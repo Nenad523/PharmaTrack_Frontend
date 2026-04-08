@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import ThemeRegistry from "./ThemeRegistry"; // 👈 dodaj
+import ThemeRegistry from "./ThemeRegistry";
 import { Header } from "./_components/header";
 import { MobileNav } from "./_components/mobile_header";
+import Footer from "./_components/footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,20 +31,25 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-      
-        {/* Desktop header */}
-        <div className="hidden md:block">
-          <Header />
-        </div>
-
-        {/* Mobile header */}
-        <div className="md:hidden">
-          <MobileNav />
-        </div>
-
+      <body className="min-h-screen flex flex-col !bg-sky-50">
         <ThemeRegistry>
-          {children}
+          <div className="min-h-screen flex flex-col">
+            
+            {/* Desktop header */}
+            <div className="hidden md:block">
+              <Header />
+            </div>
+
+            {/* Mobile header */}
+            <div className="md:hidden">
+              <MobileNav />
+            </div>
+
+            <main className="flex-1">{children}</main>
+
+            <Footer/>
+          </div>
+
         </ThemeRegistry>
       </body>
     </html>
