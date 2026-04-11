@@ -10,7 +10,8 @@ interface InputFieldProps {
     icon: React.ReactNode
     value: string,
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-    error?: string
+    error?: string,
+    disabled?: boolean
 }
 
 export default function InputField({
@@ -20,7 +21,8 @@ export default function InputField({
     icon,
     value,
     onChange,
-    error
+    error,
+    disabled
 } : InputFieldProps){
     
     const [showPassword, setShowPassword] = useState(false);
@@ -46,6 +48,8 @@ export default function InputField({
                     type={inputType}
                     placeholder={placeholder}
                     value={value}
+                    name={type}
+                    disabled={disabled}
                     onChange={onChange}
                     className="flex-1 bg-transparent outline-none text-gray-800 placeholder-gray-400 text-sm"
                 />
@@ -59,6 +63,13 @@ export default function InputField({
                          
                     </button>
                 )}
+
+                {error && (
+                    <p className="text-red-500 text-xs">
+                        {error}
+                    </p>
+                )}
+
             </div>
         </div>
     )
