@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ThemeRegistry from "./ThemeRegistry";
-import { Header } from "./_components/header";
-import { MobileNav } from "./_components/mobile_header";
-import Footer from "./_components/footer";
+import { Header } from "./_components/Header/header";
+import { MobileNav } from "./_components/Header/mobile_header";
+import Footer from "./_components/Footer/footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,7 +44,7 @@ export default function RootLayout({
             <div className="md:hidden">
               <MobileNav />
             </div>
-
+            
             <main className="flex-1">{children}</main>
 
             <Footer/>
