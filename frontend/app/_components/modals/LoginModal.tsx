@@ -22,17 +22,45 @@ export default function LoginModal({
     const [errors, setErrors] = useState<{email?: string, password?: string}>({});
     const [loading, setLoading] = useState(false);
     const [generalError, setGeneralError] = useState('');
+
+    const handleClose = () => {
+        resetForm();
+        onClose();
+    };
+
+    const handleSwitchToRegister = () => {
+        resetForm();
+        onSwitchToRegister();
+    };
+
+    const getErrorMessage = async (response: Response) => {
+        try {
+            const contentType = response.headers.get('content-type') || '';
+
+            if (contentType.includes('application/json')) {
+                const data = await response.json();
+                return data?.error?.message || data?.message || 'Greška pri prijavi';
+            }
+
+            const text = await response.text();
+            return text || 'Greška pri prijavi';
+
+        } catch {
+            return 'Greška pri prijavi';
+        }
+    };
     
     const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (e.target === e.currentTarget) onClose();
+        if (e.target === e.currentTarget) handleClose();
     }
 
     const validate = () => {
         const newErrors : {email?: string, password?: string} = {};
+        const trimmedEmail = email.trim();
 
-        if (!email){
+        if (!trimmedEmail){
             newErrors.email = 'Email adresa je obavezna.';
-        } else if (!/\S+@\S+\.\S+/.test(email)){
+        } else if (!/\S+@\S+\.\S+/.test(trimmedEmail)){
             newErrors.email = 'Unesite ispravnu email adresu.';
         }
 
@@ -62,22 +90,23 @@ export default function LoginModal({
         setLoading(true);
 
         try {
+            const trimmedEmail = email.trim();
+
             const response = await fetch('/api/v1/auth/login', {
                 method: 'POST',
                 headers: {'Content-Type' : 'application/json'},
-                body: JSON.stringify({ email, password })
+                body: JSON.stringify({ email: trimmedEmail, password })
             });
 
             if (!response.ok){
-                const data = await response.json();
-                setGeneralError(data?.error?.message || 'Greška pri prijavi');
+                const errorMessage = await getErrorMessage(response);
+                setGeneralError(errorMessage);
                 return;
             }
 
-            onClose();
-            resetForm();
+            handleClose();
 
-        } catch (error) {
+          } catch {
            setGeneralError('Došlo je do greške. Pokušajte ponovo.');
         } finally{
             setLoading(false);
@@ -90,16 +119,23 @@ export default function LoginModal({
         <div
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             onClick={handleBackdropClick}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="login-modal-title"
         >
             <div className="bg-white rounded-2xl w-full max-w-sm p-6 relative shadow-2xl">
                 <button
-                    onClick={onClose}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+                    onClick={handleClose}
+                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+                    aria-label="Zatvori modal"
                 >
                     <X size={20} />
                 </button>
  
-                <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">
+                <h2 
+                    id="login-modal-title" 
+                    className="text-2xl font-bold text-gray-900 text-center mb-6"
+                >
                     Prijavite se
                 </h2>
 
@@ -144,18 +180,18 @@ export default function LoginModal({
                         type="submit"
                         disabled={loading}
                         className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 
-                                   text-white font-semibold py-4 rounded-xl transition-colors
+                                   text-white font-semibold py-3 rounded-xl transition-colors
                                    mt-2 cursor-pointer disabled:cursor-not-allowed"
                     >
                         {loading ? 'Prijavljivanje...' : 'Prijavi se'}
                     </button>
 
-                    <p className="text-center text-gray-500 text-sm mt-4">
+                    <p className="text-center text-gray-500 text-sm mt-2">
                         Nemate nalog? 
                         <button
                             type="button"
-                            onClick={onSwitchToRegister}
-                            className="text-blue-600 font-semibold hover:underline"
+                            onClick={handleSwitchToRegister}
+                            className="text-blue-600 font-semibold hover:underline pl-1 cursor-pointer"
                         >
                             Registrujte se
                         </button>

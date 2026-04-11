@@ -35,19 +35,9 @@ export default function RootLayout({
         <ThemeRegistry>
           <div className="min-h-screen flex flex-col">
             
-            {/* Desktop header */}
-            <div className="hidden md:block">
-              <Header />
-            </div>
-
-            {/* Mobile header */}
-            <div className="md:hidden">
-              <MobileNav />
-            </div>
-            
             <main className="flex-1">{children}</main>
 
-            <Footer/>
+        
           </div>
 
         </ThemeRegistry>
