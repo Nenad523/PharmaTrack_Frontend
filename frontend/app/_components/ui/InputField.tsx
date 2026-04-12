@@ -56,7 +56,7 @@ export default function InputField({
                     onChange={onChange}
                     aria-invalid={!!error}
                     aria-describedby={error ? errorId : undefined}
-                    className="flex-1 bg-transparent outline-none text-gray-800 placeholder-gray-400 text-sm"
+                    className="flex-1 bg-transparent outline-none text-gray-800 placeholder-gray-500 text-sm"
                 />
                 {type === 'password' && (
                     <button
