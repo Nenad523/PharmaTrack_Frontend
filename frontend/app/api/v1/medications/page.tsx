@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useMemo } from "react";
 
 type Medicine = {
   id: number;
@@ -48,7 +49,29 @@ const medicines: Medicine[] = [
 ];
 
 export default function MedicationsSearchPage() {
+  const [searchTerm, setSearchTerm] = useState(""); //sta korisnik kuca u input
+  const [selectedMedicineId, setSelectedMedicineId] = useState<number | null>(null);
+  const [selectedDoses, setSelectedDoses] = useState<string[]>([]);
   
+    const trimmedSearch = searchTerm.trim(); ///razmaci sa pocetka i kraja uklonjeni
+    const hasMinimumChars = trimmedSearch.length >= 3;
+
+    // vraca listu lijekova
+    const filteredMedicines = useMemo(() => {
+        
+        if (!hasMinimumChars) return [];
+
+        return medicines.filter((medicine) =>
+            medicine.name.toLowerCase().includes(trimmedSearch.toLowerCase())
+        );
+    }, [trimmedSearch, hasMinimumChars]); 
+
+    const selectedMedicine = filteredMedicines.find(
+        (m) => m.id === selectedMedicineId
+    );
+
+    
+
   return (
     <div>
       
