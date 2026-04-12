@@ -11,7 +11,23 @@ import {
   Stethoscope,
 } from "lucide-react";
 
-const quickActions = [
+type QuickAction =
+  | {
+      title: string;
+      description: string;
+      icon: typeof Search;
+      href: string;
+      locked?: false;
+    }
+  | {
+      title: string;
+      description: string;
+      icon: typeof Search;
+      locked: true;
+      href?: never;
+    };
+
+const quickActions: QuickAction[] = [
   {
     title: "Pretraga ljekova",
     description: "Pronađite ljekove u apotekama širom Crne Gore.",
