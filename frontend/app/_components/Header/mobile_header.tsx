@@ -7,7 +7,7 @@ import { Home, Clock, Search } from "lucide-react";
 const navItems = [
   { label: "Početna", href: "/api/v1/home", icon: Home },
   { label: "Pretraga", href: "/api/v1/medications", icon: Search },
-  { label: "Dežurne", href: "/api/v1/duty", icon: Clock },
+  { label: "Dežurne", href: "/api/v1/pharmacies/duty", icon: Clock },
 ];
 
 export function MobileNav() {
