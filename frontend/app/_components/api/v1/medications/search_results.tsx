@@ -39,7 +39,7 @@ export default function SearchResults({
                 </div>
             ) : (
                 <div className="grid gap-4">
-                {filteredMedicines.map((medicine) => {
+                {filteredMedicines.map((medicine: any) => {
                     const isSelected = selectedMedicineId === medicine.id;
                     const detailsOpen = detailsMedicineId === medicine.id;
 
