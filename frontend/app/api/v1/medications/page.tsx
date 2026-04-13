@@ -10,6 +10,13 @@ import SearchButton from "../../../_components/api/v1/medications/search_button"
 
 
 
+import {
+  AlertTriangle,
+
+  Pill,
+
+  X,
+} from "lucide-react";
 
 type Medicine = {
   id: number;
@@ -17,7 +24,6 @@ type Medicine = {
   description: string;
   doses: string[];
   activeSubstance: string;
-  usage: string;
   warning: string;
 };
 
@@ -39,7 +45,6 @@ const medicines: Medicine[] = [
       "Analgetik i antipiretik za ublažavanje bola i snižavanje temperature.",
     doses: ["Sve", "500 mg", "1000 mg", "1500 mg"],
     activeSubstance: "Paracetamol",
-    usage: "Koristi se za snižavanje temperature i ublažavanje blagih do umjerenih bolova.",
     warning: "Ne prelaziti preporučenu dnevnu dozu. Koristiti oprezno kod bolesti jetre.",
   },
   {
@@ -48,7 +53,6 @@ const medicines: Medicine[] = [
     description: "Paracetamol sa kofeinom za pojačano djelovanje protiv bola.",
     doses: ["Sve", "500 mg"],
     activeSubstance: "Paracetamol + kofein",
-    usage: "Za glavobolju, zubobolju i bolove uz pojačano analgetsko djelovanje.",
     warning: "Sadrži kofein. Izbjegavati kasno uveče i kod osjetljivosti na stimulanse.",
   },
   {
@@ -57,7 +61,6 @@ const medicines: Medicine[] = [
     description: "Nesteroidni antiinflamatorni lijek za bol i upale.",
     doses: ["Sve", "200 mg", "400 mg"],
     activeSubstance: "Ibuprofen",
-    usage: "Koristi se za bolove, upalne procese i snižavanje temperature.",
     warning: "Ne preporučuje se osobama sa čirom na želucu bez savjeta ljekara.",
   },
   {
@@ -66,7 +69,6 @@ const medicines: Medicine[] = [
     description: "Lijek za ublažavanje bolova, upala i povišene temperature.",
     doses: ["Sve", "200 mg", "400 mg", "600 mg"],
     activeSubstance: "Ibuprofen",
-    usage: "Za bolove u mišićima, zglobovima, temperaturu i različite upalne tegobe.",
     warning: "Koristiti oprezno kod problema sa želucem, bubrezima i pritiskom.",
   },
 ];
@@ -191,7 +193,7 @@ export default function MedicationsSearchPage() {
   const [selectedMedicineId, setSelectedMedicineId] = useState<number | null>(null);
   const [selectedDoses, setSelectedDoses] = useState<string[]>([]);
   const [detailsMedicineId, setDetailsMedicineId] = useState<number | null>(null);
-
+  
   const trimmedSearch = searchTerm.trim();
   const hasMinimumChars = trimmedSearch.length >= 3;
 
@@ -246,12 +248,17 @@ export default function MedicationsSearchPage() {
 
       return;
     }
+    
 
     setSelectedDoses((prev) =>
       prev.includes(dose) ? prev.filter((d) => d !== dose) : [...prev, dose]
     );
   };
 
+  const detailsMedicine =
+      filteredMedicines.find((medicine) => medicine.id === detailsMedicineId) ??
+      medicines.find((medicine) => medicine.id === detailsMedicineId) ??
+      null;
   const isDoseActive = (dose: string, allDoses: string[]) => {
     const individualDoses = allDoses.filter((d) => d !== "Sve");
 
@@ -337,7 +344,12 @@ export default function MedicationsSearchPage() {
             />
           </div>
 
-          
+          {detailsMedicine && (
+            <MedicineDetailsPanel
+              medicine={detailsMedicine}
+              onClose={() => setDetailsMedicineId(null)}
+            />
+          )}
         </div>
       </section>
     </div>
