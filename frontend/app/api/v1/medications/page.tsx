@@ -17,8 +17,6 @@ type Medicine = {
   description: string;
   doses: string[];
   activeSubstance: string;
-  manufacturer: string;
-  form: string;
   usage: string;
   warning: string;
 };
@@ -41,8 +39,6 @@ const medicines: Medicine[] = [
       "Analgetik i antipiretik za ublažavanje bola i snižavanje temperature.",
     doses: ["Sve", "100 mg", "200 mg", "500 mg", "1000 mg"],
     activeSubstance: "Paracetamol",
-    manufacturer: "Pharma Montenegro",
-    form: "Tablete",
     usage: "Koristi se za snižavanje temperature i ublažavanje blagih do umjerenih bolova.",
     warning: "Ne prelaziti preporučenu dnevnu dozu. Koristiti oprezno kod bolesti jetre.",
   },
@@ -52,8 +48,6 @@ const medicines: Medicine[] = [
     description: "Paracetamol sa kofeinom za pojačano djelovanje protiv bola.",
     doses: ["Sve", "500 mg"],
     activeSubstance: "Paracetamol + kofein",
-    manufacturer: "HealthLab",
-    form: "Tablete",
     usage: "Za glavobolju, zubobolju i bolove uz pojačano analgetsko djelovanje.",
     warning: "Sadrži kofein. Izbjegavati kasno uveče i kod osjetljivosti na stimulanse.",
   },
@@ -63,8 +57,6 @@ const medicines: Medicine[] = [
     description: "Nesteroidni antiinflamatorni lijek za bol i upale.",
     doses: ["Sve", "200 mg", "400 mg"],
     activeSubstance: "Ibuprofen",
-    manufacturer: "Medica Plus",
-    form: "Film tablete",
     usage: "Koristi se za bolove, upalne procese i snižavanje temperature.",
     warning: "Ne preporučuje se osobama sa čirom na želucu bez savjeta ljekara.",
   },
@@ -74,8 +66,6 @@ const medicines: Medicine[] = [
     description: "Lijek za ublažavanje bolova, upala i povišene temperature.",
     doses: ["Sve", "200 mg", "400 mg", "600 mg"],
     activeSubstance: "Ibuprofen",
-    manufacturer: "Abbott",
-    form: "Tablete / granule",
     usage: "Za bolove u mišićima, zglobovima, temperaturu i različite upalne tegobe.",
     warning: "Koristiti oprezno kod problema sa želucem, bubrezima i pritiskom.",
   },
@@ -154,7 +144,7 @@ function MedicineDetailsPanel({
             </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
+          <div className="grid gap-4">
             <div>
               <h3 className="text-sm font-semibold text-slate-900">
                 Aktivna supstanca
@@ -164,24 +154,6 @@ function MedicineDetailsPanel({
                   {medicine.activeSubstance}
                 </span>
               </div>
-            </div>
-
-            <div>
-              <h3 className="text-sm font-semibold text-slate-900">
-                Proizvođač
-              </h3>
-              <p className="mt-2 text-sm leading-7 text-slate-600">
-                {medicine.manufacturer}
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-sm font-semibold text-slate-900">
-                Farmaceutski oblik
-              </h3>
-              <p className="mt-2 text-sm leading-7 text-slate-600">
-                {medicine.form}
-              </p>
             </div>
 
             <div>
