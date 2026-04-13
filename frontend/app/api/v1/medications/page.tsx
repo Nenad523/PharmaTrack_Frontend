@@ -337,12 +337,7 @@ export default function MedicationsSearchPage() {
             />
           </div>
 
-          {detailsMedicine && (
-            <MedicineDetailsPanel
-              medicine={detailsMedicine}
-              onClose={() => setDetailsMedicineId(null)}
-            />
-          )}
+          
         </div>
       </section>
     </div>
