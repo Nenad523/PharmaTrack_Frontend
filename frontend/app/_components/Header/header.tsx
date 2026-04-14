@@ -10,14 +10,17 @@ const navItems = [
   { label: "Dežurne apoteke", href: "/api/v1/pharmacies/duty", icon: Clock },
 ];
 
-export function Header() {  
+type HeaderProps = {
+  onLoginClick?: () => void;
+  onRegisterClick?: () => void;
+};
+
+export function Header({ onLoginClick, onRegisterClick }: HeaderProps) {
   const pathname = usePathname();
 
   return (
     <header className="border-b border-gray-100 bg-white sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-        
-        {/* Logo */}
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-6">
         <Link href="/api/v1/home" className="flex items-center gap-2">
           <Pill className="w-5 h-5 text-blue-500" />
           <span className="text-xl font-bold text-gray-900">
@@ -25,8 +28,7 @@ export function Header() {
           </span>
         </Link>
 
-        {/* Navigation */}
-        <nav className="flex items-center gap-2">
+        <nav className="hidden items-center gap-2 md:flex">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
 
@@ -47,6 +49,22 @@ export function Header() {
           })}
         </nav>
 
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onLoginClick}
+            className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-blue-200 hover:text-blue-600 cursor-pointer"
+          >
+            Prijava
+          </button>
+          <button
+            type="button"
+            onClick={onRegisterClick}
+            className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-blue-700 cursor-pointer"
+          >
+            Registracija
+          </button>
+        </div>
       </div>
     </header>
   );

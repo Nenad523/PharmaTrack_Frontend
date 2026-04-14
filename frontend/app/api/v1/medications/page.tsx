@@ -26,8 +26,6 @@ export default function MedicationsSearchPage() {
     (medicine) => medicine.id === selectedMedicineId
   );
 
-  
-
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
     setSelectedMedicineId(null);
@@ -65,7 +63,6 @@ export default function MedicationsSearchPage() {
 
       return;
     }
-    
 
     setSelectedDoses((prev) =>
       prev.includes(dose) ? prev.filter((d) => d !== dose) : [...prev, dose]
@@ -93,7 +90,6 @@ export default function MedicationsSearchPage() {
   const isSearchButtonEnabled =
     Boolean(selectedMedicine) && selectedDoses.length > 0;
 
-
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-blue-100/70 via-sky-50/80 to-white">
       <div className="absolute inset-x-0 top-0 -z-10 h-[30rem] bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.24),_transparent_70%)]" />
@@ -108,32 +104,31 @@ export default function MedicationsSearchPage() {
                 : "max-w-7xl justify-center"
             }`}
           >
-          <MedicationsContent
-            handleSearchChange={handleSearchChange}
-            searchTerm={searchTerm}
-            hasMinimumChars={hasMinimumChars}
-            popularMedicines={popularMedicines}
-            handlePopularClick={handlePopularClick}
-            trimmedSearch={trimmedSearch}
-            filteredMedicines={filteredMedicines}
-            selectedMedicineId={selectedMedicineId}
-            detailsMedicineId={detailsMedicineId}
-            selectedMedicine={selectedMedicine}
-            handleSelectMedicine={handleSelectMedicine}
-            handleToggleDetails={handleToggleDetails}
-            handleDoseClick={handleDoseClick}
-            isDoseActive={isDoseActive}
-            isSearchButtonEnabled={isSearchButtonEnabled}
-          />
+            <MedicationsContent
+              handleSearchChange={handleSearchChange}
+              searchTerm={searchTerm}
+              hasMinimumChars={hasMinimumChars}
+              popularMedicines={popularMedicines}
+              handlePopularClick={handlePopularClick}
+              trimmedSearch={trimmedSearch}
+              filteredMedicines={filteredMedicines}
+              selectedMedicineId={selectedMedicineId}
+              detailsMedicineId={detailsMedicineId}
+              selectedMedicine={selectedMedicine}
+              handleSelectMedicine={handleSelectMedicine}
+              handleToggleDetails={handleToggleDetails}
+              handleDoseClick={handleDoseClick}
+              isDoseActive={isDoseActive}
+              isSearchButtonEnabled={isSearchButtonEnabled}
+            />
 
-          {/* DESNI PANEL */}
-          {detailsMedicine && (
-            <div className="xl:relative xl:z-20 xl:-ml-2 xl:w-[380px] xl:self-start">
-              <MedicineDetailsPanel
-                medicine={detailsMedicine}
-                onClose={() => setDetailsMedicineId(null)}
-              />
-            </div>
+            {detailsMedicine && (
+              <div className="xl:relative xl:z-20 xl:-ml-2 xl:w-[380px] xl:self-start">
+                <MedicineDetailsPanel
+                  medicine={detailsMedicine}
+                  onClose={() => setDetailsMedicineId(null)}
+                />
+              </div>
             )}
           </div>
         </div>
