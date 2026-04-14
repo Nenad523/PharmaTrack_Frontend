@@ -1,7 +1,23 @@
 import { CheckCircle2 } from "lucide-react";
+import { Medicine } from "./types";
 
+type SelectedMedicationProps = {
+  selectedMedicine: Medicine;
+  detailsMedicineId: number | null;
+  handleSelectMedicine: (medicineId: number) => void;
+  handleToggleDetails: (medicineId: number) => void;
+  handleDoseClick: (dose: string, allDoses: string[]) => void;
+  isDoseActive: (dose: string, allDoses: string[]) => boolean;
+};
 
-export default function SelectedMedication({selectedMedicine, detailsMedicineId, handleSelectMedicine, handleToggleDetails, handleDoseClick, isDoseActive}: any) {
+export default function SelectedMedication({
+  selectedMedicine,
+  detailsMedicineId,
+  handleSelectMedicine,
+  handleToggleDetails,
+  handleDoseClick,
+  isDoseActive,
+}: SelectedMedicationProps) {
     return(
                   <div className="mt-8">
                     <article className="overflow-hidden rounded-2xl border border-blue-200 bg-white shadow-sm">

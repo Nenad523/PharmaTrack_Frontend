@@ -1,5 +1,14 @@
 import { Info } from "lucide-react";
+import { Medicine } from "./types";
 
+type SearchResultsProps = {
+  trimmedSearch: string;
+  filteredMedicines: Medicine[];
+  selectedMedicineId: number | null;
+  detailsMedicineId: number | null;
+  handleSelectMedicine: (medicineId: number) => void;
+  handleToggleDetails: (medicineId: number) => void;
+};
 
 export default function SearchResults({
   trimmedSearch,
@@ -8,7 +17,7 @@ export default function SearchResults({
   detailsMedicineId,
   handleSelectMedicine,
   handleToggleDetails,
-}: any) {
+}: SearchResultsProps) {
     return (
         <div className="mt-8">
             <div className="mb-5">
@@ -39,7 +48,7 @@ export default function SearchResults({
                 </div>
             ) : (
                 <div className="grid gap-4">
-                {filteredMedicines.map((medicine: any) => {
+                {filteredMedicines.map((medicine) => {
                     const isSelected = selectedMedicineId === medicine.id;
                     const detailsOpen = detailsMedicineId === medicine.id;
 

@@ -1,72 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import SearchBarTitleText from "../../../_components/api/v1/medications/search_bar_title";
-import SearchBar from "../../../_components/api/v1/medications/search_bar";
-import PopularMedicine from "../../../_components/api/v1/medications/popular_medicine";
-import SearchResults from "../../../_components/api/v1/medications/search_results";
-import SelectedMedication from "../../../_components/api/v1/medications/selected_medication";
-import SearchButton from "../../../_components/api/v1/medications/search_button";
+import { medicines, popularMedicines } from "../../../_components/api/v1/medications/data";
+import MedicationsContent from "../../../_components/api/v1/medications/medications_content";
 import MedicineDetailsPanel from "../../../_components/api/v1/medications/MedicineDetailsPanel/medicine_details_panel";
-
-
-
-type Medicine = {
-  id: number;
-  name: string;
-  description: string;
-  doses: string[];
-  activeSubstance: string;
-  warning: string;
-};
-
-const popularMedicines = [
-  "Paracetamol",
-  "Ibuprofen",
-  "Amoksicilin",
-  "Aspirin",
-  "Brufen",
-  "Andol",
-  "Panklav",
-];
-
-const medicines: Medicine[] = [
-  {
-    id: 1,
-    name: "Paracetamol",
-    description:
-      "Analgetik i antipiretik za ublažavanje bola i snižavanje temperature.",
-    doses: ["Sve", "500 mg", "1000 mg", "1500 mg"],
-    activeSubstance: "Paracetamol",
-    warning: "Ne prelaziti preporučenu dnevnu dozu. Koristiti oprezno kod bolesti jetre.",
-  },
-  {
-    id: 2,
-    name: "Paracetamol Extra",
-    description: "Paracetamol sa kofeinom za pojačano djelovanje protiv bola.",
-    doses: ["Sve", "500 mg"],
-    activeSubstance: "Paracetamol + kofein",
-    warning: "Sadrži kofein. Izbjegavati kasno uveče i kod osjetljivosti na stimulanse.",
-  },
-  {
-    id: 3,
-    name: "Ibuprofen",
-    description: "Nesteroidni antiinflamatorni lijek za bol i upale.",
-    doses: ["Sve", "200 mg", "400 mg"],
-    activeSubstance: "Ibuprofen",
-    warning: "Ne preporučuje se osobama sa čirom na želucu bez savjeta ljekara.",
-  },
-  {
-    id: 4,
-    name: "Brufen",
-    description: "Lijek za ublažavanje bolova, upala i povišene temperature.",
-    doses: ["Sve", "200 mg", "400 mg", "600 mg"],
-    activeSubstance: "Ibuprofen",
-    warning: "Koristiti oprezno kod problema sa želucem, bubrezima i pritiskom.",
-  },
-];
-
-
 
 export default function MedicationsSearchPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -136,9 +73,10 @@ export default function MedicationsSearchPage() {
   };
 
   const detailsMedicine =
-      filteredMedicines.find((medicine) => medicine.id === detailsMedicineId) ??
-      medicines.find((medicine) => medicine.id === detailsMedicineId) ??
-      null;
+    filteredMedicines.find((medicine) => medicine.id === detailsMedicineId) ??
+    medicines.find((medicine) => medicine.id === detailsMedicineId) ??
+    null;
+
   const isDoseActive = (dose: string, allDoses: string[]) => {
     const individualDoses = allDoses.filter((d) => d !== "Sve");
 
@@ -170,68 +108,23 @@ export default function MedicationsSearchPage() {
                 : "max-w-7xl justify-center"
             }`}
           >
-          <div
-            className={`rounded-[28px] border border-slate-200/80 bg-white/90 p-6 shadow-sm backdrop-blur md:p-8 flex-1`}
-          >  
-            {/* tekst na vrhu search boxa */}
-            <SearchBarTitleText /> 
-
-            {/* input za pretragu */}
-            <SearchBar
-              handleSearchChange={handleSearchChange}
-              searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
-              selectedMedicineId={selectedMedicineId}
-              setSelectedMedicineId={setSelectedMedicineId}
-              selectedDoses={selectedDoses}
-              setSelectedDoses={setSelectedDoses}
-              detailsMedicineId={detailsMedicineId}
-              setDetailsMedicineId={setDetailsMedicineId}
-            />
-
-            {/* ako nema dovoljno karaktera, prikazuju se popularni lijekovi */}
-
-            {!hasMinimumChars && (
-                <PopularMedicine
-                popularMedicines={popularMedicines}
-                searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
-                hasMinimumChars={hasMinimumChars}
-                handlePopularClick={handlePopularClick}
-                />
-            )}
-            
-            {/* ako ima dovoljno karaktera, prikazuju se rezultati pretrage */}
-
-            {hasMinimumChars && !selectedMedicine && (
-              <SearchResults
-                trimmedSearch={trimmedSearch}
-                filteredMedicines={filteredMedicines}
-                selectedMedicineId={selectedMedicineId}
-                detailsMedicineId={detailsMedicineId}
-                handleSelectMedicine={handleSelectMedicine}
-                handleToggleDetails={handleToggleDetails}
-              />
-            )}
-
-            {/* ako je odabran lijek, prikazuju se informacije o njemu */}
-
-            {hasMinimumChars && selectedMedicine && (
-                <SelectedMedication
-                    selectedMedicine={selectedMedicine}
-                    detailsMedicineId={detailsMedicineId}
-                    handleSelectMedicine={handleSelectMedicine}
-                    handleToggleDetails={handleToggleDetails}
-                    handleDoseClick={handleDoseClick}
-                    isDoseActive={isDoseActive}
-                />
-            )}
-
-            {/* dugme za pretragu */}
-            <SearchButton 
+          <MedicationsContent
+            handleSearchChange={handleSearchChange}
+            searchTerm={searchTerm}
+            hasMinimumChars={hasMinimumChars}
+            popularMedicines={popularMedicines}
+            handlePopularClick={handlePopularClick}
+            trimmedSearch={trimmedSearch}
+            filteredMedicines={filteredMedicines}
+            selectedMedicineId={selectedMedicineId}
+            detailsMedicineId={detailsMedicineId}
+            selectedMedicine={selectedMedicine}
+            handleSelectMedicine={handleSelectMedicine}
+            handleToggleDetails={handleToggleDetails}
+            handleDoseClick={handleDoseClick}
+            isDoseActive={isDoseActive}
             isSearchButtonEnabled={isSearchButtonEnabled}
-            />
-          </div>
+          />
 
           {/* DESNI PANEL */}
           {detailsMedicine && (
@@ -248,4 +141,3 @@ export default function MedicationsSearchPage() {
     </div>
   );
 }
-

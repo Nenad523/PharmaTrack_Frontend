@@ -1,16 +1,8 @@
 import { X, Pill, AlertTriangle } from "lucide-react";
-
-export type MedicineDetails = {
-  id: number;
-  name: string;
-  description: string;
-  doses: string[];
-  activeSubstance: string;
-  warning: string;
-};
+import { Medicine } from "../types";
 
 type MedicineDetailsPanelProps = {
-  medicine: MedicineDetails;
+  medicine: Medicine;
   onClose: () => void;
 };
 
