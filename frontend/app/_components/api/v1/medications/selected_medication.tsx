@@ -1,4 +1,4 @@
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, ChevronRight } from "lucide-react";
 import { Medicine } from "./types";
 
 type SelectedMedicationProps = {
@@ -27,7 +27,7 @@ export default function SelectedMedication({
                             <button
                               type="button"
                               onClick={() => handleSelectMedicine(selectedMedicine.id)}
-                              className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-blue-200 bg-blue-50 text-blue-600 transition hover:bg-blue-100"
+                              className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-blue-300 bg-blue-100 text-blue-700 transition hover:bg-blue-200"
                               aria-label={`Poništi izbor lijeka ${selectedMedicine.name}`}
                             >
                               <CheckCircle2 className="h-4 w-4" />
@@ -49,11 +49,16 @@ export default function SelectedMedication({
                               onClick={() => handleToggleDetails(selectedMedicine.id)}
                               className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-semibold transition ${
                                 detailsMedicineId === selectedMedicine.id
-                                  ? "border-blue-200 bg-blue-600 text-white hover:bg-blue-700"
-                                  : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:text-blue-600"
+                                  ? "border-blue-200 bg-blue-600 text-white shadow-md shadow-blue-200/70 hover:bg-blue-700"
+                                  : "border-blue-200/80 bg-blue-50/70 text-blue-700 shadow-sm shadow-blue-100/80 hover:bg-blue-100"
                               }`}
                             >
                               Detalji
+                              <ChevronRight
+                                className={`h-4 w-4 transition-transform duration-200 ${
+                                  detailsMedicineId === selectedMedicine.id ? "rotate-90" : "rotate-0"
+                                }`}
+                              />
                             </button>
     
                             

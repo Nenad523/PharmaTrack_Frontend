@@ -23,7 +23,7 @@ export default function SearchBar({
         value={searchTerm}
         onChange={handleSearchChange}
         placeholder="Unesite naziv lijeka (min. 3 karaktera)"
-        className="h-14 w-full rounded-2xl border border-slate-200 bg-slate-50 pl-12 pr-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-300 focus:bg-white"
+        className="h-14 w-full rounded-2xl border border-slate-200 bg-white pl-12 pr-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-300"
       />
     </div>
   );

@@ -104,7 +104,7 @@ export default function MedicineDetailsPanel({
       </div>
 
       <aside className="hidden w-full xl:sticky xl:top-24 xl:block">
-        <div className="overflow-hidden rounded-[28px] border border-slate-200/80 bg-white/90 shadow-sm backdrop-blur">
+        <div className="overflow-hidden rounded-[28px] border border-blue-200/80 bg-white/95 shadow-[0_24px_55px_-30px_rgba(15,23,42,0.45),0_14px_30px_-22px_rgba(37,99,235,0.55)] ring-1 ring-blue-100/60 backdrop-blur">
           <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-6 py-5">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-blue-600">

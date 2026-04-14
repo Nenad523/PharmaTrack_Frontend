@@ -42,7 +42,7 @@ export default function MedicationsContent({
   isSearchButtonEnabled,
 }: MedicationsContentProps) {
   return (
-    <div className="rounded-[28px] border border-slate-200/80 bg-white/90 p-6 shadow-sm backdrop-blur md:p-8 flex-1">
+    <div className="flex-1 rounded-[28px] border border-blue-200/90 bg-white p-6 shadow-[0_22px_50px_-24px_rgba(37,99,235,0.5),0_10px_20px_-14px_rgba(15,23,42,0.3),inset_0_1px_0_rgba(255,255,255,0.7)] backdrop-blur md:p-8">
       <SearchBarTitleText />
 
       <SearchBar

@@ -95,9 +95,9 @@ export default function MedicationsSearchPage() {
 
 
   return (
-    <div className="relative overflow-hidden">
-      <div className="absolute inset-x-0 top-0 -z-10 h-[28rem] bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.14),_transparent_65%)]" />
-      <div className="absolute left-1/2 top-20 -z-10 h-72 w-72 -translate-x-1/2 rounded-full bg-blue-100/50 blur-3xl" />
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-blue-100/70 via-sky-50/80 to-white">
+      <div className="absolute inset-x-0 top-0 -z-10 h-[30rem] bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.24),_transparent_70%)]" />
+      <div className="absolute left-1/2 top-20 -z-10 h-72 w-72 -translate-x-1/2 rounded-full bg-blue-200/50 blur-3xl" />
 
       <section className="mx-auto max-w-7xl px-6 pb-16 pt-16 md:pt-20">
         <div className="flex justify-center">
@@ -128,7 +128,7 @@ export default function MedicationsSearchPage() {
 
           {/* DESNI PANEL */}
           {detailsMedicine && (
-            <div className="xl:w-[380px] xl:transition-all xl:duration-300">
+            <div className="xl:relative xl:z-20 xl:-ml-2 xl:w-[380px] xl:self-start">
               <MedicineDetailsPanel
                 medicine={detailsMedicine}
                 onClose={() => setDetailsMedicineId(null)}

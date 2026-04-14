@@ -1,4 +1,4 @@
-import { Info } from "lucide-react";
+import { ChevronRight, Info } from "lucide-react";
 import { Medicine } from "./types";
 
 type SearchResultsProps = {
@@ -55,7 +55,7 @@ export default function SearchResults({
                     return (
                         <article
                             key={medicine.id}
-                            className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md"
+                            className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-[0_12px_26px_-18px_rgba(15,23,42,0.35),0_6px_16px_-12px_rgba(37,99,235,0.32)]"
                         >
                             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                             <div className="flex items-start gap-4">
@@ -64,8 +64,8 @@ export default function SearchResults({
                                 onClick={() => handleSelectMedicine(medicine.id)}
                                 className={`mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-sm font-semibold transition ${
                                     isSelected
-                                    ? "border-blue-200 bg-blue-50 text-blue-600"
-                                    : "border-slate-200 bg-white text-slate-400 hover:border-blue-200 hover:text-blue-600"
+                                    ? "border-blue-300 bg-blue-100 text-blue-700"
+                                    : "border-blue-200/80 bg-blue-50/60 text-blue-500 hover:border-blue-300 hover:text-blue-700"
                                 }`}
                                 aria-label={`Izaberi lijek ${medicine.name}`}
                                 >
@@ -88,11 +88,16 @@ export default function SearchResults({
                                 onClick={() => handleToggleDetails(medicine.id)}
                                 className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-semibold transition ${
                                     detailsOpen
-                                    ? "border-blue-200 bg-blue-600 text-white hover:bg-blue-700"
-                                    : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:text-blue-600"
+                                                                        ? "border-blue-200 bg-blue-600 text-white shadow-md shadow-blue-200/70 hover:bg-blue-700"
+                                                                        : "border-blue-200/80 bg-blue-50/70 text-blue-700 shadow-sm shadow-blue-100/80 hover:bg-blue-100"
                                 }`}
                                 >
                                 Detalji
+                                                                <ChevronRight
+                                                                    className={`h-4 w-4 transition-transform duration-200 ${
+                                                                        detailsOpen ? "rotate-90" : "rotate-0"
+                                                                    }`}
+                                                                />
                                 </button>
 
                                 
