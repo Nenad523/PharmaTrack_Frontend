@@ -161,19 +161,17 @@ export default function MedicationsSearchPage() {
       <div className="absolute inset-x-0 top-0 -z-10 h-[28rem] bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.14),_transparent_65%)]" />
       <div className="absolute left-1/2 top-20 -z-10 h-72 w-72 -translate-x-1/2 rounded-full bg-blue-100/50 blur-3xl" />
 
-      <section className="mx-auto max-w-5xl px-6 pb-16 pt-16 md:pt-20">
+      <section className="mx-auto max-w-7xl px-6 pb-16 pt-16 md:pt-20">
         <div className="flex justify-center">
           <div
-            className={`w-full transition-all duration-300 ${
+            className={`flex gap-8 ${
               detailsMedicine
-                ? "max-w-6xl flex gap-8"
-                : "max-w-2xl flex justify-center"
+                ? "max-w-7xl"
+                : "max-w-7xl justify-center"
             }`}
           >
           <div
-            className={`rounded-[28px] border border-slate-200/80 bg-white/90 p-6 shadow-sm backdrop-blur md:p-8 transition-all duration-300 ${
-            detailsMedicine ? "flex-1" : "w-full"
-            }`}
+            className={`rounded-[28px] border border-slate-200/80 bg-white/90 p-6 shadow-sm backdrop-blur md:p-8 flex-1`}
           >  
             {/* tekst na vrhu search boxa */}
             <SearchBarTitleText /> 
