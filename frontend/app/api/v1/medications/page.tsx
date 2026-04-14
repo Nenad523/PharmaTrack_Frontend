@@ -235,7 +235,7 @@ export default function MedicationsSearchPage() {
 
           {/* DESNI PANEL */}
           {detailsMedicine && (
-            <div className="w-[380px] transition-all duration-300">
+            <div className="xl:w-[380px] xl:transition-all xl:duration-300">
               <MedicineDetailsPanel
                 medicine={detailsMedicine}
                 onClose={() => setDetailsMedicineId(null)}
@@ -248,5 +248,4 @@ export default function MedicationsSearchPage() {
     </div>
   );
 }
-
 
