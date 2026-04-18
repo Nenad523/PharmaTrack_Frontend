@@ -96,6 +96,7 @@ export default function LoginModal({
             const response = await fetch(`${API_URL}/api/v1/auth/login`, {
                 method: 'POST',
                 headers: {'Content-Type' : 'application/json'},
+                credentials: 'include',
                 body: JSON.stringify({ email: trimmedEmail, password })
             });
 
