@@ -31,6 +31,10 @@ export default function VerifyEmail(){
                 setStatus('success');
                 setTimeout(() => {
                     window.close();
+                    // fallback if window.close() is blocked
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 500);
                 }, 3000);
             } catch (err) {
                 console.error('Verification error:', err);
@@ -67,13 +71,19 @@ export default function VerifyEmail(){
             <p className="text-gray-600 mt-2">
               Sada se možete prijaviti na svoj nalog.
             </p>
-
-            <button
-              className="mt-6 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition hover:cursor-pointer"
-              onClick={() => window.location.href = '/'}
-            >
-              Idi na prijavu
-            </button>
+            <p className="text-sm text-gray-500 mt-4">
+              Bićete preusmjereni na početnu stranicu za nekoliko sekundi...
+            </p>
+            <p className="text-xs text-gray-400 mt-2">
+              Ukoliko se to ne desi,{' '}
+              <button
+                onClick={() => window.close()}
+                className="underline hover:text-gray-600 transition-colors"
+              >
+                zatvorite ovaj prozor
+              </button>
+              .
+            </p>
           </>
         )}
 
