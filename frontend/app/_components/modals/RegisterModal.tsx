@@ -22,7 +22,8 @@ export default function RegisterModal({
     const [errors, setErrors] = useState<{email?: string, password?: string, username?: string}>({});
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
-
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    
     const resetForm = () => {
         setUsername('');
         setEmail('');
@@ -96,7 +97,7 @@ export default function RegisterModal({
             const trimmedEmail = email.trim();
             const fullName = username.trim();
 
-            const response = await fetch('http://localhost:3001/api/v1/auth/register', {
+            const response = await fetch(`${API_URL}/api/v1/auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type' : 'application/json'},
                 body: JSON.stringify({ email: trimmedEmail, password: password, fullName })
