@@ -21,12 +21,14 @@ export default function RegisterModal({
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState<{email?: string, password?: string, username?: string}>({});
     const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(false);
 
     const resetForm = () => {
         setUsername('');
         setEmail('');
         setPassword('');
         setErrors({});
+        setSuccess(false);
     };
 
     const handleClose = () => {
@@ -92,12 +94,12 @@ export default function RegisterModal({
 
             setLoading(true);
             const trimmedEmail = email.trim();
-            const trimmedUsername = username.trim();
+            const fullName = username.trim();
 
-            const response = await fetch('/api/v1/auth/register', {
+            const response = await fetch('http://localhost:3001/api/v1/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type' : 'application/json'},
-                body: JSON.stringify({ username: trimmedUsername, email: trimmedEmail, password })
+                body: JSON.stringify({ email: trimmedEmail, password: password, fullName })
             });
             
             if (!response.ok){
@@ -106,7 +108,7 @@ export default function RegisterModal({
                 return;
             }
 
-            handleClose();
+            setSuccess(true);
 
         } catch {
             setErrors({ email : 'Došlo je do greške. Pokušajte ponovo.'});
@@ -140,7 +142,14 @@ export default function RegisterModal({
                 <form
                     onSubmit={handleSubmit}
                     className="flex flex-col gap-4"
+                    noValidate
                 >
+                    {success && (
+                        <div className="rounded-xl bg-green-50 border border-green-200 px-4 py-3 text-center">
+                            <p className="text-green-700 font-semibold">Nalog kreiran.</p>
+                            <p className="text-green-600 text-sm mt-1">Posjetite svoj gmail nalog za verifikaciju.</p>
+                        </div>
+                    )}
                     <InputField
                         label="Ime i Prezime"
                         type="text"

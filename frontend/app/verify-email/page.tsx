@@ -29,6 +29,9 @@ export default function VerifyEmail(){
 
                 await response.json();
                 setStatus('success');
+                setTimeout(() => {
+                    window.close();
+                }, 3000);
             } catch (err) {
                 console.error('Verification error:', err);
                 setStatus('error');
