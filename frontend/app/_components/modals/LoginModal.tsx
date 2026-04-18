@@ -107,7 +107,8 @@ export default function LoginModal({
 
             handleClose();
 
-          } catch {
+          } catch (err) {
+           console.error('[LoginModal] handleSubmit error:', err);
            setGeneralError('Došlo je do greške. Pokušajte ponovo.');
         } finally{
             setLoading(false);

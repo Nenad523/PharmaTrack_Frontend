@@ -111,7 +111,8 @@ export default function RegisterModal({
 
             setSuccess(true);
 
-        } catch {
+        } catch (err) {
+            console.error('[RegisterModal] handleSubmit error:dd', err);
             setErrors({ email : 'Došlo je do greške. Pokušajte ponovo.'});
         } finally {
             setLoading(false);
