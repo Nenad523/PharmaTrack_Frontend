@@ -39,17 +39,60 @@ export default function VerifyEmail(){
                                          
     }, [token]);
 
-    return (
-    <div className="flex items-center justify-center min-h-screen text-black">
-      <div className="text-center">
-        {status === 'loading' && <p>Verifikacija u toku...</p>}
-        {status === 'success' && <p>Email uspješno verifikovan! Možete se prijaviti.</p>}
-        {status === 'error' && (
+   return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md text-center">
+
+        {status === 'loading' && (
           <>
-            <p>Token nije validan ili je istekao.</p>
-            <p className="text-xs text-gray-500 mt-2">Token: {token}</p>
+            <div className="animate-spin h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4" />
+            <h2 className="text-lg font-semibold text-gray-800">
+              Verifikacija u toku...
+            </h2>
+            <p className="text-sm text-gray-500 mt-2">
+              Molimo sačekajte nekoliko sekundi
+            </p>
           </>
         )}
+
+        {status === 'success' && (
+          <>
+            <div className="text-green-500 text-4xl mb-3">✓</div>
+            <h2 className="text-xl font-semibold text-gray-800">
+              Email verifikovan!
+            </h2>
+            <p className="text-gray-600 mt-2">
+              Sada se možete prijaviti na svoj nalog.
+            </p>
+
+            <button
+              className="mt-6 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition hover:cursor-pointer"
+              onClick={() => window.location.href = '/'}
+            >
+              Idi na prijavu
+            </button>
+          </>
+        )}
+
+        {status === 'error' && (
+          <>
+            <div className="text-red-500 text-4xl mb-3">✕</div>
+            <h2 className="text-xl font-semibold text-gray-800">
+              Verifikacija nije uspjela
+            </h2>
+            <p className="text-gray-600 mt-2">
+              Link nije validan ili je istekao.
+            </p>
+
+            <button
+              className="mt-6 bg-gray-800 hover:bg-black text-white px-6 py-2 rounded-lg transition"
+              onClick={() => window.location.href = '/'}
+            >
+              Nazad na početnu
+            </button>
+          </>
+        )}
+
       </div>
     </div>
   )
