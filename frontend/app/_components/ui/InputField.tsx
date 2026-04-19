@@ -39,7 +39,7 @@ export default function InputField({
                 {label}
             </label>
             <div className={`
-                flex items-center gap-3 px-4 py-3 rounded-xl border bg-gray-50 transition-all
+                flex items-center gap-3 px-4 py-3 rounded-xl border bg-gray-50 transition-smooth
                 ${error
                 ? 'border-red-400'
                 : 'border-gray-200 focus-within:border-blue-500'
@@ -64,7 +64,7 @@ export default function InputField({
                         onClick={() => setShowPassword(!showPassword)}
                         disabled={disabled}
                         aria-label={showPassword ? 'Sakrij lozinku' : 'Prikaži lozinku'}
-                        className="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+                        className="text-gray-400 hover:text-gray-600 transition-smooth cursor-pointer"
                     >
                          {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                          

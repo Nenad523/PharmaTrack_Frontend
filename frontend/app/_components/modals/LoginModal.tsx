@@ -120,16 +120,16 @@ export default function LoginModal({
 
     return (
         <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in"
             onClick={handleBackdropClick}
             role="dialog"
             aria-modal="true"
             aria-labelledby="login-modal-title"
         >
-            <div className="bg-white rounded-2xl w-full max-w-sm p-6 relative shadow-2xl">
+            <div className="bg-white rounded-2xl w-full max-w-sm p-6 relative shadow-2xl animate-slide-in-bottom">
                 <button
                     onClick={handleClose}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-smooth cursor-pointer"
                     aria-label="Zatvori modal"
                 >
                     <X size={20} />
@@ -183,7 +183,7 @@ export default function LoginModal({
                         type="submit"
                         disabled={loading}
                         className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 
-                                   text-white font-semibold py-3 rounded-xl transition-colors
+                                   text-white font-semibold py-3 rounded-xl transition-smooth
                                    mt-2 cursor-pointer disabled:cursor-not-allowed"
                     >
                         {loading ? 'Prijavljivanje...' : 'Prijavi se'}
@@ -194,7 +194,7 @@ export default function LoginModal({
                         <button
                             type="button"
                             onClick={handleSwitchToRegister}
-                            className="text-blue-600 font-semibold hover:underline pl-1 cursor-pointer"
+                            className="text-blue-600 font-semibold hover:underline pl-1 cursor-pointer transition-smooth"
                         >
                             Registrujte se
                         </button>
