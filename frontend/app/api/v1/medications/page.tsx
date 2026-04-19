@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { medicines, popularMedicines } from "../../../_components/api/v1/medications/data";
 import MedicationsContent from "../../../_components/api/v1/medications/medications_content";
 import MedicineDetailsPanel from "../../../_components/api/v1/medications/MedicineDetailsPanel/medicine_details_panel";
@@ -10,6 +10,9 @@ export default function MedicationsSearchPage() {
   const [selectedMedicineId, setSelectedMedicineId] = useState<number | null>(null);
   const [selectedDoses, setSelectedDoses] = useState<string[]>([]);
   const [detailsMedicineId, setDetailsMedicineId] = useState<number | null>(null);
+  const [medicineDoses, setMedicineDoses] = useState<string[]>([]);
+ 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
   
   const trimmedSearch = searchTerm.trim();
   const hasMinimumChars = trimmedSearch.length >= 3;
@@ -74,6 +77,10 @@ export default function MedicationsSearchPage() {
     medicines.find((medicine) => medicine.id === detailsMedicineId) ??
     null;
 
+  const detailsMedicineWithDoses = detailsMedicine
+    ? { ...detailsMedicine, doses: medicineDoses }
+    : null;
+
   const isDoseActive = (dose: string, allDoses: string[]) => {
     const individualDoses = allDoses.filter((d) => d !== "Sve");
 
@@ -89,6 +96,40 @@ export default function MedicationsSearchPage() {
 
   const isSearchButtonEnabled =
     Boolean(selectedMedicine) && selectedDoses.length > 0;
+
+  useEffect(()=>{
+      if(detailsMedicineId===null){
+        setMedicineDoses([]);
+        return;
+      }
+      const loadDoses = async () => {
+        
+        try{
+          const response = await fetch(`${apiUrl}/api/v1/medication/${detailsMedicineId}/doses`);
+          if(!response.ok){
+            throw new Error("Failed to fetch doses");
+          }
+
+          const data = await response.json();
+          
+          setMedicineDoses(
+            Array.isArray(data.data)
+              ? data.data
+                  .map((row: { strength?: string }) => row.strength)
+                  .filter((strength): strength is string => Boolean(strength))
+              : []
+          );
+        }catch(error){
+          console.error(error);
+          setMedicineDoses([]);
+        }
+      };
+
+      loadDoses();
+
+  }, [detailsMedicineId, apiUrl]);
+
+  
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-blue-100/70 via-sky-50/80 to-white">
@@ -122,10 +163,10 @@ export default function MedicationsSearchPage() {
               isSearchButtonEnabled={isSearchButtonEnabled}
             />
 
-            {detailsMedicine && (
+            {detailsMedicineWithDoses && (
               <div className="xl:relative xl:z-20 xl:-ml-2 xl:w-[380px] xl:self-start">
                 <MedicineDetailsPanel
-                  medicine={detailsMedicine}
+                  medicine={detailsMedicineWithDoses}
                   onClose={() => setDetailsMedicineId(null)}
                 />
               </div>
