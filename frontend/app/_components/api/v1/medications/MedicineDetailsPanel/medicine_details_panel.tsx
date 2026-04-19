@@ -28,15 +28,6 @@ export default function MedicineDetailsPanel({
               <h2 className="text-2xl font-bold tracking-tight text-slate-900">
                 {medicine.name}
               </h2>
-
-              <div className="mt-3 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm text-slate-500">
-                {availableDoses.map((dose, index) => (
-                  <span key={dose}>
-                    {dose}
-                    {index < availableDoses.length - 1 ? " ·" : ""}
-                  </span>
-                ))}
-              </div>
             </div>
 
             <button
