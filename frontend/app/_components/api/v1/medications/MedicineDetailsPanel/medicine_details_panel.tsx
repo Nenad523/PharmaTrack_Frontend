@@ -64,9 +64,9 @@ export default function MedicineDetailsPanel({
                 Dostupne doze
               </h3>
               <div className="mt-3 flex flex-wrap gap-2">
-                {availableDoses.map((dose) => (
+                {availableDoses.map((dose, index) => (
                   <span
-                    key={dose}
+                    key={`${dose}-${index}`}
                     className="rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700"
                   >
                     {dose}
@@ -118,9 +118,9 @@ export default function MedicineDetailsPanel({
 
           <div className="px-6 pt-5">
             <div className="flex flex-wrap gap-2">
-              {availableDoses.map((dose) => (
+              {availableDoses.map((dose, index) => (
                 <span
-                  key={dose}
+                  key={`${dose}-${index}`}
                   className="rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700"
                 >
                   {dose}

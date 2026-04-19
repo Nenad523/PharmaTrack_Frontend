@@ -11,8 +11,10 @@ export default function MedicationsSearchPage() {
   const [selectedDoses, setSelectedDoses] = useState<string[]>([]);
   const [detailsMedicineId, setDetailsMedicineId] = useState<number | null>(null);
   const [medicineDoses, setMedicineDoses] = useState<string[]>([]);
+  const [selectedMedicineDoses, setSelectedMedicineDoses] = useState<string[]>([]);
+
  
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   
   const trimmedSearch = searchTerm.trim();
   const hasMinimumChars = trimmedSearch.length >= 3;
@@ -33,6 +35,7 @@ export default function MedicationsSearchPage() {
     setSearchTerm(e.target.value);
     setSelectedMedicineId(null);
     setSelectedDoses([]);
+    setSelectedMedicineDoses([]);
     setDetailsMedicineId(null);
   };
 
@@ -40,12 +43,14 @@ export default function MedicationsSearchPage() {
     setSearchTerm(medicineName);
     setSelectedMedicineId(null);
     setSelectedDoses([]);
+    setSelectedMedicineDoses([]);
     setDetailsMedicineId(null);
   };
 
   const handleSelectMedicine = (medicineId: number) => {
     setSelectedMedicineId((prev) => (prev === medicineId ? null : medicineId));
     setSelectedDoses([]);
+    setSelectedMedicineDoses([]);
   };
 
   const handleToggleDetails = (medicineId: number) => {
@@ -112,13 +117,8 @@ export default function MedicationsSearchPage() {
 
           const data = await response.json();
           
-          setMedicineDoses(
-            Array.isArray(data.data)
-              ? data.data
-                  .map((row: { strength?: string }) => row.strength)
-                  .filter((strength): strength is string => Boolean(strength))
-              : []
-          );
+          const doses = data.data.map((row: { strength: string }) => row.strength).filter((s: string) => Boolean(s));
+          setMedicineDoses(doses);
         }catch(error){
           console.error(error);
           setMedicineDoses([]);
@@ -129,7 +129,31 @@ export default function MedicationsSearchPage() {
 
   }, [detailsMedicineId, apiUrl]);
 
-  
+  useEffect(() => {
+    if (selectedMedicineId === null) {
+      setSelectedMedicineDoses([]);
+      return;
+    }
+
+    const loadSelectedDoses = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/api/v1/medication/${selectedMedicineId}/doses`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch doses");
+        }
+
+        const data = await response.json();
+        const doses = data.data.map((row: { strength: string }) => row.strength).filter((s: string) => Boolean(s));
+        setSelectedMedicineDoses(doses);
+      } catch (error) {
+        console.error(error);
+        setSelectedMedicineDoses([]);
+      }
+    };
+
+    loadSelectedDoses();
+  }, [selectedMedicineId, apiUrl]);
+
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-blue-100/70 via-sky-50/80 to-white">
@@ -154,6 +178,7 @@ export default function MedicationsSearchPage() {
               trimmedSearch={trimmedSearch}
               filteredMedicines={filteredMedicines}
               selectedMedicineId={selectedMedicineId}
+              selectedMedicineDoses={selectedMedicineDoses}
               detailsMedicineId={detailsMedicineId}
               selectedMedicine={selectedMedicine}
               handleSelectMedicine={handleSelectMedicine}
