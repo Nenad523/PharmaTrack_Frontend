@@ -14,7 +14,7 @@ export default function MedicineDetailsPanel({
 
   return (
     <>
-      <div className="fixed inset-0 z-50 xl:hidden">
+      <div className="fixed inset-0 z-50 xl:hidden animate-fade-in">
         <button
           type="button"
           onClick={onClose}
@@ -22,7 +22,7 @@ export default function MedicineDetailsPanel({
           aria-label="Zatvori prikaz detalja"
         />
 
-        <div className="relative ml-auto h-full w-[min(21rem,calc(100vw-2rem))] overflow-y-auto rounded-l-[28px] border-l border-slate-200/80 bg-white shadow-xl">
+        <div className="relative ml-auto h-full w-[min(21rem,calc(100vw-2rem))] overflow-y-auto rounded-l-[28px] border-l border-slate-200/80 bg-white shadow-xl animate-slide-in-right">
           <div className="flex items-start justify-between gap-4 px-6 py-5">
             <div className="w-full text-center">
               <h2 className="text-2xl font-bold tracking-tight text-slate-900">
@@ -42,7 +42,7 @@ export default function MedicineDetailsPanel({
             <button
               type="button"
               onClick={onClose}
-              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-blue-200 bg-white text-blue-600 transition hover:bg-blue-50"
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-blue-200 bg-white text-blue-600 transition-smooth hover:bg-blue-50"
               aria-label={`Zatvori detalje za lijek ${medicine.name}`}
             >
               <X className="h-4 w-4" />
@@ -103,7 +103,7 @@ export default function MedicineDetailsPanel({
         </div>
       </div>
 
-      <aside className="hidden w-full xl:sticky xl:top-24 xl:block">
+      <aside className="hidden w-full xl:sticky xl:top-24 xl:block animate-scale-in">
         <div className="overflow-hidden rounded-[28px] border border-blue-200/80 bg-white/95 shadow-[0_24px_55px_-30px_rgba(15,23,42,0.45),0_14px_30px_-22px_rgba(37,99,235,0.55)] ring-1 ring-blue-100/60 backdrop-blur">
           <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-6 py-5">
             <div>
@@ -118,7 +118,7 @@ export default function MedicineDetailsPanel({
             <button
               type="button"
               onClick={onClose}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition hover:border-blue-200 hover:text-blue-600"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition-smooth hover:border-blue-200 hover:text-blue-600"
               aria-label={`Zatvori detalje za lijek ${medicine.name}`}
             >
               <X className="h-4 w-4" />
