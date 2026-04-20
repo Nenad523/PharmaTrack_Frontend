@@ -3,16 +3,15 @@ import { MedicineDetails } from "../types";
 
 type MedicineDetailsPanelProps = {
   medicine: MedicineDetails;
-  doses: string[];
   onClose: () => void;
 };
 
 export default function MedicineDetailsPanel({
   medicine,
-  doses,
   onClose,
 }: MedicineDetailsPanelProps) {
-  const availableDoses = doses;
+  const availableDoses = medicine.doses.filter((dose) => dose !== "Sve");
+  const hasActiveIngredients = medicine.activeIngredients.length > 0;
 
   return (
     <>
@@ -55,14 +54,18 @@ export default function MedicineDetailsPanel({
                 Aktivne supstance
               </h3>
               <div className="mt-3 flex flex-wrap gap-2">
-                {medicine.activeIngredients.map((ingredient) => (
-                  <span
-                    key={ingredient.id}
-                    className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-sm font-medium text-slate-700"
-                  >
-                    {ingredient.name}
-                  </span>
-                ))}
+                {hasActiveIngredients ? (
+                  medicine.activeIngredients.map((ingredient) => (
+                    <span
+                      key={ingredient.id}
+                      className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-sm font-medium text-slate-700"
+                    >
+                      {ingredient.name}
+                    </span>
+                  ))
+                ) : (
+                  <p className="text-sm text-slate-500">Nije dostupno.</p>
+                )}
               </div>
             </div>
 
@@ -169,14 +172,18 @@ export default function MedicineDetailsPanel({
                 Aktivne supstance
               </h3>
               <div className="mt-3 flex flex-wrap gap-2">
-                {medicine.activeIngredients.map((ingredient) => (
-                  <span
-                    key={ingredient.id}
-                    className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-sm font-medium text-slate-700"
-                  >
-                    {ingredient.name}
-                  </span>
-                ))}
+                {hasActiveIngredients ? (
+                  medicine.activeIngredients.map((ingredient) => (
+                    <span
+                      key={ingredient.id}
+                      className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-sm font-medium text-slate-700"
+                    >
+                      {ingredient.name}
+                    </span>
+                  ))
+                ) : (
+                  <p className="text-sm text-slate-500">Nije dostupno.</p>
+                )}
               </div>
             </div>
 

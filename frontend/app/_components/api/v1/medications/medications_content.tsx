@@ -15,6 +15,8 @@ type MedicationsContentProps = {
   trimmedSearch: string;
   filteredMedicines: MedicineSearchResult[];
   selectedMedicineId: number | null;
+  selectedMedicineDoses: string[];
+  isLoadingDoses: boolean;
   detailsMedicineId: number | null;
   selectedMedicine: MedicineSearchResult | undefined;
   handleSelectMedicine: (medicineId: number) => void;
@@ -33,6 +35,8 @@ export default function MedicationsContent({
   trimmedSearch,
   filteredMedicines,
   selectedMedicineId,
+  selectedMedicineDoses,
+  isLoadingDoses,
   detailsMedicineId,
   selectedMedicine,
   handleSelectMedicine,
@@ -71,6 +75,8 @@ export default function MedicationsContent({
       {hasMinimumChars && selectedMedicine && (
         <SelectedMedication
           selectedMedicine={selectedMedicine}
+          selectedMedicineDoses={selectedMedicineDoses}
+          isLoadingDoses={isLoadingDoses}
           detailsMedicineId={detailsMedicineId}
           handleSelectMedicine={handleSelectMedicine}
           handleToggleDetails={handleToggleDetails}

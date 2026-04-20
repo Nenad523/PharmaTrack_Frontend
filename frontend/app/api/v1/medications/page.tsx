@@ -1,15 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { apiUrl } from "@/lib/api";
-import { medicines, popularMedicines } from "../../../_components/api/v1/medications/data";
+import { popularMedicines } from "../../../_components/api/v1/medications/data";
 import MedicationsContent from "../../../_components/api/v1/medications/medications_content";
 import MedicineDetailsPanel from "../../../_components/api/v1/medications/MedicineDetailsPanel/medicine_details_panel";
 import {
-  Medicine,
+  MedicineDetails,
   MedicationDetailsApiResponse,
   MedicationDosesApiResponse,
+  MedicationSearchApiResponse,
+  MedicineSearchResult,
 } from "../../../_components/api/v1/medications/types";
 
 const DEFAULT_WARNING =
@@ -19,8 +20,11 @@ export default function MedicationsSearchPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedMedicineId, setSelectedMedicineId] = useState<number | null>(null);
   const [selectedDoses, setSelectedDoses] = useState<string[]>([]);
+  const [selectedMedicineDoses, setSelectedMedicineDoses] = useState<string[]>([]);
+  const [filteredMedicines, setFilteredMedicines] = useState<MedicineSearchResult[]>([]);
+  const [isLoadingDoses, setIsLoadingDoses] = useState(false);
   const [detailsMedicineId, setDetailsMedicineId] = useState<number | null>(null);
-  const [detailsMedicine, setDetailsMedicine] = useState<Medicine | null>(null);
+  const [detailsMedicine, setDetailsMedicine] = useState<MedicineDetails | null>(null);
   const [isDetailsLoading, setIsDetailsLoading] = useState(false);
   const [detailsError, setDetailsError] = useState("");
 
@@ -29,17 +33,98 @@ export default function MedicationsSearchPage() {
   const shouldShowDetailsPanel =
     isDetailsLoading || Boolean(detailsError) || Boolean(detailsMedicine);
 
-  const filteredMedicines = useMemo(() => {
-    if (!hasMinimumChars) return [];
-
-    return medicines.filter((medicine) =>
-      medicine.name.toLowerCase().includes(trimmedSearch.toLowerCase())
-    );
-  }, [trimmedSearch, hasMinimumChars]);
-
   const selectedMedicine = filteredMedicines.find(
     (medicine) => medicine.id === selectedMedicineId
   );
+
+  useEffect(() => {
+    if (!hasMinimumChars) {
+      setFilteredMedicines([]);
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(async () => {
+      try {
+        const response = await fetch(
+          apiUrl(`/api/v1/medication/search?name=${encodeURIComponent(trimmedSearch)}`),
+          { signal: controller.signal }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch medicines.");
+        }
+
+        const data = (await response.json()) as MedicationSearchApiResponse;
+        setFilteredMedicines(Array.isArray(data.data) ? data.data : []);
+      } catch (error) {
+        if (
+          error instanceof Error &&
+          (error.name === "AbortError" || controller.signal.aborted)
+        ) {
+          return;
+        }
+
+        setFilteredMedicines([]);
+      }
+    }, 300);
+
+    return () => {
+      clearTimeout(timeoutId);
+      controller.abort();
+    };
+  }, [trimmedSearch, hasMinimumChars]);
+
+  useEffect(() => {
+    if (selectedMedicineId === null) {
+      setSelectedMedicineDoses([]);
+      setIsLoadingDoses(false);
+      return;
+    }
+
+    const controller = new AbortController();
+
+    const loadSelectedDoses = async () => {
+      setIsLoadingDoses(true);
+
+      try {
+        const response = await fetch(
+          apiUrl(`/api/v1/medication/${selectedMedicineId}/doses`),
+          { signal: controller.signal }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch doses.");
+        }
+
+        const data = (await response.json()) as MedicationDosesApiResponse;
+        const doses = Array.isArray(data.data)
+          ? data.data.map((dose) => dose.strength).filter(Boolean)
+          : [];
+
+        setSelectedMedicineDoses(doses);
+      } catch (error) {
+        if (
+          error instanceof Error &&
+          (error.name === "AbortError" || controller.signal.aborted)
+        ) {
+          return;
+        }
+
+        setSelectedMedicineDoses([]);
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsLoadingDoses(false);
+        }
+      }
+    };
+
+    void loadSelectedDoses();
+
+    return () => {
+      controller.abort();
+    };
+  }, [selectedMedicineId]);
 
   const closeDetailsPanel = () => {
     setDetailsMedicineId(null);
@@ -77,21 +162,25 @@ export default function MedicationsSearchPage() {
   const mapDetailsToMedicine = (
     details: MedicationDetailsApiResponse,
     doses: MedicationDosesApiResponse
-  ): Medicine => {
+  ): MedicineDetails => {
     const activeIngredients = Array.isArray(details.data.activeIngredients)
       ? details.data.activeIngredients
+      : [];
+    const availableDoses = Array.isArray(doses.data)
+      ? doses.data.map((dose) => dose.strength)
       : [];
 
     return {
       id: details.data.id,
       name: details.data.name,
       description: details.data.description,
-      doses: ["Sve", ...doses.data.map((dose) => dose.strength)],
+      doses: ["Sve", ...availableDoses],
       activeSubstance:
         activeIngredients.length > 0
           ? activeIngredients.map((item) => item.name).join(", ")
           : "Nije dostupno",
       warning: DEFAULT_WARNING,
+      activeIngredients,
     };
   };
 
@@ -138,6 +227,7 @@ export default function MedicationsSearchPage() {
     setSearchTerm(e.target.value);
     setSelectedMedicineId(null);
     setSelectedDoses([]);
+    setSelectedMedicineDoses([]);
     closeDetailsPanel();
   };
 
@@ -145,12 +235,14 @@ export default function MedicationsSearchPage() {
     setSearchTerm(medicineName);
     setSelectedMedicineId(null);
     setSelectedDoses([]);
+    setSelectedMedicineDoses([]);
     closeDetailsPanel();
   };
 
   const handleSelectMedicine = (medicineId: number) => {
     setSelectedMedicineId((prev) => (prev === medicineId ? null : medicineId));
     setSelectedDoses([]);
+    setSelectedMedicineDoses([]);
   };
 
   const handleToggleDetails = (medicineId: number) => {
@@ -216,6 +308,8 @@ export default function MedicationsSearchPage() {
               trimmedSearch={trimmedSearch}
               filteredMedicines={filteredMedicines}
               selectedMedicineId={selectedMedicineId}
+              selectedMedicineDoses={selectedMedicineDoses}
+              isLoadingDoses={isLoadingDoses}
               detailsMedicineId={detailsMedicineId}
               selectedMedicine={selectedMedicine}
               handleSelectMedicine={handleSelectMedicine}

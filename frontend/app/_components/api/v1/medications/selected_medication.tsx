@@ -2,7 +2,9 @@ import { CheckCircle2, ChevronRight } from "lucide-react";
 import { MedicineSearchResult } from "./types";
 
 type SelectedMedicationProps = {
-  selectedMedicine: Medicine;
+  selectedMedicine: MedicineSearchResult;
+  selectedMedicineDoses: string[];
+  isLoadingDoses: boolean;
   detailsMedicineId: number | null;
   handleSelectMedicine: (medicineId: number) => void;
   handleToggleDetails: (medicineId: number) => void;
@@ -12,6 +14,8 @@ type SelectedMedicationProps = {
 
 export default function SelectedMedication({
   selectedMedicine,
+  selectedMedicineDoses,
+  isLoadingDoses,
   detailsMedicineId,
   handleSelectMedicine,
   handleToggleDetails,
@@ -71,28 +75,52 @@ export default function SelectedMedication({
                 Odaberite dozu
               </p>
 
-              <div className="flex flex-wrap gap-2">
-                {selectedMedicine.doses.map((dose) => {
-                  const active = isDoseActive(dose, selectedMedicine.doses);
+              {isLoadingDoses ? (
+                <div className="flex flex-wrap gap-2">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div
+                      key={i}
+                      className="h-7 w-16 animate-pulse rounded-full bg-slate-200"
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleDoseClick("Sve", ["Sve", ...selectedMedicineDoses])
+                    }
+                    className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+                      isDoseActive("Sve", ["Sve", ...selectedMedicineDoses])
+                        ? "border border-blue-600 bg-blue-600 text-white shadow-lg shadow-blue-200 hover:bg-blue-700"
+                        : "border border-slate-200 bg-slate-50 text-slate-700 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+                    }`}
+                  >
+                    Sve
+                  </button>
 
-                  return (
-                    <button
-                      key={dose}
-                      type="button"
-                      onClick={() =>
-                        handleDoseClick(dose, selectedMedicine.doses)
-                      }
-                      className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
-                        active
-                          ? "border border-blue-600 bg-blue-600 text-white shadow-lg shadow-blue-200 hover:bg-blue-700"
-                          : "border border-slate-200 bg-slate-50 text-slate-700 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
-                      }`}
-                    >
-                      {dose}
-                    </button>
-                  );
-                })}
-              </div>
+                  {selectedMedicineDoses.map((dose, index) => {
+                    const dosesWithAll = ["Sve", ...selectedMedicineDoses];
+                    const active = isDoseActive(dose, dosesWithAll);
+
+                    return (
+                      <button
+                        key={`${dose}-${index}`}
+                        type="button"
+                        onClick={() => handleDoseClick(dose, dosesWithAll)}
+                        className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+                          active
+                            ? "border border-blue-600 bg-blue-600 text-white shadow-lg shadow-blue-200 hover:bg-blue-700"
+                            : "border border-slate-200 bg-slate-50 text-slate-700 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+                        }`}
+                      >
+                        {dose}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </article>
         </div>

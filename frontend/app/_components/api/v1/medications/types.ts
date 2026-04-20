@@ -1,3 +1,8 @@
+export type ActiveIngredient = {
+  id: number;
+  name: string;
+};
+
 export type Medicine = {
   id: number;
   name: string;
@@ -7,6 +12,17 @@ export type Medicine = {
   warning: string;
 };
 
+export type MedicineSearchResult = {
+  id: number;
+  name: string;
+  description: string;
+  img_url?: string;
+};
+
+export type MedicineDetails = Medicine & {
+  activeIngredients: ActiveIngredient[];
+};
+
 export type MedicationDetailsApiResponse = {
   success: boolean;
   data: {
@@ -14,11 +30,15 @@ export type MedicationDetailsApiResponse = {
     name: string;
     description: string;
     img_url: string;
-    activeIngredients: {
-      id: number;
-      name: string;
-    }[];
+    activeIngredients?: ActiveIngredient[];
   };
+};
+
+export type MedicationSearchApiResponse = {
+  success?: boolean;
+  data: MedicineSearchResult[];
+  count?: number;
+  message?: string;
 };
 
 export type MedicationDosesApiResponse = {
