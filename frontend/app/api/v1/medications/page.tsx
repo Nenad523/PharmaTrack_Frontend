@@ -1,23 +1,32 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
+import { apiUrl } from "@/lib/api";
 import { medicines, popularMedicines } from "../../../_components/api/v1/medications/data";
 import MedicationsContent from "../../../_components/api/v1/medications/medications_content";
 import MedicineDetailsPanel from "../../../_components/api/v1/medications/MedicineDetailsPanel/medicine_details_panel";
+import {
+  Medicine,
+  MedicationDetailsApiResponse,
+  MedicationDosesApiResponse,
+} from "../../../_components/api/v1/medications/types";
+
+const DEFAULT_WARNING =
+  "Prikazane informacije služe isključivo u informativne svrhe i ne predstavljaju zamjenu za savjet ljekara ili farmaceuta.";
 
 export default function MedicationsSearchPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedMedicineId, setSelectedMedicineId] = useState<number | null>(null);
   const [selectedDoses, setSelectedDoses] = useState<string[]>([]);
   const [detailsMedicineId, setDetailsMedicineId] = useState<number | null>(null);
-  const [medicineDoses, setMedicineDoses] = useState<string[]>([]);
-  const [selectedMedicineDoses, setSelectedMedicineDoses] = useState<string[]>([]);
+  const [detailsMedicine, setDetailsMedicine] = useState<Medicine | null>(null);
+  const [isDetailsLoading, setIsDetailsLoading] = useState(false);
+  const [detailsError, setDetailsError] = useState("");
 
- 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  
   const trimmedSearch = searchTerm.trim();
   const hasMinimumChars = trimmedSearch.length >= 3;
+  const shouldShowDetailsPanel =
+    isDetailsLoading || Boolean(detailsError) || Boolean(detailsMedicine);
 
   const filteredMedicines = useMemo(() => {
     if (!hasMinimumChars) return [];
@@ -31,30 +40,120 @@ export default function MedicationsSearchPage() {
     (medicine) => medicine.id === selectedMedicineId
   );
 
+  const closeDetailsPanel = () => {
+    setDetailsMedicineId(null);
+    setDetailsMedicine(null);
+    setDetailsError("");
+    setIsDetailsLoading(false);
+  };
+
+  const getErrorMessage = async (response: Response) => {
+    try {
+      const contentType = response.headers.get("content-type") || "";
+
+      if (contentType.includes("application/json")) {
+        const data = (await response.json()) as {
+          error?: { message?: string | string[] };
+          message?: string | string[];
+        };
+
+        const message = data.error?.message ?? data.message;
+
+        if (Array.isArray(message)) {
+          return message.join(", ");
+        }
+
+        return message || "Detalji nijesu dostupni.";
+      }
+
+      const text = await response.text();
+      return text || "Detalji nijesu dostupni.";
+    } catch {
+      return "Detalji nijesu dostupni.";
+    }
+  };
+
+  const mapDetailsToMedicine = (
+    details: MedicationDetailsApiResponse,
+    doses: MedicationDosesApiResponse
+  ): Medicine => {
+    const activeIngredients = Array.isArray(details.data.activeIngredients)
+      ? details.data.activeIngredients
+      : [];
+
+    return {
+      id: details.data.id,
+      name: details.data.name,
+      description: details.data.description,
+      doses: ["Sve", ...doses.data.map((dose) => dose.strength)],
+      activeSubstance:
+        activeIngredients.length > 0
+          ? activeIngredients.map((item) => item.name).join(", ")
+          : "Nije dostupno",
+      warning: DEFAULT_WARNING,
+    };
+  };
+
+  const loadMedicineDetails = async (medicineId: number) => {
+    if (detailsMedicineId === medicineId) {
+      closeDetailsPanel();
+      return;
+    }
+
+    setDetailsMedicineId(medicineId);
+    setDetailsMedicine(null);
+    setDetailsError("");
+    setIsDetailsLoading(true);
+
+    try {
+      const [detailsResponse, dosesResponse] = await Promise.all([
+        fetch(apiUrl(`/api/v1/medication/${medicineId}`)),
+        fetch(apiUrl(`/api/v1/medication/${medicineId}/doses`)),
+      ]);
+
+      if (!detailsResponse.ok) {
+        setDetailsError(await getErrorMessage(detailsResponse));
+        return;
+      }
+
+      if (!dosesResponse.ok) {
+        setDetailsError(await getErrorMessage(dosesResponse));
+        return;
+      }
+
+      const detailsData =
+        (await detailsResponse.json()) as MedicationDetailsApiResponse;
+      const dosesData = (await dosesResponse.json()) as MedicationDosesApiResponse;
+
+      setDetailsMedicine(mapDetailsToMedicine(detailsData, dosesData));
+    } catch {
+      setDetailsError("Došlo je do greške pri učitavanju detalja lijeka.");
+    } finally {
+      setIsDetailsLoading(false);
+    }
+  };
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
     setSelectedMedicineId(null);
     setSelectedDoses([]);
-    setSelectedMedicineDoses([]);
-    setDetailsMedicineId(null);
+    closeDetailsPanel();
   };
 
   const handlePopularClick = (medicineName: string) => {
     setSearchTerm(medicineName);
     setSelectedMedicineId(null);
     setSelectedDoses([]);
-    setSelectedMedicineDoses([]);
-    setDetailsMedicineId(null);
+    closeDetailsPanel();
   };
 
   const handleSelectMedicine = (medicineId: number) => {
     setSelectedMedicineId((prev) => (prev === medicineId ? null : medicineId));
     setSelectedDoses([]);
-    setSelectedMedicineDoses([]);
   };
 
   const handleToggleDetails = (medicineId: number) => {
-    setDetailsMedicineId((prev) => (prev === medicineId ? null : medicineId));
+    void loadMedicineDetails(medicineId);
   };
 
   const handleDoseClick = (dose: string, allDoses: string[]) => {
@@ -77,15 +176,6 @@ export default function MedicationsSearchPage() {
     );
   };
 
-  const detailsMedicine =
-    filteredMedicines.find((medicine) => medicine.id === detailsMedicineId) ??
-    medicines.find((medicine) => medicine.id === detailsMedicineId) ??
-    null;
-
-  const detailsMedicineWithDoses = detailsMedicine
-    ? { ...detailsMedicine, doses: medicineDoses }
-    : null;
-
   const isDoseActive = (dose: string, allDoses: string[]) => {
     const individualDoses = allDoses.filter((d) => d !== "Sve");
 
@@ -102,59 +192,6 @@ export default function MedicationsSearchPage() {
   const isSearchButtonEnabled =
     Boolean(selectedMedicine) && selectedDoses.length > 0;
 
-  useEffect(()=>{
-      if(detailsMedicineId===null){
-        setMedicineDoses([]);
-        return;
-      }
-      const loadDoses = async () => {
-        
-        try{
-          const response = await fetch(`${apiUrl}/api/v1/medication/${detailsMedicineId}/doses`);
-          if(!response.ok){
-            throw new Error("Failed to fetch doses");
-          }
-
-          const data = await response.json();
-          
-          const doses = data.data.map((row: { strength: string }) => row.strength).filter((s: string) => Boolean(s));
-          setMedicineDoses(doses);
-        }catch(error){
-          console.error(error);
-          setMedicineDoses([]);
-        }
-      };
-
-      loadDoses();
-
-  }, [detailsMedicineId, apiUrl]);
-
-  useEffect(() => {
-    if (selectedMedicineId === null) {
-      setSelectedMedicineDoses([]);
-      return;
-    }
-
-    const loadSelectedDoses = async () => {
-      try {
-        const response = await fetch(`${apiUrl}/api/v1/medication/${selectedMedicineId}/doses`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch doses");
-        }
-
-        const data = await response.json();
-        const doses = data.data.map((row: { strength: string }) => row.strength).filter((s: string) => Boolean(s));
-        setSelectedMedicineDoses(doses);
-      } catch (error) {
-        console.error(error);
-        setSelectedMedicineDoses([]);
-      }
-    };
-
-    loadSelectedDoses();
-  }, [selectedMedicineId, apiUrl]);
-
-
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-blue-100/70 via-sky-50/80 to-white">
       <div className="absolute inset-x-0 top-0 -z-10 h-[30rem] bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.24),_transparent_70%)]" />
@@ -164,7 +201,7 @@ export default function MedicationsSearchPage() {
         <div className="flex justify-center">
           <div
             className={`flex gap-8 ${
-              detailsMedicine
+              shouldShowDetailsPanel
                 ? "max-w-7xl"
                 : "max-w-7xl justify-center"
             }`}
@@ -178,7 +215,6 @@ export default function MedicationsSearchPage() {
               trimmedSearch={trimmedSearch}
               filteredMedicines={filteredMedicines}
               selectedMedicineId={selectedMedicineId}
-              selectedMedicineDoses={selectedMedicineDoses}
               detailsMedicineId={detailsMedicineId}
               selectedMedicine={selectedMedicine}
               handleSelectMedicine={handleSelectMedicine}
@@ -188,12 +224,36 @@ export default function MedicationsSearchPage() {
               isSearchButtonEnabled={isSearchButtonEnabled}
             />
 
-            {detailsMedicineWithDoses && (
+            {shouldShowDetailsPanel && (
               <div className="xl:relative xl:z-20 xl:-ml-2 xl:w-[380px] xl:self-start">
-                <MedicineDetailsPanel
-                  medicine={detailsMedicineWithDoses}
-                  onClose={() => setDetailsMedicineId(null)}
-                />
+                {isDetailsLoading ? (
+                  <div className="rounded-[28px] border border-blue-200/80 bg-white p-6 shadow-sm">
+                    <p className="text-sm font-semibold text-blue-600">
+                      Učitavanje detalja...
+                    </p>
+                  </div>
+                ) : detailsError ? (
+                  <div className="rounded-[28px] border border-red-200 bg-white p-6 shadow-sm">
+                    <p className="text-sm font-semibold text-red-600">
+                      Detalji nijesu dostupni.
+                    </p>
+                    <p className="mt-2 text-sm text-slate-600">{detailsError}</p>
+                    <button
+                      type="button"
+                      onClick={closeDetailsPanel}
+                      className="mt-4 rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
+                    >
+                      Zatvori
+                    </button>
+                  </div>
+                ) : (
+                  detailsMedicine && (
+                    <MedicineDetailsPanel
+                      medicine={detailsMedicine}
+                      onClose={closeDetailsPanel}
+                    />
+                  )
+                )}
               </div>
             )}
           </div>

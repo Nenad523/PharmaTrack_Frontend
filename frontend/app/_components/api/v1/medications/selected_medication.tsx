@@ -3,7 +3,6 @@ import { Medicine } from "./types";
 
 type SelectedMedicationProps = {
   selectedMedicine: Medicine;
-  selectedMedicineDoses: string[];
   detailsMedicineId: number | null;
   handleSelectMedicine: (medicineId: number) => void;
   handleToggleDetails: (medicineId: number) => void;
@@ -13,7 +12,6 @@ type SelectedMedicationProps = {
 
 export default function SelectedMedication({
   selectedMedicine,
-  selectedMedicineDoses,
   detailsMedicineId,
   handleSelectMedicine,
   handleToggleDetails,
@@ -74,30 +72,15 @@ export default function SelectedMedication({
               </p>
 
               <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={() =>
-                    handleDoseClick("Sve", ["Sve", ...selectedMedicineDoses])
-                  }
-                  className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
-                    isDoseActive("Sve", ["Sve", ...selectedMedicineDoses])
-                      ? "border border-blue-600 bg-blue-600 text-white shadow-lg shadow-blue-200 hover:bg-blue-700"
-                      : "border border-slate-200 bg-slate-50 text-slate-700 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
-                  }`}
-                >
-                  Sve
-                </button>
-
-                {selectedMedicineDoses.map((dose, index) => {
-                  const dosesWithAll = ["Sve", ...selectedMedicineDoses];
-                  const active = isDoseActive(dose, dosesWithAll);
+                {selectedMedicine.doses.map((dose) => {
+                  const active = isDoseActive(dose, selectedMedicine.doses);
 
                   return (
                     <button
-                      key={`${dose}-${index}`}
+                      key={dose}
                       type="button"
                       onClick={() =>
-                        handleDoseClick(dose, dosesWithAll)
+                        handleDoseClick(dose, selectedMedicine.doses)
                       }
                       className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
                         active
