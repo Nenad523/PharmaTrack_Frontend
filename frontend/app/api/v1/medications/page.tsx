@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { medicines, popularMedicines } from "../../../_components/api/v1/medications/data";
 import MedicationsContent from "../../../_components/api/v1/medications/medications_content";
 import MedicineDetailsPanel from "../../../_components/api/v1/medications/MedicineDetailsPanel/medicine_details_panel";
@@ -10,6 +10,11 @@ export default function MedicationsSearchPage() {
   const [selectedMedicineId, setSelectedMedicineId] = useState<number | null>(null);
   const [selectedDoses, setSelectedDoses] = useState<string[]>([]);
   const [detailsMedicineId, setDetailsMedicineId] = useState<number | null>(null);
+  const [medicineDoses, setMedicineDoses] = useState<string[]>([]);
+  const [selectedMedicineDoses, setSelectedMedicineDoses] = useState<string[]>([]);
+
+ 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   
   const trimmedSearch = searchTerm.trim();
   const hasMinimumChars = trimmedSearch.length >= 3;
@@ -30,6 +35,7 @@ export default function MedicationsSearchPage() {
     setSearchTerm(e.target.value);
     setSelectedMedicineId(null);
     setSelectedDoses([]);
+    setSelectedMedicineDoses([]);
     setDetailsMedicineId(null);
   };
 
@@ -37,12 +43,14 @@ export default function MedicationsSearchPage() {
     setSearchTerm(medicineName);
     setSelectedMedicineId(null);
     setSelectedDoses([]);
+    setSelectedMedicineDoses([]);
     setDetailsMedicineId(null);
   };
 
   const handleSelectMedicine = (medicineId: number) => {
     setSelectedMedicineId((prev) => (prev === medicineId ? null : medicineId));
     setSelectedDoses([]);
+    setSelectedMedicineDoses([]);
   };
 
   const handleToggleDetails = (medicineId: number) => {
@@ -74,6 +82,10 @@ export default function MedicationsSearchPage() {
     medicines.find((medicine) => medicine.id === detailsMedicineId) ??
     null;
 
+  const detailsMedicineWithDoses = detailsMedicine
+    ? { ...detailsMedicine, doses: medicineDoses }
+    : null;
+
   const isDoseActive = (dose: string, allDoses: string[]) => {
     const individualDoses = allDoses.filter((d) => d !== "Sve");
 
@@ -89,6 +101,59 @@ export default function MedicationsSearchPage() {
 
   const isSearchButtonEnabled =
     Boolean(selectedMedicine) && selectedDoses.length > 0;
+
+  useEffect(()=>{
+      if(detailsMedicineId===null){
+        setMedicineDoses([]);
+        return;
+      }
+      const loadDoses = async () => {
+        
+        try{
+          const response = await fetch(`${apiUrl}/api/v1/medication/${detailsMedicineId}/doses`);
+          if(!response.ok){
+            throw new Error("Failed to fetch doses");
+          }
+
+          const data = await response.json();
+          
+          const doses = data.data.map((row: { strength: string }) => row.strength).filter((s: string) => Boolean(s));
+          setMedicineDoses(doses);
+        }catch(error){
+          console.error(error);
+          setMedicineDoses([]);
+        }
+      };
+
+      loadDoses();
+
+  }, [detailsMedicineId, apiUrl]);
+
+  useEffect(() => {
+    if (selectedMedicineId === null) {
+      setSelectedMedicineDoses([]);
+      return;
+    }
+
+    const loadSelectedDoses = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/api/v1/medication/${selectedMedicineId}/doses`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch doses");
+        }
+
+        const data = await response.json();
+        const doses = data.data.map((row: { strength: string }) => row.strength).filter((s: string) => Boolean(s));
+        setSelectedMedicineDoses(doses);
+      } catch (error) {
+        console.error(error);
+        setSelectedMedicineDoses([]);
+      }
+    };
+
+    loadSelectedDoses();
+  }, [selectedMedicineId, apiUrl]);
+
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-blue-100/70 via-sky-50/80 to-white">
@@ -113,6 +178,7 @@ export default function MedicationsSearchPage() {
               trimmedSearch={trimmedSearch}
               filteredMedicines={filteredMedicines}
               selectedMedicineId={selectedMedicineId}
+              selectedMedicineDoses={selectedMedicineDoses}
               detailsMedicineId={detailsMedicineId}
               selectedMedicine={selectedMedicine}
               handleSelectMedicine={handleSelectMedicine}
@@ -122,10 +188,10 @@ export default function MedicationsSearchPage() {
               isSearchButtonEnabled={isSearchButtonEnabled}
             />
 
-            {detailsMedicine && (
+            {detailsMedicineWithDoses && (
               <div className="xl:relative xl:z-20 xl:-ml-2 xl:w-[380px] xl:self-start">
                 <MedicineDetailsPanel
-                  medicine={detailsMedicine}
+                  medicine={detailsMedicineWithDoses}
                   onClose={() => setDetailsMedicineId(null)}
                 />
               </div>
