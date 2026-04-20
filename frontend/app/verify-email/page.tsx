@@ -7,6 +7,7 @@ export default function VerifyEmail(){
     const searchParams = useSearchParams();
     const token = searchParams.get('token');
     const [status, setStatus] = useState<'loading' | 'error' | 'success'> ('loading');
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
 
@@ -18,7 +19,7 @@ export default function VerifyEmail(){
             }
 
             try {
-                const response = await fetch(`http://localhost:3001/api/v1/auth/verify-email?token=${token}`);
+                const response = await fetch(`${API_URL}/api/v1/auth/verify-email?token=${token}`);
 
                 if (!response.ok){
                     const text = await response.text();
