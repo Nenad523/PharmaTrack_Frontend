@@ -4,7 +4,7 @@ import SearchBarTitleText from "./search_bar_title";
 import SearchButton from "./search_button";
 import SearchResults from "./search_results";
 import SelectedMedication from "./selected_medication";
-import { Medicine } from "./types";
+import { MedicineSearchResult } from "./types";
 
 type MedicationsContentProps = {
   handleSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -13,10 +13,10 @@ type MedicationsContentProps = {
   popularMedicines: string[];
   handlePopularClick: (medicineName: string) => void;
   trimmedSearch: string;
-  filteredMedicines: Medicine[];
+  filteredMedicines: MedicineSearchResult[];
   selectedMedicineId: number | null;
   detailsMedicineId: number | null;
-  selectedMedicine: Medicine | undefined;
+  selectedMedicine: MedicineSearchResult | undefined;
   handleSelectMedicine: (medicineId: number) => void;
   handleToggleDetails: (medicineId: number) => void;
   handleDoseClick: (dose: string, allDoses: string[]) => void;

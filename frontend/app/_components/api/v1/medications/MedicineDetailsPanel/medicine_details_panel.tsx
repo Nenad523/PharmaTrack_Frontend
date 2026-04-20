@@ -1,16 +1,18 @@
 import { X, Pill, AlertTriangle } from "lucide-react";
-import { Medicine } from "../types";
+import { MedicineDetails } from "../types";
 
 type MedicineDetailsPanelProps = {
-  medicine: Medicine;
+  medicine: MedicineDetails;
+  doses: string[];
   onClose: () => void;
 };
 
 export default function MedicineDetailsPanel({
   medicine,
+  doses,
   onClose,
 }: MedicineDetailsPanelProps) {
-  const availableDoses = medicine.doses.filter((dose) => dose !== "Sve");
+  const availableDoses = doses;
 
   return (
     <>
@@ -50,12 +52,17 @@ export default function MedicineDetailsPanel({
 
             <div>
               <h3 className="text-sm font-semibold text-slate-900">
-                Aktivna supstanca
+                Aktivne supstance
               </h3>
-              <div className="mt-3">
-                <span className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-sm font-medium text-slate-700">
-                  {medicine.activeSubstance}
-                </span>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {medicine.activeIngredients.map((ingredient) => (
+                  <span
+                    key={ingredient.id}
+                    className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-sm font-medium text-slate-700"
+                  >
+                    {ingredient.name}
+                  </span>
+                ))}
               </div>
             </div>
 
@@ -159,12 +166,17 @@ export default function MedicineDetailsPanel({
 
             <div>
               <h3 className="text-sm font-semibold text-slate-900">
-                Aktivna supstanca
+                Aktivne supstance
               </h3>
-              <div className="mt-3">
-                <span className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-sm font-medium text-slate-700">
-                  {medicine.activeSubstance}
-                </span>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {medicine.activeIngredients.map((ingredient) => (
+                  <span
+                    key={ingredient.id}
+                    className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-sm font-medium text-slate-700"
+                  >
+                    {ingredient.name}
+                  </span>
+                ))}
               </div>
             </div>
 
@@ -179,7 +191,7 @@ export default function MedicineDetailsPanel({
                     Informativni prikaz
                   </p>
                   <p className="mt-1 text-sm leading-6 text-slate-700">
-                    {medicine.warning}
+                    Prikazane informacije služe isključivo u informativne svrhe i ne predstavljaju zamjenu za savjet ljekara ili farmaceuta.
                   </p>
                 </div>
               </div>

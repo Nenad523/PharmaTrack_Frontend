@@ -1,9 +1,9 @@
 import { ChevronRight, Info } from "lucide-react";
-import { Medicine } from "./types";
+import { MedicineSearchResult } from "./types";
 
 type SearchResultsProps = {
   trimmedSearch: string;
-  filteredMedicines: Medicine[];
+  filteredMedicines: MedicineSearchResult[];
   selectedMedicineId: number | null;
   detailsMedicineId: number | null;
   handleSelectMedicine: (medicineId: number) => void;

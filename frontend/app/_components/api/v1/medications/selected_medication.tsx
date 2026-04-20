@@ -1,5 +1,5 @@
 import { CheckCircle2, ChevronRight } from "lucide-react";
-import { Medicine } from "./types";
+import { MedicineSearchResult } from "./types";
 
 type SelectedMedicationProps = {
   selectedMedicine: Medicine;
