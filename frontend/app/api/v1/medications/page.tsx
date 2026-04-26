@@ -286,9 +286,7 @@ export default function MedicationsSearchPage() {
     Boolean(selectedMedicine) && selectedDoses.length > 0;
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-blue-100/70 via-sky-50/80 to-white">
-      <div className="absolute inset-x-0 top-0 -z-10 h-[30rem] bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.24),_transparent_70%)]" />
-      <div className="absolute left-1/2 top-20 -z-10 h-72 w-72 -translate-x-1/2 rounded-full bg-blue-200/50 blur-3xl" />
+    <div className="min-h-screen">
 
       <section className="mx-auto max-w-7xl px-6 pb-16 pt-16 md:pt-20">
         <div className="flex justify-center">
