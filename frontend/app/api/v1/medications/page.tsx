@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { apiUrl } from "@/lib/api";
 import { popularMedicines } from "../../../_components/api/v1/medications/data";
 import MedicationsContent from "../../../_components/api/v1/medications/medications_content";
-import MedicineDetailsPanel from "../../../_components/api/v1/medications/MedicineDetailsPanel/medicine_details_panel";
+import MedicineDetailsPanel, { MobileDetailsOverlay } from "../../../_components/api/v1/medications/MedicineDetailsPanel/medicine_details_panel";
 import {
   MedicineDetails,
   MedicationDetailsApiResponse,
@@ -318,7 +318,7 @@ export default function MedicationsSearchPage() {
             />
 
             {shouldShowDetailsPanel && (
-              <div className="xl:relative xl:z-20 xl:-ml-2 xl:w-[380px] xl:self-start">
+              <div className="hidden xl:block xl:relative xl:z-20 xl:-ml-2 xl:w-[380px] xl:self-start">
                 {isDetailsLoading ? (
                   <div className="rounded-[28px] border border-blue-200/80 bg-white p-6 shadow-sm">
                     <p className="text-sm font-semibold text-blue-600">
@@ -352,6 +352,13 @@ export default function MedicationsSearchPage() {
           </div>
         </div>
       </section>
+
+      {detailsMedicine && (
+        <MobileDetailsOverlay
+          medicine={detailsMedicine}
+          onClose={closeDetailsPanel}
+        />
+      )}
     </div>
   );
 }
