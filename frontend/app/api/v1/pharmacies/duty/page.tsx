@@ -189,13 +189,18 @@ export default function DutyPharmaciesPage() {
           { signal }
         );
 
-        if (response.status === 404) {
-          setPharmacies([]);
-          return;
-        }
-
         if (!response.ok) {
-          setDutyError(await getErrorMessage(response));
+          const message = await getErrorMessage(response);
+
+          if (
+            response.status === 404 &&
+            message.toLowerCase().includes("nema dežurnih apoteka")
+          ) {
+            setPharmacies([]);
+            return;
+          }
+
+          setDutyError(message);
           setPharmacies([]);
           return;
         }
