@@ -5,6 +5,7 @@ import { apiUrl } from "@/lib/api";
 import CityFilter from "@/app/_components/api/v1/pharmacies/duty/city_filter";
 import DutyCalendar from "@/app/_components/api/v1/pharmacies/duty/duty_calendar";
 import DutyPharmacyList from "@/app/_components/api/v1/pharmacies/duty/duty_pharmacy_list";
+import MobileDutyControls from "@/app/_components/api/v1/pharmacies/duty/mobile_duty_controls";
 import PharmacyDetailsPanel, {
   MobilePharmacyDetailsOverlay,
 } from "@/app/_components/api/v1/pharmacies/duty/pharmacy_details_panel";
@@ -342,6 +343,15 @@ export default function DutyPharmaciesPage() {
             />
           </aside>
 
+          <MobileDutyControls
+            selectedDate={selectedDate}
+            selectedCity={selectedCity}
+            cities={cities}
+            isCitiesLoading={isCitiesLoading}
+            onDateChange={handleDateChange}
+            onCityChange={handleCityChange}
+          />
+
           <div className="min-w-0 flex-1">
             <DutyPharmacyList
               selectedDate={selectedDate}
@@ -357,7 +367,7 @@ export default function DutyPharmaciesPage() {
           </div>
 
           {shouldShowDetailsPanel && (
-            <div className="hidden xl:block xl:w-[390px] xl:flex-none">
+            <div className="hidden xl:sticky xl:top-24 xl:block xl:w-[390px] xl:flex-none">
               <PharmacyDetailsPanel
                 pharmacy={detailsPharmacy}
                 isLoading={isDetailsLoading}
