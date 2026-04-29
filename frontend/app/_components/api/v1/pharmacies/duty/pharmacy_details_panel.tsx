@@ -1,14 +1,12 @@
 import {
   Building2,
   CalendarClock,
-  Clock3,
   MapPin,
-  Navigation,
   Phone,
   Power,
   X,
 } from "lucide-react";
-import { formatDateTime, formatDutyTimeRange, formatTime } from "./date_utils";
+import { formatDateTime, formatTime } from "./date_utils";
 import { PharmacyDetails } from "./types";
 
 type DetailsStateProps = {
@@ -117,28 +115,7 @@ function DetailsBody({
           </div>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
-          <div className="rounded-2xl border border-blue-100 bg-blue-50 p-4">
-            <div className="flex items-start gap-3">
-              <Clock3 className="mt-0.5 h-5 w-5 text-blue-600" />
-              <div>
-                <p className="text-sm font-semibold text-slate-900">
-                  Status dežurstva
-                </p>
-                <p className="mt-1 text-sm text-blue-700">
-                  {pharmacy.dutySchedule
-                    ? formatDutyTimeRange(
-                        pharmacy.dutySchedule.startDatetime,
-                        pharmacy.dutySchedule.endDatetime
-                      )
-                    : pharmacy.isOnDuty
-                      ? "Dežurna"
-                      : "Nije dežurna trenutno"}
-                </p>
-              </div>
-            </div>
-          </div>
-
+        <div className="grid gap-3">
           <div className="rounded-2xl border border-slate-200 bg-white p-4">
             <div className="flex items-start gap-3">
               <Power
@@ -209,22 +186,6 @@ function DetailsBody({
             )}
           </div>
         </div>
-
-        {pharmacy.latitude !== null && pharmacy.longitude !== null && (
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-            <div className="flex items-start gap-3">
-              <Navigation className="mt-0.5 h-5 w-5 text-slate-500" />
-              <div>
-                <p className="text-sm font-semibold text-slate-900">
-                  Koordinate
-                </p>
-                <p className="mt-1 text-sm text-slate-600">
-                  {pharmacy.latitude.toFixed(5)}, {pharmacy.longitude.toFixed(5)}
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
