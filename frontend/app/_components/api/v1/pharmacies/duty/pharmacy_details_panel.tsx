@@ -1,14 +1,12 @@
 import {
   Building2,
   CalendarClock,
-  Clock3,
   MapPin,
-  Navigation,
   Phone,
   Power,
   X,
 } from "lucide-react";
-import { formatDateTime, formatDutyTimeRange, formatTime } from "./date_utils";
+import { formatDateTime, formatTime } from "./date_utils";
 import { PharmacyDetails } from "./types";
 
 type DetailsStateProps = {
@@ -55,8 +53,8 @@ function DetailsBody({
   }
 
   return (
-    <div className="overflow-hidden rounded-[28px] border border-blue-200/80 bg-white/95 shadow-[0_24px_55px_-30px_rgba(15,23,42,0.45),0_14px_30px_-22px_rgba(37,99,235,0.55)] ring-1 ring-blue-100/60 backdrop-blur">
-      <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-6 py-5">
+    <div className="overflow-hidden rounded-[28px] border border-blue-200/80 bg-white/95 shadow-[0_24px_55px_-30px_rgba(15,23,42,0.45),0_14px_30px_-22px_rgba(37,99,235,0.55)] ring-1 ring-blue-100/60 backdrop-blur xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto">
+      <div className="flex items-start justify-between gap-4 border-b border-slate-100 bg-white/95 px-6 py-5 xl:sticky xl:top-0 xl:z-10 xl:backdrop-blur">
         <div>
           <p className="text-xs font-semibold uppercase text-blue-600">
             Detalji apoteke
@@ -117,28 +115,7 @@ function DetailsBody({
           </div>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
-          <div className="rounded-2xl border border-blue-100 bg-blue-50 p-4">
-            <div className="flex items-start gap-3">
-              <Clock3 className="mt-0.5 h-5 w-5 text-blue-600" />
-              <div>
-                <p className="text-sm font-semibold text-slate-900">
-                  Status dežurstva
-                </p>
-                <p className="mt-1 text-sm text-blue-700">
-                  {pharmacy.dutySchedule
-                    ? formatDutyTimeRange(
-                        pharmacy.dutySchedule.startDatetime,
-                        pharmacy.dutySchedule.endDatetime
-                      )
-                    : pharmacy.isOnDuty
-                      ? "Dežurna"
-                      : "Nije dežurna trenutno"}
-                </p>
-              </div>
-            </div>
-          </div>
-
+        <div className="grid gap-3">
           <div className="rounded-2xl border border-slate-200 bg-white p-4">
             <div className="flex items-start gap-3">
               <Power
@@ -209,22 +186,6 @@ function DetailsBody({
             )}
           </div>
         </div>
-
-        {pharmacy.latitude !== null && pharmacy.longitude !== null && (
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-            <div className="flex items-start gap-3">
-              <Navigation className="mt-0.5 h-5 w-5 text-slate-500" />
-              <div>
-                <p className="text-sm font-semibold text-slate-900">
-                  Koordinate
-                </p>
-                <p className="mt-1 text-sm text-slate-600">
-                  {pharmacy.latitude.toFixed(5)}, {pharmacy.longitude.toFixed(5)}
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
@@ -232,7 +193,7 @@ function DetailsBody({
 
 export default function PharmacyDetailsPanel(props: DetailsStateProps) {
   return (
-    <aside className="hidden w-full xl:sticky xl:top-24 xl:block animate-scale-in">
+    <aside className="hidden w-full xl:block animate-scale-in">
       <DetailsBody {...props} />
     </aside>
   );
