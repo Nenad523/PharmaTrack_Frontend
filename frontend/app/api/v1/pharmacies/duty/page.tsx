@@ -94,6 +94,27 @@ const normalizeNumber = (value: number | string | null) => {
   return null;
 };
 
+const FALLBACK_WORKING_DAY_NAMES = [
+  "Ponedjeljak",
+  "Utorak",
+  "Srijeda",
+  "Četvrtak",
+  "Petak",
+  "Subota",
+  "Nedjelja",
+];
+
+const normalizeWorkingHours = (items: PharmacyDetails["workingHours"] | undefined) =>
+  Array.isArray(items)
+    ? items.map((item, index) => ({
+        ...item,
+        day_of_week:
+          typeof item?.day_of_week === "string" && item.day_of_week.trim()
+            ? item.day_of_week
+            : FALLBACK_WORKING_DAY_NAMES[index % FALLBACK_WORKING_DAY_NAMES.length],
+      }))
+    : [];
+
 const normalizePharmacyDetails = (
   response: PharmacyDetailsApiResponse
 ): PharmacyDetails => ({
@@ -106,9 +127,7 @@ const normalizePharmacyDetails = (
   isActive: response.data.isActive === true || response.data.isActive === 1,
   isOnDuty: response.data.isOnDuty,
   phones: Array.isArray(response.data.phones) ? response.data.phones : [],
-  workingHours: Array.isArray(response.data.workingHours)
-    ? response.data.workingHours
-    : [],
+  workingHours: normalizeWorkingHours(response.data.workingHours),
   dutySchedule: response.data.dutySchedule ?? null,
 });
 
