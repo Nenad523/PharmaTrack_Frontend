@@ -88,9 +88,11 @@ export default async function HomeNews() {
                   {item.title}
                 </h3>
 
-                <p className="mt-3 text-sm leading-7 text-slate-600 md:text-base">
-                  {item.description ?? "Detaljniji opis nije dostupan za ovu vijest."}
-                </p>
+                {item.description && (
+                  <p className="mt-3 text-sm leading-7 text-slate-600 md:text-base">
+                    {item.description}
+                  </p>
+                )}
 
                 <a
                   href={item.link}
