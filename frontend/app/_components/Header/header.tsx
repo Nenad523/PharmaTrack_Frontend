@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Clock, Home, Pill } from "lucide-react";
+import { Clock, Home, LogOut, Pill, UserRound } from "lucide-react";
+import type { AuthUser } from "../auth/types";
 
 const navItems = [
   { label: "Početna", href: "/api/v1/home", icon: Home },
@@ -11,11 +12,20 @@ const navItems = [
 ];
 
 type HeaderProps = {
+  user?: AuthUser | null;
   onLoginClick?: () => void;
+  onLogoutClick?: () => void;
   onRegisterClick?: () => void;
+  logoutLoading?: boolean;
 };
 
-export function Header({ onLoginClick, onRegisterClick }: HeaderProps) {
+export function Header({
+  user,
+  onLoginClick,
+  onLogoutClick,
+  onRegisterClick,
+  logoutLoading,
+}: HeaderProps) {
   const pathname = usePathname();
 
   return (
@@ -49,22 +59,45 @@ export function Header({ onLoginClick, onRegisterClick }: HeaderProps) {
           })}
         </nav>
 
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={onLoginClick}
-            className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-blue-200 hover:text-blue-600 cursor-pointer"
-          >
-            Prijava
-          </button>
-          <button
-            type="button"
-            onClick={onRegisterClick}
-            className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-blue-700 cursor-pointer"
-          >
-            Registracija
-          </button>
-        </div>
+        {user ? (
+          <div className="flex min-w-0 items-center gap-2">
+            <div className="flex min-w-0 items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700">
+              <UserRound className="h-4 w-4 shrink-0 text-blue-600" />
+              <span className="max-w-[6.5rem] truncate sm:max-w-[10rem]">
+                {user.fullName}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={onLogoutClick}
+              disabled={logoutLoading}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-blue-200 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+            >
+              <LogOut className="h-4 w-4" />
+              <span className="hidden sm:inline">
+                {logoutLoading ? "Odjava..." : "Odjava"}
+              </span>
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onLoginClick}
+              className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-blue-200 hover:text-blue-600 cursor-pointer"
+            >
+              Prijava
+            </button>
+            <button
+              type="button"
+              onClick={onRegisterClick}
+              className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-blue-700 cursor-pointer"
+            >
+              Registracija
+            </button>
+          </div>
+        )}
       </div>
     </header>
   );

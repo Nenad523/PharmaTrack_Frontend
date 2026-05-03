@@ -1,13 +1,22 @@
+"use client";
+
 import Link from "next/link";
+import { useAuth } from "../auth/AuthContext";
 import { quickActions } from "./data";
 
 export default function HomeQuickActions() {
+  const { user } = useAuth();
+  const isLoggedIn = Boolean(user);
+  const activeCardClassName =
+    "cursor-pointer rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md";
+
   return (
     <section className="mx-auto grid max-w-6xl gap-4 px-6 md:grid-cols-2 xl:grid-cols-4">
       {quickActions.map((action) => {
         const Icon = action.icon;
+        const isLocked = action.locked && !isLoggedIn;
 
-        if (action.locked) {
+        if (isLocked) {
           return (
             <div
               key={action.title}
@@ -29,11 +38,28 @@ export default function HomeQuickActions() {
           );
         }
 
+        if (action.locked) {
+          return (
+            <article
+              key={action.title}
+              className={activeCardClassName}
+            >
+              <Icon className="h-5 w-5 text-blue-600" />
+              <h2 className="mt-5 text-lg font-semibold text-slate-900">
+                {action.title}
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-slate-500">
+                {action.description}
+              </p>
+            </article>
+          );
+        }
+
         return (
           <Link
             key={action.title}
             href={action.href}
-            className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md"
+            className={activeCardClassName}
           >
             <Icon className="h-5 w-5 text-blue-600" />
             <h2 className="mt-5 text-lg font-semibold text-slate-900">

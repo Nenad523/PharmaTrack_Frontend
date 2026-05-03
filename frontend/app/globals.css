@@ -140,3 +140,15 @@ body {
 .transition-smooth-slow {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+.home-promo-video:fullscreen {
+  height: 100vh;
+  width: 100vw;
+  object-fit: contain;
+}
+
+.home-promo-video:-webkit-full-screen {
+  height: 100vh;
+  width: 100vw;
+  object-fit: contain;
+}
