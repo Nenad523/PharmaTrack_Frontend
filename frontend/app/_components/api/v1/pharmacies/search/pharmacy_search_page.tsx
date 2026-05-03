@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import {
   AlertCircle,
   ArrowLeft,
+  X,
   LocateFixed,
   RotateCw,
   Search,
@@ -408,9 +409,7 @@ export default function PharmacySearchPage() {
           userLocation={userLocation}
           isLocating={isLocating}
           viewMode={viewMode}
-          onOpenFilters={() =>
-            setIsMobileFiltersOpen((current) => !current)
-          }
+          onOpenFilters={() => setIsMobileFiltersOpen(true)}
           onRequestLocation={requestLocation}
           onSortChange={handleSortChange}
           onViewModeChange={setViewMode}
@@ -519,6 +518,42 @@ export default function PharmacySearchPage() {
       {isMobileFiltersOpen && (
         <div className="fixed inset-x-4 top-36 z-40 xl:hidden animate-fade-in">
           <div className="max-h-[70vh] overflow-y-auto rounded-[28px] border border-slate-200 bg-white p-4 shadow-[0_24px_60px_-28px_rgba(15,23,42,0.45)]">
+            <div className="mb-4 flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-blue-600">
+                  Pretraga apoteka
+                </p>
+                <h2 className="mt-1 text-lg font-bold text-slate-900">
+                  Filteri
+                </h2>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={requestLocation}
+                  disabled={isLocating}
+                  className={`inline-flex h-10 items-center justify-center gap-2 rounded-full border px-3 text-sm font-semibold transition ${
+                    userLocation
+                      ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                      : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:text-blue-600"
+                  } disabled:cursor-wait disabled:opacity-70`}
+                  aria-label={userLocation ? "Lokacija aktivna" : "Moja lokacija"}
+                >
+                  <LocateFixed className="h-4 w-4" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setIsMobileFiltersOpen(false)}
+                  className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition hover:border-blue-200 hover:text-blue-600"
+                  aria-label="Zatvori filtere"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
             <SearchFilterPanel
               filters={filters}
               cities={cities}

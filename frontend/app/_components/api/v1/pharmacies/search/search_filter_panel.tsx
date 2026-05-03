@@ -40,30 +40,43 @@ export default function SearchFilterPanel({
           : "rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm"
       }
     >
-      <div className="mb-4 flex items-start justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-            <Filter className="h-4 w-4" />
-          </span>
-          <div>
-            <p className="text-xs font-semibold uppercase text-slate-500">
-              Filteri
-            </p>
-            <h2 className="text-sm font-bold text-slate-900">
-              Prilagodi prikaz
-            </h2>
-          </div>
+      {isMobile ? (
+        <div className="mb-4 flex justify-end">
+          <button
+            type="button"
+            onClick={onResetFilters}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:border-blue-200 hover:text-blue-600"
+            aria-label="Resetuj filtere"
+          >
+            <RotateCcw className="h-4 w-4" />
+          </button>
         </div>
+      ) : (
+        <div className="mb-4 flex items-start justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+              <Filter className="h-4 w-4" />
+            </span>
+            <div>
+              <p className="text-xs font-semibold uppercase text-slate-500">
+                Filteri
+              </p>
+              <h2 className="text-sm font-bold text-slate-900">
+                Prilagodi prikaz
+              </h2>
+            </div>
+          </div>
 
-        <button
-          type="button"
-          onClick={onResetFilters}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:border-blue-200 hover:text-blue-600"
-          aria-label="Resetuj filtere"
-        >
-          <RotateCcw className="h-4 w-4" />
-        </button>
-      </div>
+          <button
+            type="button"
+            onClick={onResetFilters}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:border-blue-200 hover:text-blue-600"
+            aria-label="Resetuj filtere"
+          >
+            <RotateCcw className="h-4 w-4" />
+          </button>
+        </div>
+      )}
 
       <div className="grid gap-4">
         <label className="grid gap-1.5">
