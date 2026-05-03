@@ -6,6 +6,7 @@ import { Header } from "../Header/header";
 import { MobileNav } from "../Header/mobile_header";
 import LoginModal from "../modals/LoginModal";
 import RegisterModal from "../modals/RegisterModal";
+import { AuthProvider } from "../auth/AuthContext";
 import { fetchCurrentUser, logoutUser } from "../auth/api";
 import type { AuthUser } from "../auth/types";
 
@@ -70,7 +71,9 @@ export function AppShell({ children }: AppShellProps) {
         }}
       />
 
-      <main className="flex-1">{children}</main>
+      <AuthProvider user={user}>
+        <main className="flex-1">{children}</main>
+      </AuthProvider>
 
       <Footer />
       <MobileNav />
