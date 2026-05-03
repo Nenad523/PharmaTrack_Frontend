@@ -61,6 +61,15 @@ export default function RegisterModal({
         if (e.target === e.currentTarget) handleClose();
     }
 
+    const validatePassword = (pwd: string): string | null => {
+        if (pwd.length < 12) return 'Lozinka mora imati najmanje 12 karaktera.';
+        if (!/[A-Z]/.test(pwd)) return 'Lozinka mora sadržavati najmanje jedno VELIKO slovo.';
+        if (!/[a-z]/.test(pwd)) return 'Lozinka mora sadržavati najmanje jedno malo slovo.';
+        if (!/[0-9]/.test(pwd)) return 'Lozinka mora sadržavati najmanje jedan broj.';
+        if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pwd)) return 'Lozinka mora sadržavati najmanje jedan specijalni karakter.';
+        return null;
+    };
+
     const validate = () => {
         const newErrors : {email?: string, password?: string, username?: string} = {};
         const trimmedEmail = email.trim();
@@ -78,8 +87,9 @@ export default function RegisterModal({
 
         if (!password){
             newErrors.password = 'Lozinka je obavezna.';
-        } else if (password.length < 8){
-            newErrors.password = 'Lozinka mora imati minimum 8 karaktera.';
+        } else {
+            const passwordError = validatePassword(password);
+            if (passwordError) newErrors.password = passwordError;
         }
 
         setErrors(newErrors);
