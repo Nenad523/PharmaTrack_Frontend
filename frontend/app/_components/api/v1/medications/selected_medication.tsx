@@ -1,15 +1,15 @@
 import { CheckCircle2, ChevronRight } from "lucide-react";
-import { MedicineSearchResult } from "./types";
+import { MedicationDose, MedicineSearchResult } from "./types";
 
 type SelectedMedicationProps = {
   selectedMedicine: MedicineSearchResult;
-  selectedMedicineDoses: string[];
+  selectedMedicineDoses: MedicationDose[];
   isLoadingDoses: boolean;
   detailsMedicineId: number | null;
   handleSelectMedicine: (medicineId: number) => void;
   handleToggleDetails: (medicineId: number) => void;
-  handleDoseClick: (dose: string, allDoses: string[]) => void;
-  isDoseActive: (dose: string, allDoses: string[]) => boolean;
+  handleDoseClick: (dose: MedicationDose | "all") => void;
+  isDoseActive: (dose: MedicationDose | "all") => boolean;
 };
 
 export default function SelectedMedication({
@@ -88,11 +88,9 @@ export default function SelectedMedication({
                 <div className="flex flex-wrap gap-2">
                   <button
                     type="button"
-                    onClick={() =>
-                      handleDoseClick("Sve", ["Sve", ...selectedMedicineDoses])
-                    }
+                    onClick={() => handleDoseClick("all")}
                     className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
-                      isDoseActive("Sve", ["Sve", ...selectedMedicineDoses])
+                      isDoseActive("all")
                         ? "border border-blue-600 bg-blue-600 text-white shadow-lg shadow-blue-200 hover:bg-blue-700"
                         : "border border-slate-200 bg-slate-50 text-slate-700 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
                     }`}
@@ -100,22 +98,21 @@ export default function SelectedMedication({
                     Sve
                   </button>
 
-                  {selectedMedicineDoses.map((dose, index) => {
-                    const dosesWithAll = ["Sve", ...selectedMedicineDoses];
-                    const active = isDoseActive(dose, dosesWithAll);
+                  {selectedMedicineDoses.map((dose) => {
+                    const active = isDoseActive(dose);
 
                     return (
                       <button
-                        key={`${dose}-${index}`}
+                        key={dose.id}
                         type="button"
-                        onClick={() => handleDoseClick(dose, dosesWithAll)}
+                        onClick={() => handleDoseClick(dose)}
                         className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
                           active
                             ? "border border-blue-600 bg-blue-600 text-white shadow-lg shadow-blue-200 hover:bg-blue-700"
                             : "border border-slate-200 bg-slate-50 text-slate-700 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
                         }`}
                       >
-                        {dose}
+                        {dose.strength}
                       </button>
                     );
                   })}

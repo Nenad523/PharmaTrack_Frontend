@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { apiUrl } from "@/lib/api";
 import { popularMedicines } from "../../../_components/api/v1/medications/data";
 import MedicationsContent from "../../../_components/api/v1/medications/medications_content";
@@ -9,6 +10,7 @@ import {
   MedicineDetails,
   MedicationDetailsApiResponse,
   MedicationDosesApiResponse,
+  MedicationDose,
   MedicationSearchApiResponse,
   MedicineSearchResult,
 } from "../../../_components/api/v1/medications/types";
@@ -17,10 +19,11 @@ const DEFAULT_WARNING =
   "Prikazane informacije služe isključivo u informativne svrhe i ne predstavljaju zamjenu za savjet ljekara ili farmaceuta.";
 
 export default function MedicationsSearchPage() {
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedMedicineId, setSelectedMedicineId] = useState<number | null>(null);
-  const [selectedDoses, setSelectedDoses] = useState<string[]>([]);
-  const [selectedMedicineDoses, setSelectedMedicineDoses] = useState<string[]>([]);
+  const [selectedDoses, setSelectedDoses] = useState<MedicationDose[]>([]);
+  const [selectedMedicineDoses, setSelectedMedicineDoses] = useState<MedicationDose[]>([]);
   const [filteredMedicines, setFilteredMedicines] = useState<MedicineSearchResult[]>([]);
   const [isLoadingDoses, setIsLoadingDoses] = useState(false);
   const [detailsMedicineId, setDetailsMedicineId] = useState<number | null>(null);
@@ -99,7 +102,12 @@ export default function MedicationsSearchPage() {
 
         const data = (await response.json()) as MedicationDosesApiResponse;
         const doses = Array.isArray(data.data)
-          ? data.data.map((dose) => dose.strength).filter(Boolean)
+          ? data.data.filter(
+              (dose) =>
+                typeof dose.id === "number" &&
+                typeof dose.strength === "string" &&
+                dose.strength.trim()
+            )
           : [];
 
         setSelectedMedicineDoses(doses);
@@ -249,41 +257,60 @@ export default function MedicationsSearchPage() {
     void loadMedicineDetails(medicineId);
   };
 
-  const handleDoseClick = (dose: string, allDoses: string[]) => {
-    const individualDoses = allDoses.filter((d) => d !== "Sve");
-
-    if (dose === "Sve") {
-      const allSelected = individualDoses.every((d) => selectedDoses.includes(d));
+  const handleDoseClick = (dose: MedicationDose | "all") => {
+    if (dose === "all") {
+      const allSelected = selectedMedicineDoses.every((item) =>
+        selectedDoses.some((selectedDose) => selectedDose.id === item.id)
+      );
 
       if (allSelected) {
         setSelectedDoses([]);
       } else {
-        setSelectedDoses(individualDoses);
+        setSelectedDoses(selectedMedicineDoses);
       }
 
       return;
     }
 
     setSelectedDoses((prev) =>
-      prev.includes(dose) ? prev.filter((d) => d !== dose) : [...prev, dose]
+      prev.some((item) => item.id === dose.id)
+        ? prev.filter((item) => item.id !== dose.id)
+        : [...prev, dose]
     );
   };
 
-  const isDoseActive = (dose: string, allDoses: string[]) => {
-    const individualDoses = allDoses.filter((d) => d !== "Sve");
-
-    if (dose === "Sve") {
+  const isDoseActive = (dose: MedicationDose | "all") => {
+    if (dose === "all") {
       return (
-        individualDoses.length > 0 &&
-        individualDoses.every((d) => selectedDoses.includes(d))
+        selectedMedicineDoses.length > 0 &&
+        selectedMedicineDoses.every((item) =>
+          selectedDoses.some((selectedDose) => selectedDose.id === item.id)
+        )
       );
     }
 
-    return selectedDoses.includes(dose);
+    return selectedDoses.some((item) => item.id === dose.id);
   };
 
   const isSearchButtonEnabled =
     Boolean(selectedMedicine) && selectedDoses.length > 0;
+
+  const handleSearchPharmacies = () => {
+    if (!selectedMedicine || selectedDoses.length === 0) {
+      return;
+    }
+
+    const params = new URLSearchParams();
+
+    params.set("medicineId", String(selectedMedicine.id));
+    params.set("medicineName", selectedMedicine.name);
+    selectedDoses.forEach((dose) => {
+      params.append("doseIds", String(dose.id));
+      params.append("doseStrengths", dose.strength);
+    });
+
+    router.push(`/api/v1/pharmacies/search?${params.toString()}`);
+  };
 
   return (
     <div className="min-h-screen">
@@ -315,6 +342,7 @@ export default function MedicationsSearchPage() {
               handleDoseClick={handleDoseClick}
               isDoseActive={isDoseActive}
               isSearchButtonEnabled={isSearchButtonEnabled}
+              onSearchPharmacies={handleSearchPharmacies}
             />
 
             {shouldShowDetailsPanel && (

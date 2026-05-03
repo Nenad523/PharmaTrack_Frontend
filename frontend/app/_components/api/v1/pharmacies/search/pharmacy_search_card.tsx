@@ -1,22 +1,50 @@
-import { Building2, ChevronRight, Clock3, MapPin, Phone } from "lucide-react";
-import { formatDutyTimeRange } from "./date_utils";
-import { DutyPharmacy } from "./types";
+import {
+  Building2,
+  ChevronRight,
+  Clock3,
+  MapPin,
+  Navigation,
+} from "lucide-react";
+import { formatTime } from "../duty/date_utils";
+import { PharmacySearchResult } from "./types";
+import {
+  formatDistance,
+  formatRelativeUpdate,
+  getLatestInventoryUpdate,
+} from "./search_utils";
 
-type DutyPharmacyCardProps = {
-  pharmacy: DutyPharmacy;
+type PharmacySearchCardProps = {
+  pharmacy: PharmacySearchResult;
   detailsPharmacyId: number | null;
   onToggleDetails: (pharmacyId: number) => void;
 };
 
-export default function DutyPharmacyCard({
+const getAvailabilityLabel = (pharmacy: PharmacySearchResult) => {
+  if (pharmacy.isOnDuty) {
+    return pharmacy.openUntil
+      ? `Dežurna do ${formatTime(pharmacy.openUntil)}`
+      : "Dežurna";
+  }
+
+  if (pharmacy.isOpenNow) {
+    return pharmacy.openUntil
+      ? `Otvoreno do ${formatTime(pharmacy.openUntil)}`
+      : "Otvoreno sada";
+  }
+
+  return "Trenutno zatvoreno";
+};
+
+export default function PharmacySearchCard({
   pharmacy,
   detailsPharmacyId,
   onToggleDetails,
-}: DutyPharmacyCardProps) {
+}: PharmacySearchCardProps) {
   const detailsOpen = detailsPharmacyId === pharmacy.id;
-  const phones = pharmacy.phone
-    ? pharmacy.phone.split(",").map((phone) => phone.trim()).filter(Boolean)
-    : []
+  const distance = formatDistance(pharmacy.distance);
+  const updateLabel = formatRelativeUpdate(
+    getLatestInventoryUpdate(pharmacy.doses)
+  );
 
   return (
     <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-[0_14px_28px_-20px_rgba(15,23,42,0.42),0_6px_16px_-12px_rgba(37,99,235,0.35)]">
@@ -43,20 +71,43 @@ export default function DutyPharmacyCard({
                   <span>{pharmacy.address}</span>
                 </p>
 
-                <p className="flex items-center gap-2">
-                  <Phone className="h-4 w-4 shrink-0 text-slate-400" />
-                  <span>{phones.length > 0 ? phones.join(", ") : "Nije dostupno"}</span>
+                <p
+                  className={`flex items-center gap-2 font-semibold ${
+                    pharmacy.isOpenNow ? "text-emerald-600" : "text-slate-500"
+                  }`}
+                >
+                  <Clock3 className="h-4 w-4 shrink-0" />
+                  <span>{getAvailabilityLabel(pharmacy)}</span>
                 </p>
+              </div>
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                {pharmacy.doses.map((dose) => (
+                  <span
+                    key={`${pharmacy.id}-${dose.doseId}`}
+                    className="rounded-full border border-emerald-100 bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700"
+                  >
+                    {dose.strength}
+                  </span>
+                ))}
+
+                {pharmacy.isOnDuty && (
+                  <span className="rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-700">
+                    Dežurna
+                  </span>
+                )}
               </div>
             </div>
           </div>
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center lg:flex-col lg:items-end">
-          <div className="inline-flex min-h-10 items-center gap-2 rounded-xl bg-blue-50 px-3 py-2 text-sm font-bold text-blue-700">
-            <Clock3 className="h-4 w-4" />
-            {formatDutyTimeRange(pharmacy.dutyStart, pharmacy.dutyEnd)}
-          </div>
+          {distance && (
+            <div className="inline-flex min-h-10 items-center gap-2 rounded-xl bg-slate-50 px-3 py-2 text-sm font-bold text-blue-700">
+              <Navigation className="h-4 w-4" />
+              {distance}
+            </div>
+          )}
 
           <button
             type="button"
@@ -74,6 +125,8 @@ export default function DutyPharmacyCard({
               }`}
             />
           </button>
+
+          <p className="text-xs font-medium text-slate-400">{updateLabel}</p>
         </div>
       </div>
     </article>
