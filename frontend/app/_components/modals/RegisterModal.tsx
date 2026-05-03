@@ -78,8 +78,8 @@ export default function RegisterModal({
 
         if (!password){
             newErrors.password = 'Lozinka je obavezna.';
-        } else if (password.length < 6){
-            newErrors.password = 'Lozinka mora imati minimum 6 karaktera.';
+        } else if (password.length < 8){
+            newErrors.password = 'Lozinka mora imati minimum 8 karaktera.';
         }
 
         setErrors(newErrors);

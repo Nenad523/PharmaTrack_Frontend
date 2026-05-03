@@ -1,0 +1,3 @@
+# postcss moderate vulnerability is transitive from next.js internal dependency
+# Cannot be fixed without breaking Next.js version downgrade
+# Tracked: https://github.com/advisories/GHSA-qx2v-qp2m-jg93
