@@ -213,8 +213,11 @@ export function MobilePharmacyDetailsOverlay(props: DetailsStateProps) {
         aria-label="Zatvori prikaz detalja"
       />
 
-      <div className="relative ml-auto h-full w-[min(24rem,calc(100vw-1rem))] overflow-y-auto rounded-l-[28px] bg-white shadow-xl animate-slide-in-right">
-        <DetailsBody {...props} />
+      <div className="absolute inset-x-0 bottom-0 flex max-h-[88vh] flex-col rounded-t-[28px] bg-white px-3 pt-3 shadow-2xl animate-slide-in-right">
+        <div className="mx-auto mb-3 h-1.5 w-14 rounded-full bg-slate-200" />
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain pb-3">
+          <DetailsBody {...props} />
+        </div>
       </div>
     </div>
   );

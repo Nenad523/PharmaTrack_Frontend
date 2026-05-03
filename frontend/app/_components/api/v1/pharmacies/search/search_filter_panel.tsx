@@ -15,6 +15,7 @@ type SearchFilterPanelProps = {
   ) => void;
   onRequestLocation: () => void;
   onResetFilters: () => void;
+  variant?: "desktop" | "mobile";
 };
 
 export default function SearchFilterPanel({
@@ -27,9 +28,18 @@ export default function SearchFilterPanel({
   onFilterChange,
   onRequestLocation,
   onResetFilters,
+  variant = "desktop",
 }: SearchFilterPanelProps) {
+  const isMobile = variant === "mobile";
+
   return (
-    <aside className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm">
+    <aside
+      className={
+        isMobile
+          ? "bg-white px-1 pb-1"
+          : "rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm"
+      }
+    >
       <div className="mb-4 flex items-start justify-between gap-3">
         <div className="flex items-center gap-2">
           <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600">

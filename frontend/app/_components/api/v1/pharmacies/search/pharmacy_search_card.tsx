@@ -124,7 +124,7 @@ export default function PharmacySearchCard({
           <button
             type="button"
             onClick={() => onToggleDetails(pharmacy.id)}
-            className={`inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border px-4 py-2 text-sm font-semibold transition ${
+            className={`inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border px-4 py-2 text-sm font-semibold transition sm:w-auto ${
               detailsOpen
                 ? "border-blue-200 bg-blue-600 text-white shadow-md shadow-blue-200/70 hover:bg-blue-700"
                 : "border-blue-200/80 bg-white text-blue-700 shadow-sm shadow-blue-100/80 hover:bg-blue-50"
@@ -137,7 +137,6 @@ export default function PharmacySearchCard({
               }`}
             />
           </button>
-
         </div>
       </div>
     </article>

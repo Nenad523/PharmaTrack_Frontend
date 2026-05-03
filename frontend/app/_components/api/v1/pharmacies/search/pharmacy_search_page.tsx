@@ -21,6 +21,7 @@ import {
 } from "../duty/types";
 import MapPlaceholder from "./map_placeholder";
 import PharmacySearchCard from "./pharmacy_search_card";
+import MobileSearchControls from "./mobile_search_controls";
 import SearchFilterPanel from "./search_filter_panel";
 import {
   ALL_CITIES_VALUE,
@@ -103,6 +104,7 @@ export default function PharmacySearchPage() {
   const [pharmacies, setPharmacies] = useState<PharmacySearchResult[]>([]);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [searchError, setSearchError] = useState("");
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
   const [detailsPharmacyId, setDetailsPharmacyId] = useState<number | null>(null);
   const [detailsPharmacy, setDetailsPharmacy] = useState<PharmacyDetails | null>(
     null
@@ -281,6 +283,22 @@ export default function PharmacySearchPage() {
     closeDetailsPanel();
   };
 
+  const activeFiltersCount = useMemo(() => {
+    let count = 0;
+
+    if (filters.name.trim()) count += 1;
+    if (filters.address.trim()) count += 1;
+    if (filters.city !== ALL_CITIES_VALUE) count += 1;
+    if (filters.openNow) count += 1;
+    if (filters.onDuty) count += 1;
+    if (filters.radiusEnabled) count += 1;
+
+    return count;
+  }, [filters]);
+
+  const selectedCityLabel =
+    filters.city === ALL_CITIES_VALUE ? "all" : filters.city;
+
   const loadPharmacyDetails = useCallback(
     async (pharmacyId: number) => {
       if (detailsPharmacyId === pharmacyId) {
@@ -368,7 +386,7 @@ export default function PharmacySearchPage() {
               type="button"
               onClick={requestLocation}
               disabled={isLocating}
-              className={`inline-flex h-11 items-center justify-center gap-2 rounded-xl border px-4 text-sm font-bold transition ${
+              className={`hidden h-11 items-center justify-center gap-2 rounded-xl border px-4 text-sm font-bold transition sm:inline-flex ${
                 userLocation
                   ? "border-emerald-200 bg-emerald-50 text-emerald-700"
                   : "border-blue-200 bg-white text-blue-700 hover:bg-blue-50"
@@ -377,12 +395,29 @@ export default function PharmacySearchPage() {
               <LocateFixed className="h-4 w-4" />
               {userLocation ? "Lokacija uključena" : "Koristi lokaciju"}
             </button>
-            <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
+            <div className="hidden sm:block">
+              <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
+            </div>
           </div>
         </div>
 
+        <MobileSearchControls
+          activeFiltersCount={activeFiltersCount}
+          selectedCityLabel={selectedCityLabel}
+          sort={sort}
+          userLocation={userLocation}
+          isLocating={isLocating}
+          viewMode={viewMode}
+          onOpenFilters={() =>
+            setIsMobileFiltersOpen((current) => !current)
+          }
+          onRequestLocation={requestLocation}
+          onSortChange={handleSortChange}
+          onViewModeChange={setViewMode}
+        />
+
         <div className="flex flex-col gap-6 xl:flex-row xl:items-start">
-          <div className="space-y-4 xl:sticky xl:top-24 xl:w-[300px] xl:flex-none">
+          <div className="hidden space-y-4 xl:sticky xl:top-24 xl:block xl:w-[300px] xl:flex-none">
             <SearchFilterPanel
               filters={filters}
               cities={cities}
@@ -413,7 +448,7 @@ export default function PharmacySearchPage() {
                   </p>
                 </div>
 
-                <label className="flex w-full items-center gap-2 sm:w-auto">
+                <label className="hidden w-full items-center gap-2 sm:flex sm:w-auto">
                   <span className="text-sm font-semibold text-slate-500">
                     Sortiraj:
                   </span>
@@ -479,6 +514,25 @@ export default function PharmacySearchPage() {
           error={detailsError}
           onClose={closeDetailsPanel}
         />
+      )}
+
+      {isMobileFiltersOpen && (
+        <div className="fixed inset-x-4 top-36 z-40 xl:hidden animate-fade-in">
+          <div className="max-h-[70vh] overflow-y-auto rounded-[28px] border border-slate-200 bg-white p-4 shadow-[0_24px_60px_-28px_rgba(15,23,42,0.45)]">
+            <SearchFilterPanel
+              filters={filters}
+              cities={cities}
+              isCitiesLoading={isCitiesLoading}
+              userLocation={userLocation}
+              isLocating={isLocating}
+              locationError={locationError}
+              onFilterChange={handleFilterChange}
+              onRequestLocation={requestLocation}
+              onResetFilters={handleResetFilters}
+              variant="mobile"
+            />
+          </div>
+        </div>
       )}
     </div>
   );
