@@ -70,8 +70,6 @@ export default function LoginModal({
 
         if (!password){
             newErrors.password = 'Lozinka je obavezna.';
-        } else if (password.length < 6){
-            newErrors.password = 'Lozinka mora imati minimum 6 karaktera.';
         }
 
         setErrors(newErrors);
