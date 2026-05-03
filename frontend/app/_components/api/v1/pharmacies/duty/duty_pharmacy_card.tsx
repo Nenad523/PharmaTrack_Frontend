@@ -16,7 +16,7 @@ export default function DutyPharmacyCard({
   const detailsOpen = detailsPharmacyId === pharmacy.id;
   const phones = pharmacy.phone
     ? pharmacy.phone.split(",").map((phone) => phone.trim()).filter(Boolean)
-    : [];
+    : []
 
   return (
     <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-[0_14px_28px_-20px_rgba(15,23,42,0.42),0_6px_16px_-12px_rgba(37,99,235,0.35)]">

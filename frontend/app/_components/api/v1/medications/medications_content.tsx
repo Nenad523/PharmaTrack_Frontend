@@ -4,7 +4,7 @@ import SearchBarTitleText from "./search_bar_title";
 import SearchButton from "./search_button";
 import SearchResults from "./search_results";
 import SelectedMedication from "./selected_medication";
-import { MedicineSearchResult } from "./types";
+import { MedicationDose, MedicineSearchResult } from "./types";
 
 type MedicationsContentProps = {
   handleSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -15,15 +15,16 @@ type MedicationsContentProps = {
   trimmedSearch: string;
   filteredMedicines: MedicineSearchResult[];
   selectedMedicineId: number | null;
-  selectedMedicineDoses: string[];
+  selectedMedicineDoses: MedicationDose[];
   isLoadingDoses: boolean;
   detailsMedicineId: number | null;
   selectedMedicine: MedicineSearchResult | undefined;
   handleSelectMedicine: (medicineId: number) => void;
   handleToggleDetails: (medicineId: number) => void;
-  handleDoseClick: (dose: string, allDoses: string[]) => void;
-  isDoseActive: (dose: string, allDoses: string[]) => boolean;
+  handleDoseClick: (dose: MedicationDose | "all") => void;
+  isDoseActive: (dose: MedicationDose | "all") => boolean;
   isSearchButtonEnabled: boolean;
+  onSearchPharmacies: () => void;
 };
 
 export default function MedicationsContent({
@@ -44,6 +45,7 @@ export default function MedicationsContent({
   handleDoseClick,
   isDoseActive,
   isSearchButtonEnabled,
+  onSearchPharmacies,
 }: MedicationsContentProps) {
   return (
     <div className="flex-1 rounded-[28px] border border-blue-200/90 bg-white p-6 shadow-[0_22px_50px_-24px_rgba(37,99,235,0.5),0_10px_20px_-14px_rgba(15,23,42,0.3),inset_0_1px_0_rgba(255,255,255,0.7)] backdrop-blur md:p-8">
@@ -85,7 +87,10 @@ export default function MedicationsContent({
         />
       )}
 
-      <SearchButton isSearchButtonEnabled={isSearchButtonEnabled} />
+      <SearchButton
+        isSearchButtonEnabled={isSearchButtonEnabled}
+        onSearchPharmacies={onSearchPharmacies}
+      />
     </div>
   );
 }

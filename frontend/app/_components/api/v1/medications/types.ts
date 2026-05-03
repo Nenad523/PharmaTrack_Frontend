@@ -19,6 +19,11 @@ export type MedicineSearchResult = {
   img_url?: string;
 };
 
+export type MedicationDose = {
+  id: number;
+  strength: string;
+};
+
 export type MedicineDetails = Medicine & {
   activeIngredients: ActiveIngredient[];
 };
@@ -43,10 +48,7 @@ export type MedicationSearchApiResponse = {
 
 export type MedicationDosesApiResponse = {
   success?: boolean;
-  data: {
-    id: number;
-    strength: string;
-  }[];
+  data: MedicationDose[];
   count?: number;
   message?: string;
 };
