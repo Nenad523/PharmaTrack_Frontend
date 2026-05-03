@@ -88,7 +88,7 @@ function DetailsBody({
                 Osnovne informacije
               </h3>
               <p className="mt-2 flex items-start gap-2 text-sm leading-6 text-slate-600">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
+                
                 {pharmacy.address}
               </p>
             </div>
