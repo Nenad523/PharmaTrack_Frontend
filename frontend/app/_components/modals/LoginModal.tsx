@@ -3,16 +3,20 @@
 import { useState } from "react";
 import { X, Mail, Lock } from "lucide-react";
 import InputField from "../ui/InputField";
+import { fetchCurrentUser, getAuthUserFromResponse, loginUser } from "../auth/api";
+import type { AuthUser } from "../auth/types";
 
 interface LoginModalProps {
     isOpen: boolean
     onClose: () => void
+    onLoginSuccess?: (user: AuthUser) => void
     onSwitchToRegister: () => void
 }
 
 export default function LoginModal({
     isOpen, 
     onClose, 
+    onLoginSuccess,
     onSwitchToRegister
 
 }: LoginModalProps){
@@ -22,7 +26,6 @@ export default function LoginModal({
     const [errors, setErrors] = useState<{email?: string, password?: string}>({});
     const [loading, setLoading] = useState(false);
     const [generalError, setGeneralError] = useState('');
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     
     const handleClose = () => {
         resetForm();
@@ -93,12 +96,7 @@ export default function LoginModal({
         try {
             const trimmedEmail = email.trim();
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/login`, {
-                method: 'POST',
-                headers: {'Content-Type' : 'application/json'},
-                credentials: 'include',
-                body: JSON.stringify({ email: trimmedEmail, password })
-            });
+            const response = await loginUser(trimmedEmail, password);
 
             if (!response.ok){
                 const errorMessage = await getErrorMessage(response);
@@ -106,6 +104,14 @@ export default function LoginModal({
                 return;
             }
 
+            const user = await getAuthUserFromResponse(response) ?? await fetchCurrentUser();
+
+            if (!user) {
+                setGeneralError('Prijava je uspjela, ali podaci korisnika nisu učitani.');
+                return;
+            }
+
+            onLoginSuccess?.(user);
             handleClose();
 
           } catch (err) {
