@@ -7,11 +7,7 @@ import {
 } from "lucide-react";
 import { formatTime } from "../duty/date_utils";
 import { PharmacySearchResult } from "./types";
-import {
-  formatDistance,
-  formatRelativeUpdate,
-  getLatestInventoryUpdate,
-} from "./search_utils";
+import { formatDistance, formatRelativeUpdate } from "./search_utils";
 
 type PharmacySearchCardProps = {
   pharmacy: PharmacySearchResult;
@@ -35,6 +31,20 @@ const getAvailabilityLabel = (pharmacy: PharmacySearchResult) => {
   return "Trenutno zatvoreno";
 };
 
+const formatDoseUpdate = (lastUpdated?: string | null) => {
+  if (!lastUpdated) {
+    return "Ažuriranje nije dostupno";
+  }
+
+  const updatedAt = new Date(lastUpdated);
+
+  if (Number.isNaN(updatedAt.getTime())) {
+    return "Ažuriranje nije dostupno";
+  }
+
+  return `Ažurirano ${formatRelativeUpdate(updatedAt).toLowerCase()}`;
+};
+
 export default function PharmacySearchCard({
   pharmacy,
   detailsPharmacyId,
@@ -42,9 +52,6 @@ export default function PharmacySearchCard({
 }: PharmacySearchCardProps) {
   const detailsOpen = detailsPharmacyId === pharmacy.id;
   const distance = formatDistance(pharmacy.distance);
-  const updateLabel = formatRelativeUpdate(
-    getLatestInventoryUpdate(pharmacy.doses)
-  );
 
   return (
     <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-[0_14px_28px_-20px_rgba(15,23,42,0.42),0_6px_16px_-12px_rgba(37,99,235,0.35)]">
@@ -85,9 +92,14 @@ export default function PharmacySearchCard({
                 {pharmacy.doses.map((dose) => (
                   <span
                     key={`${pharmacy.id}-${dose.doseId}`}
-                    className="rounded-full border border-emerald-100 bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700"
+                    className="inline-flex min-h-12 flex-col justify-center rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-2"
                   >
-                    {dose.strength}
+                    <span className="text-xs font-bold text-emerald-700">
+                      {dose.strength}
+                    </span>
+                    <span className="mt-0.5 text-[11px] font-semibold text-emerald-700/75">
+                      {formatDoseUpdate(dose.lastUpdated)}
+                    </span>
                   </span>
                 ))}
 
@@ -126,7 +138,6 @@ export default function PharmacySearchCard({
             />
           </button>
 
-          <p className="text-xs font-medium text-slate-400">{updateLabel}</p>
         </div>
       </div>
     </article>
