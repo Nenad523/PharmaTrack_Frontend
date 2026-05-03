@@ -44,13 +44,12 @@ export function AppShell({ children }: AppShellProps) {
 
   const handleLogout = async () => {
     setLogoutLoading(true);
-
     try {
       await logoutUser();
-      setUser(null);
     } catch (error) {
       console.error("[AppShell] handleLogout error:", error);
     } finally {
+      setUser(null);      // uvijek postavi na null, bez obzira na uspjeh
       setLogoutLoading(false);
     }
   };
