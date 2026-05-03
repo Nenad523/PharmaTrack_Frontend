@@ -61,10 +61,6 @@ export default async function HomeNews() {
             <h2 className="text-3xl font-bold tracking-tight text-slate-900">
               Aktuelnosti iz svijeta zdravlja
             </h2>
-            <p className="mt-2 max-w-2xl text-sm leading-7 text-slate-600 md:text-base">
-              Vijesti se preuzimaju preko backend servisa i osvjezavaju jednom
-              dnevno, bez direktnih poziva korisnika prema spoljnom API-ju.
-            </p>
           </div>
         </div>
 
@@ -73,36 +69,48 @@ export default async function HomeNews() {
             {news.map((item) => (
               <article
                 key={item.articleId}
-                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+                className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
               >
-                <div className="flex flex-wrap items-center gap-3 text-xs">
-                  <span className="rounded-full bg-blue-50 px-3 py-1 font-semibold text-blue-600">
-                    {item.category ?? "Zdravlje"}
-                  </span>
-                  <span className="text-slate-400">
-                    {formatPublishedDate(item.publishedAt)}
-                  </span>
-                </div>
-
-                <h3 className="mt-4 text-xl font-semibold leading-8 text-slate-900">
-                  {item.title}
-                </h3>
-
-                {item.description && (
-                  <p className="mt-3 text-sm leading-7 text-slate-600 md:text-base">
-                    {item.description}
-                  </p>
+                {item.imageUrl && (
+                  <img
+                    src={item.imageUrl}
+                    alt={item.title}
+                    className="h-52 w-full object-cover"
+                  />
                 )}
 
-                <a
-                  href={item.link}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition-colors hover:text-blue-600"
-                >
-                  <ExternalLink className="h-4 w-4" />
-                  {item.source ? `Otvori na ${item.source}` : "Otvori originalnu vijest"}
-                </a>
+                <div className="p-6">
+                  <div className="flex flex-wrap items-center gap-3 text-xs">
+                    <span className="rounded-full bg-blue-50 px-3 py-1 font-semibold text-blue-600">
+                      {item.category ?? "Zdravlje"}
+                    </span>
+                    <span className="text-slate-400">
+                      {formatPublishedDate(item.publishedAt)}
+                    </span>
+                  </div>
+
+                  <h3 className="mt-4 text-xl font-semibold leading-8 text-slate-900">
+                    {item.title}
+                  </h3>
+
+                  {item.description && (
+                    <p className="mt-3 text-sm leading-7 text-slate-600 md:text-base">
+                      {item.description}
+                    </p>
+                  )}
+
+                  <a
+                    href={item.link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition-colors hover:text-blue-600"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                    {item.source
+                      ? `Otvori na ${item.source}`
+                      : "Otvori originalnu vijest"}
+                  </a>
+                </div>
               </article>
             ))}
           </div>
