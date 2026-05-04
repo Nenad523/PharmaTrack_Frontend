@@ -329,7 +329,7 @@ export default function MedicationsSearchPage() {
       params.append("doseIds", String(dose.id));
       params.append("doseStrengths", dose.strength);
     });
-
+    
     router.push(`/api/v1/pharmacies/search?${params.toString()}`);
   };
 
