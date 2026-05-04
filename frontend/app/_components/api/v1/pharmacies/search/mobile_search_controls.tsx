@@ -13,6 +13,7 @@ type MobileSearchControlsProps = {
   sort: SearchSort;
   userLocation: UserLocation | null;
   isLocating: boolean;
+  isPinned?: boolean;
   viewMode: SearchViewMode;
   onOpenFilters: () => void;
   onRequestLocation: () => void;
@@ -26,6 +27,7 @@ export default function MobileSearchControls({
   sort,
   userLocation,
   isLocating,
+  isPinned = false,
   viewMode,
   onOpenFilters,
   onRequestLocation,
@@ -33,7 +35,13 @@ export default function MobileSearchControls({
   onViewModeChange,
 }: MobileSearchControlsProps) {
   return (
-    <div className="sticky top-16 z-30 -mx-4 mb-4 border-y border-blue-100 bg-white/95 px-4 py-3 shadow-sm backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 xl:hidden">
+    <div
+      className={`z-30 border-y border-blue-100 bg-white/95 px-4 py-3 shadow-sm backdrop-blur sm:px-6 lg:px-8 xl:hidden ${
+        isPinned
+          ? "fixed inset-x-0 top-16"
+          : "sticky top-16 -mx-4 mb-4 sm:-mx-6 lg:-mx-8"
+      }`}
+    >
       <div className="flex gap-2 overflow-x-auto pb-1">
         <button
           type="button"

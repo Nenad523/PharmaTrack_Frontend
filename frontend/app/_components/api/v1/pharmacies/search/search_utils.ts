@@ -149,7 +149,7 @@ export const buildPharmacySearchParams = ({
   filters: {
     name: string;
     address: string;
-    city: string;
+    cities: string[];
     openNow: boolean;
     onDuty: boolean;
     radiusEnabled: boolean;
@@ -185,8 +185,8 @@ export const buildPharmacySearchParams = ({
     params.set("onDuty", "true");
   }
 
-  if (filters.city !== ALL_CITIES_VALUE) {
-    params.append("city", filters.city);
+  if (filters.cities.length > 0) {
+    filters.cities.forEach((city) => params.append("city", city));
   }
 
   if (filters.name.trim()) {

@@ -25,7 +25,6 @@ import PharmacySearchCard from "./pharmacy_search_card";
 import MobileSearchControls from "./mobile_search_controls";
 import SearchFilterPanel from "./search_filter_panel";
 import {
-  ALL_CITIES_VALUE,
   buildPharmacySearchParams,
   getErrorMessage,
   isAbortError,
@@ -46,7 +45,7 @@ import ViewToggle from "./view_toggle";
 const DEFAULT_FILTERS: SearchFilters = {
   name: "",
   address: "",
-  city: ALL_CITIES_VALUE,
+  cities: [],
   openNow: false,
   onDuty: false,
   radiusEnabled: false,
@@ -295,7 +294,7 @@ export default function PharmacySearchPage() {
 
     if (filters.name.trim()) count += 1;
     if (filters.address.trim()) count += 1;
-    if (filters.city !== ALL_CITIES_VALUE) count += 1;
+    if (filters.cities.length > 0) count += 1;
     if (filters.openNow) count += 1;
     if (filters.onDuty) count += 1;
     if (filters.radiusEnabled) count += 1;
@@ -304,7 +303,11 @@ export default function PharmacySearchPage() {
   }, [filters]);
 
   const selectedCityLabel =
-    filters.city === ALL_CITIES_VALUE ? "all" : filters.city;
+    filters.cities.length === 0
+      ? "all"
+      : filters.cities.length === 1
+        ? filters.cities[0]
+        : `${filters.cities.length} grada`;
 
   const loadPharmacyDetails = useCallback(
     async (pharmacyId: number) => {
@@ -414,12 +417,14 @@ export default function PharmacySearchPage() {
           sort={sort}
           userLocation={userLocation}
           isLocating={isLocating}
+          isPinned={isMobileFiltersOpen}
           viewMode={viewMode}
           onOpenFilters={() => setIsMobileFiltersOpen(true)}
           onRequestLocation={requestLocation}
           onSortChange={handleSortChange}
           onViewModeChange={setViewMode}
         />
+        {isMobileFiltersOpen && <div className="h-28 xl:hidden" />}
 
         <div className="flex flex-col gap-6 xl:flex-row xl:items-start">
           <div className="hidden space-y-4 xl:sticky xl:top-24 xl:block xl:w-[300px] xl:flex-none">
