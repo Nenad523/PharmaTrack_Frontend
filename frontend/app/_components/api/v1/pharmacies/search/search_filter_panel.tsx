@@ -1,6 +1,5 @@
 import { Filter, LocateFixed, MapPin, RotateCcw, SlidersHorizontal } from "lucide-react";
 import { City, SearchFilters, UserLocation } from "./types";
-import { ALL_CITIES_VALUE } from "./search_utils";
 
 type SearchFilterPanelProps = {
   filters: SearchFilters;
@@ -103,22 +102,69 @@ export default function SearchFilterPanel({
           />
         </label>
 
-        <label className="grid gap-1.5">
+        <div className="grid gap-1.5">
           <span className="text-xs font-semibold text-slate-500">Grad</span>
-          <select
-            value={filters.city}
-            onChange={(event) => onFilterChange("city", event.target.value)}
-            disabled={isCitiesLoading}
-            className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-800 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
-          >
-            <option value={ALL_CITIES_VALUE}>Svi gradovi</option>
-            {cities.map((city) => (
-              <option key={city.id} value={city.name}>
-                {city.name}
-              </option>
-            ))}
-          </select>
-        </label>
+          <div className="rounded-2xl border border-slate-200 bg-white p-2">
+            <div className="mb-2 flex flex-wrap gap-2 px-1">
+              <button
+                type="button"
+                onClick={() => onFilterChange("cities", [])}
+                className={`rounded-full px-3 py-1.5 text-xs font-bold transition ${
+                  filters.cities.length === 0
+                    ? "bg-blue-600 text-white"
+                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                }`}
+              >
+                Svi gradovi
+              </button>
+              <button
+                type="button"
+                onClick={() => onFilterChange("cities", [])}
+                disabled={filters.cities.length === 0}
+                className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-700 transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Očisti izbor
+              </button>
+            </div>
+
+            {isCitiesLoading ? (
+              <p className="px-2 py-2 text-sm text-slate-500">Ucitavanje gradova...</p>
+            ) : (
+              <div className="grid max-h-52 gap-2 overflow-y-auto pr-1">
+                {cities.map((city) => {
+                  const checked = filters.cities.includes(city.name);
+
+                  return (
+                    <label
+                      key={city.id}
+                      className={`flex items-center justify-between gap-3 rounded-xl border px-3 py-2.5 transition ${
+                        checked
+                          ? "border-blue-200 bg-blue-50"
+                          : "border-slate-200 bg-white"
+                      }`}
+                    >
+                      <span className="text-sm font-semibold text-slate-700">
+                        {city.name}
+                      </span>
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={(event) => {
+                          const nextCities = event.target.checked
+                            ? [...filters.cities, city.name]
+                            : filters.cities.filter((item) => item !== city.name);
+
+                          onFilterChange("cities", nextCities);
+                        }}
+                        className="h-5 w-5 rounded border-slate-300 accent-blue-600"
+                      />
+                    </label>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
 
         <div className="grid gap-2">
           <ToggleRow

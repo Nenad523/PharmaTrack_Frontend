@@ -35,7 +35,7 @@ export type SearchSort = "az" | "distance";
 export type SearchFilters = {
   name: string;
   address: string;
-  city: string;
+  cities: string[];
   openNow: boolean;
   onDuty: boolean;
   radiusEnabled: boolean;
