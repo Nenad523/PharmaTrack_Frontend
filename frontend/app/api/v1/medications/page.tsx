@@ -325,11 +325,12 @@ export default function MedicationsSearchPage() {
 
     params.set("medicineId", String(selectedMedicine.id));
     params.set("medicineName", selectedMedicine.name);
+    params.set("trackSearch", "true");
     selectedDoses.forEach((dose) => {
       params.append("doseIds", String(dose.id));
       params.append("doseStrengths", dose.strength);
     });
-    
+
     router.push(`/api/v1/pharmacies/search?${params.toString()}`);
   };
 

@@ -94,6 +94,8 @@ export default function PharmacySearchPage() {
   const medicineName = searchParams.get("medicineName") ?? "Odabrani lijek";
   const doseStrengths = searchParams.getAll("doseStrengths");
 
+  const pendingTrackSearch = useRef(searchParams.get("trackSearch") === "true");
+
   const [viewMode, setViewMode] = useState<SearchViewMode>("list");
   const [sort, setSort] = useState<SearchSort>("az");
   const [filters, setFilters] = useState<SearchFilters>(DEFAULT_FILTERS);
@@ -203,11 +205,15 @@ export default function PharmacySearchPage() {
       setSearchError("");
 
       try {
+        const trackSearch = pendingTrackSearch.current;
+        pendingTrackSearch.current = false;
+
         const params = buildPharmacySearchParams({
           doseIds,
           sort,
           filters,
           userLocation,
+          trackSearch,
         });
 
         const response = await fetch(

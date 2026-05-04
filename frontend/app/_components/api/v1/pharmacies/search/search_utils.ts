@@ -142,6 +142,7 @@ export const buildPharmacySearchParams = ({
   sort,
   filters,
   userLocation,
+  trackSearch,
 }: {
   doseIds: number[];
   sort: "az" | "distance";
@@ -155,6 +156,7 @@ export const buildPharmacySearchParams = ({
     radius: number;
   };
   userLocation: { latitude: number; longitude: number } | null;
+  trackSearch?: boolean;
 }) => {
   const params = new URLSearchParams();
 
@@ -193,6 +195,10 @@ export const buildPharmacySearchParams = ({
 
   if (filters.address.trim()) {
     params.set("address", filters.address.trim());
+  }
+
+  if (trackSearch) {
+    params.set("trackSearch", "true");
   }
 
   return params;
