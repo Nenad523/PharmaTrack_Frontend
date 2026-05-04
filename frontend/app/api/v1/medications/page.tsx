@@ -331,6 +331,12 @@ export default function MedicationsSearchPage() {
       params.append("doseStrengths", dose.strength);
     });
 
+    setSearchTerm("");
+    setSelectedMedicineId(null);
+    setSelectedDoses([]);
+    setSelectedMedicineDoses([]);
+    closeDetailsPanel();
+
     router.push(`/api/v1/pharmacies/search?${params.toString()}`);
   };
 
