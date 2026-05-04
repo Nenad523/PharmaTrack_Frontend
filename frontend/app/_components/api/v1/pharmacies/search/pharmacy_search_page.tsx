@@ -409,13 +409,18 @@ export default function PharmacySearchPage() {
           userLocation={userLocation}
           isLocating={isLocating}
           viewMode={viewMode}
+          showSort={viewMode === "list"}
           onOpenFilters={() => setIsMobileFiltersOpen(true)}
           onRequestLocation={requestLocation}
           onSortChange={handleSortChange}
           onViewModeChange={setViewMode}
         />
 
-        <div className="flex flex-col gap-6 xl:flex-row xl:items-start">
+        <div
+          className={`flex flex-col gap-6 xl:flex-row xl:items-start ${
+            viewMode === "map" ? "xl:min-h-[calc(100vh-15rem)]" : ""
+          }`}
+        >
           <div className="hidden space-y-4 xl:sticky xl:top-24 xl:block xl:w-[300px] xl:flex-none">
             <SearchFilterPanel
               filters={filters}
@@ -431,7 +436,13 @@ export default function PharmacySearchPage() {
           </div>
 
           <div className="min-w-0 flex-1">
-            <section className="min-w-0 xl:sticky xl:top-24 xl:flex xl:max-h-[calc(100vh-7rem)] xl:flex-col">
+            <section
+              className={`min-w-0 xl:sticky xl:top-24 xl:flex xl:flex-col ${
+                viewMode === "map"
+                  ? "xl:h-[calc(100vh-7rem)]"
+                  : "xl:max-h-[calc(100vh-7rem)]"
+              }`}
+            >
               <div className="mb-5 flex flex-col gap-3 rounded-[24px] border border-slate-200 bg-white px-5 py-4 shadow-sm sm:flex-row sm:items-center sm:justify-between xl:flex-none">
                 <div>
                   <p className="text-sm font-semibold text-blue-600">
@@ -443,32 +454,45 @@ export default function PharmacySearchPage() {
                     Dostupnost lijeka
                   </h2>
                   <p className="mt-1 text-sm text-slate-500">
-                    Lista prikazuje apoteke koje imaju odabranu dozu na stanju.
+                    {viewMode === "map"
+                      ? "Mapa prikazuje iste apoteke sa lokacijama, dozama i brzim otvaranjem detalja."
+                      : "Lista prikazuje apoteke koje imaju odabranu dozu na stanju."}
                   </p>
                 </div>
 
-                <label className="hidden w-full items-center gap-2 sm:flex sm:w-auto">
-                  <span className="text-sm font-semibold text-slate-500">
-                    Sortiraj:
-                  </span>
-                  <select
-                    value={sort}
-                    onChange={(event) =>
-                      handleSortChange(event.target.value as SearchSort)
-                    }
-                    className="h-11 min-w-36 rounded-xl border border-slate-200 bg-white px-3 text-sm font-bold text-slate-800 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
-                  >
-                    <option value="az">A-Z</option>
-                    <option value="distance" disabled={!userLocation}>
-                      Udaljenost
-                    </option>
-                  </select>
-                </label>
+                {viewMode === "list" && (
+                  <label className="hidden w-full items-center gap-2 sm:flex sm:w-auto">
+                    <span className="text-sm font-semibold text-slate-500">
+                      Sortiraj:
+                    </span>
+                    <select
+                      value={sort}
+                      onChange={(event) =>
+                        handleSortChange(event.target.value as SearchSort)
+                      }
+                      className="h-11 min-w-36 rounded-xl border border-slate-200 bg-white px-3 text-sm font-bold text-slate-800 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
+                    >
+                      <option value="az">A-Z</option>
+                      <option value="distance" disabled={!userLocation}>
+                        Udaljenost
+                      </option>
+                    </select>
+                  </label>
+                )}
               </div>
 
-              <div className="xl:min-h-0 xl:flex-1 xl:overflow-y-auto xl:pb-2 xl:pr-2">
+              <div
+                className={`${
+                  viewMode === "map"
+                    ? "xl:min-h-0 xl:flex-1 xl:overflow-hidden"
+                    : "xl:min-h-0 xl:flex-1 xl:overflow-y-auto xl:pb-2 xl:pr-2"
+                }`}
+              >
                 {viewMode === "map" ? (
-                  <MapPlaceholder pharmacies={pharmacies} />
+                  <MapPlaceholder
+                    pharmacies={pharmacies}
+                    userLocation={userLocation}
+                  />
                 ) : isSearchLoading ? (
                   <LoadingList />
                 ) : searchError ? (
@@ -493,7 +517,7 @@ export default function PharmacySearchPage() {
             </section>
           </div>
 
-          {shouldShowDetailsPanel && (
+          {viewMode !== "map" && shouldShowDetailsPanel && (
             <div className="hidden xl:sticky xl:top-24 xl:block xl:w-[390px] xl:flex-none">
               <PharmacyDetailsPanel
                 pharmacy={detailsPharmacy}
@@ -506,7 +530,7 @@ export default function PharmacySearchPage() {
         </div>
       </section>
 
-      {shouldShowDetailsPanel && (
+      {viewMode !== "map" && shouldShowDetailsPanel && (
         <MobilePharmacyDetailsOverlay
           pharmacy={detailsPharmacy}
           isLoading={isDetailsLoading}

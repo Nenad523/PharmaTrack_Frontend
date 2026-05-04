@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import "leaflet/dist/leaflet.css";
 import "./globals.css";
 import ThemeRegistry from "./ThemeRegistry";
 import { AppShell } from "./_components/layout/AppShell";
