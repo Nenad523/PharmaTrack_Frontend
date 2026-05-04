@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { apiUrl } from "@/lib/api";
-import { popularMedicines } from "../../../_components/api/v1/medications/data";
 import MedicationsContent from "../../../_components/api/v1/medications/medications_content";
 import MedicineDetailsPanel, { MobileDetailsOverlay } from "../../../_components/api/v1/medications/MedicineDetailsPanel/medicine_details_panel";
 import {
@@ -29,6 +28,7 @@ export default function MedicationsSearchPage() {
   const [detailsMedicineId, setDetailsMedicineId] = useState<number | null>(null);
   const [detailsMedicine, setDetailsMedicine] = useState<MedicineDetails | null>(null);
   const [isDetailsLoading, setIsDetailsLoading] = useState(false);
+  const [popularMedicines, setPopularMedicines] = useState<string[]>([]);
   const [detailsError, setDetailsError] = useState("");
 
   const trimmedSearch = searchTerm.trim();
@@ -133,6 +133,27 @@ export default function MedicationsSearchPage() {
       controller.abort();
     };
   }, [selectedMedicineId]);
+
+  useEffect(() => {
+        const controller = new AbortController();
+
+        const load = async () => {
+          try {
+            const response = await fetch(apiUrl("/api/v1/medication/popular"), {
+              signal: controller.signal,
+            });
+            if (!response.ok) return;
+
+            const data = await response.json() as string[];
+            setPopularMedicines(Array.isArray(data.data) ? data.data : []);
+          } catch (error) {
+            if (error instanceof Error && error.name === "AbortError") return;
+          }
+        };
+
+        void load();
+        return () => controller.abort();
+    }, []);
 
   const closeDetailsPanel = () => {
     setDetailsMedicineId(null);
