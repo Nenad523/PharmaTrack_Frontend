@@ -346,7 +346,7 @@ export default function MedicationsSearchPage() {
       <section className="mx-auto max-w-7xl px-6 pb-16 pt-16 md:pt-20">
         <div className="flex justify-center">
           <div
-            className={`flex gap-8 ${
+            className={`flex w-full gap-8 ${
               shouldShowDetailsPanel
                 ? "max-w-7xl"
                 : "max-w-7xl justify-center"
