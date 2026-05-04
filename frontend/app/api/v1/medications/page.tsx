@@ -144,8 +144,8 @@ export default function MedicationsSearchPage() {
             });
             if (!response.ok) return;
 
-            const data = await response.json() as { data: string[] };
-            setPopularMedicines(Array.isArray(data.data) ? data.data : []);
+            const data = await response.json() as { data: { name: string }[] };
+            setPopularMedicines(Array.isArray(data.data) ? data.data.map((row) => row.name) : []);
           } catch (error) {
             if (error instanceof Error && error.name === "AbortError") return;
           }

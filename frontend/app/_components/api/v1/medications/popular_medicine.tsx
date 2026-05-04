@@ -9,6 +9,8 @@ export default function PopularMedicine({
   popularMedicines,
   handlePopularClick,
 }: PopularMedicineProps) {
+  if (popularMedicines.length === 0) return null;
+
   return (
     <div className="mt-8">
       <div className="mb-4 flex items-center gap-2">
