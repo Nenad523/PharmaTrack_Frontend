@@ -26,6 +26,7 @@ export type MedicationDose = {
 
 export type MedicineDetails = Medicine & {
   activeIngredients: ActiveIngredient[];
+  img_url?: string;
 };
 
 export type MedicationDetailsApiResponse = {

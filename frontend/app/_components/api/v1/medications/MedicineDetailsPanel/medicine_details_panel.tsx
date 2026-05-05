@@ -1,4 +1,5 @@
-import { X, Pill, AlertTriangle } from "lucide-react";
+import Image from "next/image";
+import { X, AlertTriangle } from "lucide-react";
 import { MedicineDetails } from "../types";
 
 type Props = {
@@ -38,6 +39,20 @@ export function MobileDetailsOverlay({ medicine, onClose }: Props) {
         </div>
 
         <div className="space-y-6 px-6 pb-8">
+          {medicine.img_url && (
+            <div className="mt-2 -mb-2">
+              <Image
+                src={medicine.img_url}
+                alt={medicine.name}
+                width={0}
+                height={0}
+                sizes="100vw"
+                unoptimized
+                className="mx-auto block h-44 w-4/5 rounded-2xl object-contain"
+              />
+            </div>
+          )}
+
           <div>
             <h3 className="text-sm font-semibold text-slate-900">Opis</h3>
             <p className="mt-2 text-sm leading-7 text-slate-600">
@@ -142,25 +157,19 @@ export default function MedicineDetailsPanel({ medicine, onClose }: Props) {
           </div>
         </div>
 
-        <div className="px-6 pt-5">
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-            <div className="flex items-start gap-3">
-              <div className="rounded-2xl border border-blue-100 bg-white p-3 text-blue-600 shadow-sm">
-                <Pill className="h-5 w-5" />
-              </div>
-
-              <div>
-                <h3 className="text-sm font-semibold text-slate-900">
-                  Kratak pregled
-                </h3>
-                <p className="mt-2 text-sm leading-7 text-slate-600">
-                  {medicine.name} je dostupan u više jačina i može se dalje
-                  pretraživati po odabranoj dozi.
-                </p>
-              </div>
-            </div>
+        {medicine.img_url && (
+          <div className="px-6 pt-6 pb-2">
+            <Image
+              src={medicine.img_url}
+              alt={medicine.name}
+              width={0}
+              height={0}  
+              sizes="100vw"
+              unoptimized
+              className="mx-auto block h-44 w-4/5 rounded-2xl object-contain"
+            />
           </div>
-        </div>
+        )}
 
         <div className="space-y-6 px-6 py-6">
           <div>

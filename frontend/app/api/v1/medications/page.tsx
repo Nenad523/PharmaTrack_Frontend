@@ -203,6 +203,7 @@ export default function MedicationsSearchPage() {
       id: details.data.id,
       name: details.data.name,
       description: details.data.description,
+      img_url: details.data.img_url || undefined,
       doses: ["Sve", ...availableDoses],
       activeSubstance:
         activeIngredients.length > 0
