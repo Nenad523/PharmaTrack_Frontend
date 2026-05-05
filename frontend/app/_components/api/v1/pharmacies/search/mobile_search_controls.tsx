@@ -15,6 +15,7 @@ type MobileSearchControlsProps = {
   isLocating: boolean;
   isPinned?: boolean;
   viewMode: SearchViewMode;
+  showSort: boolean;
   onOpenFilters: () => void;
   onRequestLocation: () => void;
   onSortChange: (value: SearchSort) => void;
@@ -29,6 +30,7 @@ export default function MobileSearchControls({
   isLocating,
   isPinned = false,
   viewMode,
+  showSort,
   onOpenFilters,
   onRequestLocation,
   onSortChange,
@@ -57,20 +59,22 @@ export default function MobileSearchControls({
           )}
         </button>
 
-        <label className="relative inline-flex h-11 shrink-0 items-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
-          <SlidersHorizontal className="ml-3 h-4 w-4 text-blue-600" />
-          <select
-            value={sort}
-            onChange={(event) => onSortChange(event.target.value as SearchSort)}
-            className="h-full appearance-none bg-transparent pl-2 pr-8 text-sm font-bold text-slate-800 outline-none"
-          >
-            <option value="az">A-Z</option>
-            <option value="distance" disabled={!userLocation}>
-              Udaljenost
-            </option>
-          </select>
-          <ChevronDown className="pointer-events-none absolute right-3 h-4 w-4 text-slate-400" />
-        </label>
+        {showSort && (
+          <label className="relative inline-flex h-11 shrink-0 items-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
+            <SlidersHorizontal className="ml-3 h-4 w-4 text-blue-600" />
+            <select
+              value={sort}
+              onChange={(event) => onSortChange(event.target.value as SearchSort)}
+              className="h-full appearance-none bg-transparent pl-2 pr-8 text-sm font-bold text-slate-800 outline-none"
+            >
+              <option value="az">A-Z</option>
+              <option value="distance" disabled={!userLocation}>
+                Udaljenost
+              </option>
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-3 h-4 w-4 text-slate-400" />
+          </label>
+        )}
 
         <button
           type="button"
