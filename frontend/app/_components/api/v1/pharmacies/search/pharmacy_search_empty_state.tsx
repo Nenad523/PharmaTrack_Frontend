@@ -72,9 +72,9 @@ export default function PharmacySearchEmptyState({
   };
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm animate-fade-in">
-      <div className="flex items-start gap-3">
-        <span className="rounded-xl bg-slate-100 p-2 text-slate-500">
+    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm animate-fade-in sm:p-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
+        <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
           <AlertCircle className="h-5 w-5" />
         </span>
         <div className="min-w-0 flex-1">
@@ -87,12 +87,12 @@ export default function PharmacySearchEmptyState({
               : "Nema rezultata za odabrani lijek i dozu."}
           </p>
 
-          <div className="mt-4 flex flex-wrap gap-3">
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <button
               type="button"
               onClick={onLoadAlternatives}
               disabled={!medicineId || isAlternativesLoading}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-bold text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
+              className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-bold text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none sm:w-auto"
             >
               {isAlternativesLoading ? (
                 <RotateCw className="h-4 w-4 animate-spin" />
@@ -106,7 +106,7 @@ export default function PharmacySearchEmptyState({
               <button
                 type="button"
                 onClick={onResetFilters}
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-blue-200 hover:text-blue-700"
+                className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-blue-200 hover:text-blue-700 sm:w-auto"
               >
                 <X className="h-4 w-4" />
                 Očisti filtere
@@ -180,11 +180,11 @@ export default function PharmacySearchEmptyState({
                                 </div>
                               </div>
 
-                              <div className="flex gap-2 self-start">
+                              <div className="flex gap-2 self-stretch sm:self-start">
                                 <button
                                   type="button"
                                   onClick={() => onLoadMedicineDetails(alternative.id)}
-                                  className="inline-flex items-center gap-2 rounded-xl border border-blue-200/80 bg-blue-50/70 px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm shadow-blue-100/80 transition hover:bg-blue-100"
+                                  className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-xl border border-blue-200/80 bg-blue-50/70 px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm shadow-blue-100/80 transition hover:bg-blue-100 sm:w-auto"
                                 >
                                   Detalji
                                   <ChevronRight className="h-4 w-4" />
