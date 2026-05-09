@@ -1,4 +1,9 @@
 import { City, PharmacyDetailsApiResponse } from "../duty/types";
+import type {
+  MedicationDetailsApiResponse,
+  MedicationDose,
+  MedicationDosesApiResponse,
+} from "../../medications/types";
 
 export type PharmacySearchDose = {
   doseId: number;
@@ -43,18 +48,6 @@ export type MedicationAlternativesApiResponse = {
   message?: string;
 };
 
-export type MedicationDose = {
-  id: number;
-  strength: string;
-};
-
-export type MedicationDosesApiResponse = {
-  success?: boolean;
-  data: MedicationDose[];
-  count?: number;
-  message?: string;
-};
-
 export type SearchViewMode = "list" | "map";
 
 export type SearchSort = "az" | "distance";
@@ -75,3 +68,8 @@ export type UserLocation = {
 };
 
 export type { City, PharmacyDetailsApiResponse };
+export type {
+  MedicationDetailsApiResponse,
+  MedicationDose,
+  MedicationDosesApiResponse,
+};

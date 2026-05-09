@@ -5,11 +5,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   AlertCircle,
-  CheckCircle2,
   ArrowLeft,
   X,
   LocateFixed,
-  Pill,
   RotateCw,
   Search,
 } from "lucide-react";
@@ -17,6 +15,10 @@ import { apiUrl } from "@/lib/api";
 import PharmacyDetailsPanel, {
   MobilePharmacyDetailsOverlay,
 } from "../duty/pharmacy_details_panel";
+import MedicineDetailsPanel, {
+  MobileDetailsOverlay as MobileMedicineDetailsOverlay,
+} from "../../medications/MedicineDetailsPanel/medicine_details_panel";
+import { MedicineDetails } from "../../medications/types";
 import {
   CitiesApiResponse,
   FALLBACK_CITIES,
@@ -24,18 +26,21 @@ import {
 } from "../duty/types";
 import MapPlaceholder from "./map_placeholder";
 import PharmacySearchCard from "./pharmacy_search_card";
+import PharmacySearchEmptyState from "./pharmacy_search_empty_state";
 import MobileSearchControls from "./mobile_search_controls";
 import SearchFilterPanel from "./search_filter_panel";
 import {
   buildPharmacySearchParams,
   getErrorMessage,
   isAbortError,
+  normalizeMedicineDetails,
   normalizePharmacyDetails,
 } from "./search_utils";
 import {
   City,
   MedicationAlternative,
   MedicationAlternativesApiResponse,
+  MedicationDetailsApiResponse,
   MedicationDose,
   MedicationDosesApiResponse,
   PharmacyDetailsApiResponse,
@@ -127,6 +132,13 @@ export default function PharmacySearchPage() {
   const [isDetailsLoading, setIsDetailsLoading] = useState(false);
   const [detailsError, setDetailsError] = useState("");
   const detailsRequestId = useRef(0);
+  const [medicineDetailsId, setMedicineDetailsId] = useState<number | null>(null);
+  const [medicineDetails, setMedicineDetails] = useState<MedicineDetails | null>(
+    null
+  );
+  const [isMedicineDetailsLoading, setIsMedicineDetailsLoading] = useState(false);
+  const [medicineDetailsError, setMedicineDetailsError] = useState("");
+  const medicineDetailsRequestId = useRef(0);
   const [alternatives, setAlternatives] = useState<MedicationAlternative[]>([]);
   const [isAlternativesLoading, setIsAlternativesLoading] = useState(false);
   const [alternativesError, setAlternativesError] = useState("");
@@ -146,6 +158,10 @@ export default function PharmacySearchPage() {
 
   const shouldShowDetailsPanel =
     isDetailsLoading || Boolean(detailsError) || Boolean(detailsPharmacy);
+  const shouldShowMedicineDetailsPanel =
+    isMedicineDetailsLoading ||
+    Boolean(medicineDetailsError) ||
+    Boolean(medicineDetails);
 
   const closeDetailsPanel = useCallback(() => {
     detailsRequestId.current += 1;
@@ -153,6 +169,14 @@ export default function PharmacySearchPage() {
     setDetailsPharmacy(null);
     setDetailsError("");
     setIsDetailsLoading(false);
+  }, []);
+
+  const closeMedicineDetailsPanel = useCallback(() => {
+    medicineDetailsRequestId.current += 1;
+    setMedicineDetailsId(null);
+    setMedicineDetails(null);
+    setMedicineDetailsError("");
+    setIsMedicineDetailsLoading(false);
   }, []);
 
   const requestLocation = useCallback(() => {
@@ -302,7 +326,8 @@ export default function PharmacySearchPage() {
     setSelectedAlternativeDoseIds([]);
     setAlternativeDosesError("");
     setIsAlternativeDosesLoading(false);
-  }, [medicineId]);
+    closeMedicineDetailsPanel();
+  }, [closeMedicineDetailsPanel, medicineId]);
 
   const handleFilterChange = <Key extends keyof SearchFilters>(
     key: Key,
@@ -320,6 +345,67 @@ export default function PharmacySearchPage() {
     setSort("az");
     closeDetailsPanel();
   };
+
+  const loadMedicineDetails = useCallback(
+    async (selectedMedicineId: number) => {
+      if (medicineDetailsId === selectedMedicineId) {
+        closeMedicineDetailsPanel();
+        return;
+      }
+
+      const requestId = medicineDetailsRequestId.current + 1;
+      medicineDetailsRequestId.current = requestId;
+
+      closeDetailsPanel();
+      setMedicineDetailsId(selectedMedicineId);
+      setMedicineDetails(null);
+      setMedicineDetailsError("");
+      setIsMedicineDetailsLoading(true);
+
+      try {
+        const [detailsResponse, dosesResponse] = await Promise.all([
+          fetch(apiUrl(`/api/v1/medication/${selectedMedicineId}`)),
+          fetch(apiUrl(`/api/v1/medication/${selectedMedicineId}/doses`)),
+        ]);
+
+        if (requestId !== medicineDetailsRequestId.current) {
+          return;
+        }
+
+        if (!detailsResponse.ok) {
+          setMedicineDetailsError(await getErrorMessage(detailsResponse));
+          return;
+        }
+
+        if (!dosesResponse.ok) {
+          setMedicineDetailsError(await getErrorMessage(dosesResponse));
+          return;
+        }
+
+        const detailsData =
+          (await detailsResponse.json()) as MedicationDetailsApiResponse;
+        const dosesData =
+          (await dosesResponse.json()) as MedicationDosesApiResponse;
+
+        if (requestId !== medicineDetailsRequestId.current) {
+          return;
+        }
+
+        setMedicineDetails(normalizeMedicineDetails(detailsData, dosesData));
+      } catch {
+        if (requestId === medicineDetailsRequestId.current) {
+          setMedicineDetailsError(
+            "Došlo je do greške pri učitavanju detalja lijeka."
+          );
+        }
+      } finally {
+        if (requestId === medicineDetailsRequestId.current) {
+          setIsMedicineDetailsLoading(false);
+        }
+      }
+    },
+    [closeDetailsPanel, closeMedicineDetailsPanel, medicineDetailsId]
+  );
 
   const loadAlternatives = useCallback(async () => {
     if (!medicineId) {
@@ -517,6 +603,7 @@ export default function PharmacySearchPage() {
       setDetailsPharmacy(null);
       setDetailsError("");
       setIsDetailsLoading(true);
+      closeMedicineDetailsPanel();
 
       try {
         const response = await fetch(apiUrl(`/api/v1/pharmacies/${pharmacyId}`));
@@ -547,7 +634,7 @@ export default function PharmacySearchPage() {
         }
       }
     },
-    [closeDetailsPanel, detailsPharmacyId]
+    [closeDetailsPanel, closeMedicineDetailsPanel, detailsPharmacyId]
   );
 
   const handleRetry = () => {
@@ -703,7 +790,7 @@ export default function PharmacySearchPage() {
                 ) : searchError ? (
                   <ErrorState error={searchError} onRetry={handleRetry} />
                 ) : pharmacies.length === 0 ? (
-                  <EmptyState
+                  <PharmacySearchEmptyState
                     medicineId={medicineId}
                     hasActiveFilters={activeFiltersCount > 0}
                     alternatives={alternatives}
@@ -721,6 +808,9 @@ export default function PharmacySearchPage() {
                     onToggleAlternativeDose={handleAlternativeDoseClick}
                     onSearchAlternative={handleSearchAlternative}
                     onResetFilters={handleResetFilters}
+                    onLoadMedicineDetails={(selectedMedicineId) =>
+                      void loadMedicineDetails(selectedMedicineId)
+                    }
                   />
                 ) : (
                   <div className="grid gap-4 animate-fade-in">
@@ -750,6 +840,41 @@ export default function PharmacySearchPage() {
               />
             </div>
           )}
+
+          {viewMode !== "map" && shouldShowMedicineDetailsPanel && (
+            <div className="hidden xl:sticky xl:top-24 xl:block xl:w-[390px] xl:flex-none">
+              {isMedicineDetailsLoading ? (
+                <div className="rounded-[28px] border border-blue-200/80 bg-white p-6 shadow-sm">
+                  <p className="text-sm font-semibold text-blue-600">
+                    Učitavanje detalja lijeka...
+                  </p>
+                </div>
+              ) : medicineDetailsError ? (
+                <div className="rounded-[28px] border border-red-200 bg-white p-6 shadow-sm">
+                  <p className="text-sm font-semibold text-red-600">
+                    Detalji lijeka nijesu dostupni.
+                  </p>
+                  <p className="mt-2 text-sm text-slate-600">
+                    {medicineDetailsError}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={closeMedicineDetailsPanel}
+                    className="mt-4 rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
+                  >
+                    Zatvori
+                  </button>
+                </div>
+              ) : (
+                medicineDetails && (
+                  <MedicineDetailsPanel
+                    medicine={medicineDetails}
+                    onClose={closeMedicineDetailsPanel}
+                  />
+                )
+              )}
+            </div>
+          )}
         </div>
       </section>
 
@@ -759,6 +884,13 @@ export default function PharmacySearchPage() {
           isLoading={isDetailsLoading}
           error={detailsError}
           onClose={closeDetailsPanel}
+        />
+      )}
+
+      {viewMode !== "map" && medicineDetails && (
+        <MobileMedicineDetailsOverlay
+          medicine={medicineDetails}
+          onClose={closeMedicineDetailsPanel}
         />
       )}
 
@@ -866,223 +998,6 @@ function ErrorState({ error, onRetry }: { error: string; onRetry: () => void }) 
             <RotateCw className="h-4 w-4" />
             Pokušaj ponovo
           </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-type EmptyStateProps = {
-  medicineId: number | null;
-  hasActiveFilters: boolean;
-  alternatives: MedicationAlternative[];
-  isAlternativesLoading: boolean;
-  alternativesError: string;
-  selectedAlternative: MedicationAlternative | null;
-  selectedAlternativeDoses: MedicationDose[];
-  selectedAlternativeDoseIds: number[];
-  isAlternativeDosesLoading: boolean;
-  alternativeDosesError: string;
-  onLoadAlternatives: () => void;
-  onSelectAlternative: (alternative: MedicationAlternative) => void;
-  onToggleAlternativeDose: (doseId: number) => void;
-  onSearchAlternative: () => void;
-  onResetFilters: () => void;
-};
-
-function EmptyState({
-  medicineId,
-  hasActiveFilters,
-  alternatives,
-  isAlternativesLoading,
-  alternativesError,
-  selectedAlternative,
-  selectedAlternativeDoses,
-  selectedAlternativeDoseIds,
-  isAlternativeDosesLoading,
-  alternativeDosesError,
-  onLoadAlternatives,
-  onSelectAlternative,
-  onToggleAlternativeDose,
-  onSearchAlternative,
-  onResetFilters,
-}: EmptyStateProps) {
-  const hasLoadedAlternatives =
-    alternatives.length > 0 || Boolean(alternativesError);
-  const canSearchAlternative =
-    Boolean(selectedAlternative) && selectedAlternativeDoseIds.length > 0;
-
-  return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm animate-fade-in">
-      <div className="flex items-start gap-3">
-        <span className="rounded-xl bg-slate-100 p-2 text-slate-500">
-          <AlertCircle className="h-5 w-5" />
-        </span>
-        <div className="min-w-0 flex-1">
-          <h2 className="text-base font-bold text-slate-900">
-            Nema apoteka za prikaz.
-          </h2>
-          <p className="mt-1 text-sm leading-6 text-slate-600">
-            {hasActiveFilters
-              ? "Nema rezultata za odabrani lijek sa trenutnim filterima."
-              : "Nema rezultata za odabrani lijek i dozu."}
-          </p>
-
-          <div className="mt-4 flex flex-wrap gap-3">
-            <button
-              type="button"
-              onClick={onLoadAlternatives}
-              disabled={!medicineId || isAlternativesLoading}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-bold text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
-            >
-              {isAlternativesLoading ? (
-                <RotateCw className="h-4 w-4 animate-spin" />
-              ) : (
-                <Pill className="h-4 w-4" />
-              )}
-              {isAlternativesLoading ? "Učitavanje..." : "Prikaži alternative"}
-            </button>
-
-            {hasActiveFilters && (
-              <button
-                type="button"
-                onClick={onResetFilters}
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-blue-200 hover:text-blue-700"
-              >
-                <X className="h-4 w-4" />
-                Očisti filtere
-              </button>
-            )}
-          </div>
-
-          {!medicineId && (
-            <p className="mt-3 text-sm font-semibold text-amber-700">
-              Lijek nije dostupan u URL parametrima, pa alternative nije moguće
-              učitati sa ove stranice.
-            </p>
-          )}
-
-          {hasLoadedAlternatives && (
-            <div className="mt-6 border-t border-slate-100 pt-5">
-              {alternativesError && (
-                <p className="rounded-xl border border-amber-100 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-700">
-                  {alternativesError}
-                </p>
-              )}
-
-              {alternatives.length > 0 && (
-                <>
-                  <div>
-                    <p className="text-sm font-bold text-slate-900">
-                      Odaberite alternativni lijek
-                    </p>
-                    <p className="mt-1 text-sm leading-6 text-slate-500">
-                      Filteri za apoteke ostaju aktivni nakon pretrage
-                      alternative.
-                    </p>
-                  </div>
-
-                  <div className="mt-4 grid gap-3 md:grid-cols-2">
-                    {alternatives.map((alternative) => {
-                      const selected = selectedAlternative?.id === alternative.id;
-
-                      return (
-                        <button
-                          key={alternative.id}
-                          type="button"
-                          onClick={() => onSelectAlternative(alternative)}
-                          aria-pressed={selected}
-                          className={`min-h-24 rounded-2xl border p-4 text-left transition ${
-                            selected
-                              ? "border-blue-300 bg-blue-50 shadow-sm shadow-blue-100"
-                              : "border-slate-200 bg-white hover:border-blue-200 hover:bg-blue-50/50"
-                          }`}
-                        >
-                          <span className="flex items-start gap-3">
-                            <span
-                              className={`mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${
-                                selected
-                                  ? "bg-blue-600 text-white"
-                                  : "bg-slate-100 text-slate-500"
-                              }`}
-                            >
-                              {selected ? (
-                                <CheckCircle2 className="h-4 w-4" />
-                              ) : (
-                                <Pill className="h-4 w-4" />
-                              )}
-                            </span>
-                            <span className="min-w-0">
-                              <span className="block text-sm font-bold text-slate-900">
-                                {alternative.name}
-                              </span>
-                              <span className="mt-1 line-clamp-2 block text-xs leading-5 text-slate-500">
-                                {alternative.description ||
-                                  "Opis alternative nije dostupan."}
-                              </span>
-                            </span>
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </>
-              )}
-
-              {selectedAlternative && (
-                <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                  <p className="text-sm font-bold text-slate-900">
-                    Doze za {selectedAlternative.name}
-                  </p>
-
-                  {isAlternativeDosesLoading ? (
-                    <p className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-blue-600">
-                      <RotateCw className="h-4 w-4 animate-spin" />
-                      Učitavanje doza...
-                    </p>
-                  ) : alternativeDosesError ? (
-                    <p className="mt-3 text-sm font-semibold text-amber-700">
-                      {alternativeDosesError}
-                    </p>
-                  ) : (
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {selectedAlternativeDoses.map((dose) => {
-                        const selected = selectedAlternativeDoseIds.includes(
-                          dose.id
-                        );
-
-                        return (
-                          <button
-                            key={dose.id}
-                            type="button"
-                            onClick={() => onToggleAlternativeDose(dose.id)}
-                            aria-pressed={selected}
-                            className={`min-h-10 rounded-full border px-3 py-1.5 text-sm font-bold transition ${
-                              selected
-                                ? "border-emerald-300 bg-emerald-50 text-emerald-700"
-                                : "border-slate-200 bg-white text-slate-700 hover:border-emerald-200 hover:text-emerald-700"
-                            }`}
-                          >
-                            {dose.strength}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-
-                  <button
-                    type="button"
-                    onClick={onSearchAlternative}
-                    disabled={!canSearchAlternative || isAlternativeDosesLoading}
-                    className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-2 text-sm font-bold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
-                  >
-                    <Search className="h-4 w-4" />
-                    Pretraži ovu alternativu
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
         </div>
       </div>
     </div>

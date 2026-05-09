@@ -1,5 +1,10 @@
 import { PharmacyDetails, WorkingHours } from "../duty/types";
-import { PharmacyDetailsApiResponse } from "./types";
+import { MedicineDetails } from "../../medications/types";
+import {
+  MedicationDetailsApiResponse,
+  MedicationDosesApiResponse,
+  PharmacyDetailsApiResponse,
+} from "./types";
 
 type ApiErrorBody = {
   error?: {
@@ -19,6 +24,9 @@ const FALLBACK_WORKING_DAY_NAMES = [
 ];
 
 export const ALL_CITIES_VALUE = "all";
+
+const DEFAULT_MEDICINE_WARNING =
+  "Prikazane informacije služe isključivo u informativne svrhe i ne predstavljaju zamjenu za savjet ljekara ili farmaceuta.";
 
 export const isAbortError = (error: unknown) =>
   error instanceof Error && error.name === "AbortError";
@@ -84,6 +92,32 @@ export const normalizePharmacyDetails = (
   workingHours: normalizeWorkingHours(response.data.workingHours),
   dutySchedule: response.data.dutySchedule ?? null,
 });
+
+export const normalizeMedicineDetails = (
+  details: MedicationDetailsApiResponse,
+  doses: MedicationDosesApiResponse
+): MedicineDetails => {
+  const activeIngredients = Array.isArray(details.data.activeIngredients)
+    ? details.data.activeIngredients
+    : [];
+  const availableDoses = Array.isArray(doses.data)
+    ? doses.data.map((dose) => dose.strength)
+    : [];
+
+  return {
+    id: details.data.id,
+    name: details.data.name,
+    description: details.data.description,
+    img_url: details.data.img_url || undefined,
+    doses: ["Sve", ...availableDoses],
+    activeSubstance:
+      activeIngredients.length > 0
+        ? activeIngredients.map((item) => item.name).join(", ")
+        : "Nije dostupno",
+    warning: DEFAULT_MEDICINE_WARNING,
+    activeIngredients,
+  };
+};
 
 export const formatDistance = (value: number | string | null | undefined) => {
   const distance = normalizeNumber(value);
