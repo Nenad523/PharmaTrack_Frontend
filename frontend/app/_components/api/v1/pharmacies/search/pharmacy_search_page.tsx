@@ -7,6 +7,7 @@ import {
   AlertCircle,
   CheckCircle2,
   ArrowLeft,
+  Info,
   X,
   LocateFixed,
   Pill,
@@ -17,6 +18,10 @@ import { apiUrl } from "@/lib/api";
 import PharmacyDetailsPanel, {
   MobilePharmacyDetailsOverlay,
 } from "../duty/pharmacy_details_panel";
+import MedicineDetailsPanel, {
+  MobileDetailsOverlay as MobileMedicineDetailsOverlay,
+} from "../../medications/MedicineDetailsPanel/medicine_details_panel";
+import { MedicineDetails } from "../../medications/types";
 import {
   CitiesApiResponse,
   FALLBACK_CITIES,
@@ -36,6 +41,7 @@ import {
   City,
   MedicationAlternative,
   MedicationAlternativesApiResponse,
+  MedicationDetailsApiResponse,
   MedicationDose,
   MedicationDosesApiResponse,
   PharmacyDetailsApiResponse,
@@ -57,6 +63,9 @@ const DEFAULT_FILTERS: SearchFilters = {
   radiusEnabled: false,
   radius: 10,
 };
+
+const DEFAULT_WARNING =
+  "Prikazane informacije služe isključivo u informativne svrhe i ne predstavljaju zamjenu za savjet ljekara ili farmaceuta.";
 
 const normalizeCities = (items: unknown): City[] => {
   if (!Array.isArray(items)) {
@@ -127,6 +136,13 @@ export default function PharmacySearchPage() {
   const [isDetailsLoading, setIsDetailsLoading] = useState(false);
   const [detailsError, setDetailsError] = useState("");
   const detailsRequestId = useRef(0);
+  const [medicineDetailsId, setMedicineDetailsId] = useState<number | null>(null);
+  const [medicineDetails, setMedicineDetails] = useState<MedicineDetails | null>(
+    null
+  );
+  const [isMedicineDetailsLoading, setIsMedicineDetailsLoading] = useState(false);
+  const [medicineDetailsError, setMedicineDetailsError] = useState("");
+  const medicineDetailsRequestId = useRef(0);
   const [alternatives, setAlternatives] = useState<MedicationAlternative[]>([]);
   const [isAlternativesLoading, setIsAlternativesLoading] = useState(false);
   const [alternativesError, setAlternativesError] = useState("");
@@ -146,6 +162,10 @@ export default function PharmacySearchPage() {
 
   const shouldShowDetailsPanel =
     isDetailsLoading || Boolean(detailsError) || Boolean(detailsPharmacy);
+  const shouldShowMedicineDetailsPanel =
+    isMedicineDetailsLoading ||
+    Boolean(medicineDetailsError) ||
+    Boolean(medicineDetails);
 
   const closeDetailsPanel = useCallback(() => {
     detailsRequestId.current += 1;
@@ -153,6 +173,14 @@ export default function PharmacySearchPage() {
     setDetailsPharmacy(null);
     setDetailsError("");
     setIsDetailsLoading(false);
+  }, []);
+
+  const closeMedicineDetailsPanel = useCallback(() => {
+    medicineDetailsRequestId.current += 1;
+    setMedicineDetailsId(null);
+    setMedicineDetails(null);
+    setMedicineDetailsError("");
+    setIsMedicineDetailsLoading(false);
   }, []);
 
   const requestLocation = useCallback(() => {
@@ -302,7 +330,8 @@ export default function PharmacySearchPage() {
     setSelectedAlternativeDoseIds([]);
     setAlternativeDosesError("");
     setIsAlternativeDosesLoading(false);
-  }, [medicineId]);
+    closeMedicineDetailsPanel();
+  }, [closeMedicineDetailsPanel, medicineId]);
 
   const handleFilterChange = <Key extends keyof SearchFilters>(
     key: Key,
@@ -320,6 +349,93 @@ export default function PharmacySearchPage() {
     setSort("az");
     closeDetailsPanel();
   };
+
+  const mapDetailsToMedicine = (
+    details: MedicationDetailsApiResponse,
+    doses: MedicationDosesApiResponse
+  ): MedicineDetails => {
+    const activeIngredients = Array.isArray(details.data.activeIngredients)
+      ? details.data.activeIngredients
+      : [];
+    const availableDoses = Array.isArray(doses.data)
+      ? doses.data.map((dose) => dose.strength)
+      : [];
+
+    return {
+      id: details.data.id,
+      name: details.data.name,
+      description: details.data.description,
+      img_url: details.data.img_url || undefined,
+      doses: ["Sve", ...availableDoses],
+      activeSubstance:
+        activeIngredients.length > 0
+          ? activeIngredients.map((item) => item.name).join(", ")
+          : "Nije dostupno",
+      warning: DEFAULT_WARNING,
+      activeIngredients,
+    };
+  };
+
+  const loadMedicineDetails = useCallback(
+    async (selectedMedicineId: number) => {
+      if (medicineDetailsId === selectedMedicineId) {
+        closeMedicineDetailsPanel();
+        return;
+      }
+
+      const requestId = medicineDetailsRequestId.current + 1;
+      medicineDetailsRequestId.current = requestId;
+
+      closeDetailsPanel();
+      setMedicineDetailsId(selectedMedicineId);
+      setMedicineDetails(null);
+      setMedicineDetailsError("");
+      setIsMedicineDetailsLoading(true);
+
+      try {
+        const [detailsResponse, dosesResponse] = await Promise.all([
+          fetch(apiUrl(`/api/v1/medication/${selectedMedicineId}`)),
+          fetch(apiUrl(`/api/v1/medication/${selectedMedicineId}/doses`)),
+        ]);
+
+        if (requestId !== medicineDetailsRequestId.current) {
+          return;
+        }
+
+        if (!detailsResponse.ok) {
+          setMedicineDetailsError(await getErrorMessage(detailsResponse));
+          return;
+        }
+
+        if (!dosesResponse.ok) {
+          setMedicineDetailsError(await getErrorMessage(dosesResponse));
+          return;
+        }
+
+        const detailsData =
+          (await detailsResponse.json()) as MedicationDetailsApiResponse;
+        const dosesData =
+          (await dosesResponse.json()) as MedicationDosesApiResponse;
+
+        if (requestId !== medicineDetailsRequestId.current) {
+          return;
+        }
+
+        setMedicineDetails(mapDetailsToMedicine(detailsData, dosesData));
+      } catch {
+        if (requestId === medicineDetailsRequestId.current) {
+          setMedicineDetailsError(
+            "Došlo je do greške pri učitavanju detalja lijeka."
+          );
+        }
+      } finally {
+        if (requestId === medicineDetailsRequestId.current) {
+          setIsMedicineDetailsLoading(false);
+        }
+      }
+    },
+    [closeDetailsPanel, closeMedicineDetailsPanel, medicineDetailsId]
+  );
 
   const loadAlternatives = useCallback(async () => {
     if (!medicineId) {
@@ -517,6 +633,7 @@ export default function PharmacySearchPage() {
       setDetailsPharmacy(null);
       setDetailsError("");
       setIsDetailsLoading(true);
+      closeMedicineDetailsPanel();
 
       try {
         const response = await fetch(apiUrl(`/api/v1/pharmacies/${pharmacyId}`));
@@ -547,7 +664,7 @@ export default function PharmacySearchPage() {
         }
       }
     },
-    [closeDetailsPanel, detailsPharmacyId]
+    [closeDetailsPanel, closeMedicineDetailsPanel, detailsPharmacyId]
   );
 
   const handleRetry = () => {
@@ -721,6 +838,9 @@ export default function PharmacySearchPage() {
                     onToggleAlternativeDose={handleAlternativeDoseClick}
                     onSearchAlternative={handleSearchAlternative}
                     onResetFilters={handleResetFilters}
+                    onLoadMedicineDetails={(selectedMedicineId) =>
+                      void loadMedicineDetails(selectedMedicineId)
+                    }
                   />
                 ) : (
                   <div className="grid gap-4 animate-fade-in">
@@ -750,6 +870,41 @@ export default function PharmacySearchPage() {
               />
             </div>
           )}
+
+          {viewMode !== "map" && shouldShowMedicineDetailsPanel && (
+            <div className="hidden xl:sticky xl:top-24 xl:block xl:w-[390px] xl:flex-none">
+              {isMedicineDetailsLoading ? (
+                <div className="rounded-[28px] border border-blue-200/80 bg-white p-6 shadow-sm">
+                  <p className="text-sm font-semibold text-blue-600">
+                    Učitavanje detalja lijeka...
+                  </p>
+                </div>
+              ) : medicineDetailsError ? (
+                <div className="rounded-[28px] border border-red-200 bg-white p-6 shadow-sm">
+                  <p className="text-sm font-semibold text-red-600">
+                    Detalji lijeka nijesu dostupni.
+                  </p>
+                  <p className="mt-2 text-sm text-slate-600">
+                    {medicineDetailsError}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={closeMedicineDetailsPanel}
+                    className="mt-4 rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
+                  >
+                    Zatvori
+                  </button>
+                </div>
+              ) : (
+                medicineDetails && (
+                  <MedicineDetailsPanel
+                    medicine={medicineDetails}
+                    onClose={closeMedicineDetailsPanel}
+                  />
+                )
+              )}
+            </div>
+          )}
         </div>
       </section>
 
@@ -759,6 +914,13 @@ export default function PharmacySearchPage() {
           isLoading={isDetailsLoading}
           error={detailsError}
           onClose={closeDetailsPanel}
+        />
+      )}
+
+      {viewMode !== "map" && medicineDetails && (
+        <MobileMedicineDetailsOverlay
+          medicine={medicineDetails}
+          onClose={closeMedicineDetailsPanel}
         />
       )}
 
@@ -888,6 +1050,7 @@ type EmptyStateProps = {
   onToggleAlternativeDose: (doseId: number) => void;
   onSearchAlternative: () => void;
   onResetFilters: () => void;
+  onLoadMedicineDetails: (medicineId: number) => void;
 };
 
 function EmptyState({
@@ -906,6 +1069,7 @@ function EmptyState({
   onToggleAlternativeDose,
   onSearchAlternative,
   onResetFilters,
+  onLoadMedicineDetails,
 }: EmptyStateProps) {
   const hasLoadedAlternatives =
     alternatives.length > 0 || Boolean(alternativesError);
@@ -976,10 +1140,6 @@ function EmptyState({
                     <p className="text-sm font-bold text-slate-900">
                       Odaberite alternativni lijek
                     </p>
-                    <p className="mt-1 text-sm leading-6 text-slate-500">
-                      Filteri za apoteke ostaju aktivni nakon pretrage
-                      alternative.
-                    </p>
                   </div>
 
                   <div className="mt-4 grid gap-3 md:grid-cols-2">
@@ -987,18 +1147,15 @@ function EmptyState({
                       const selected = selectedAlternative?.id === alternative.id;
 
                       return (
-                        <button
+                        <article
                           key={alternative.id}
-                          type="button"
-                          onClick={() => onSelectAlternative(alternative)}
-                          aria-pressed={selected}
-                          className={`min-h-24 rounded-2xl border p-4 text-left transition ${
+                          className={`rounded-2xl border p-4 transition ${
                             selected
                               ? "border-blue-300 bg-blue-50 shadow-sm shadow-blue-100"
                               : "border-slate-200 bg-white hover:border-blue-200 hover:bg-blue-50/50"
                           }`}
                         >
-                          <span className="flex items-start gap-3">
+                          <div className="flex items-start gap-3">
                             <span
                               className={`mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${
                                 selected
@@ -1012,17 +1169,42 @@ function EmptyState({
                                 <Pill className="h-4 w-4" />
                               )}
                             </span>
-                            <span className="min-w-0">
-                              <span className="block text-sm font-bold text-slate-900">
+                            <div className="min-w-0">
+                              <h3 className="text-sm font-bold text-slate-900">
                                 {alternative.name}
-                              </span>
-                              <span className="mt-1 line-clamp-2 block text-xs leading-5 text-slate-500">
+                              </h3>
+                              <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-500">
                                 {alternative.description ||
                                   "Opis alternative nije dostupan."}
-                              </span>
-                            </span>
-                          </span>
-                        </button>
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="mt-4 flex flex-wrap gap-2">
+                            <button
+                              type="button"
+                              onClick={() => onSelectAlternative(alternative)}
+                              aria-pressed={selected}
+                              className={`inline-flex min-h-10 items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-bold transition ${
+                                selected
+                                  ? "bg-blue-600 text-white hover:bg-blue-700"
+                                  : "border border-blue-200 bg-white text-blue-700 hover:bg-blue-50"
+                              }`}
+                            >
+                              {selected && <CheckCircle2 className="h-4 w-4" />}
+                              Odaberi
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => onLoadMedicineDetails(alternative.id)}
+                              className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 transition hover:border-blue-200 hover:text-blue-700"
+                            >
+                              <Info className="h-4 w-4" />
+                              Detalji
+                            </button>
+                          </div>
+                        </article>
                       );
                     })}
                   </div>

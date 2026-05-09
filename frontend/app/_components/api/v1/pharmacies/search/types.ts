@@ -55,6 +55,22 @@ export type MedicationDosesApiResponse = {
   message?: string;
 };
 
+export type ActiveIngredient = {
+  id: number;
+  name: string;
+};
+
+export type MedicationDetailsApiResponse = {
+  success: boolean;
+  data: {
+    id: number;
+    name: string;
+    description: string;
+    img_url: string;
+    activeIngredients?: ActiveIngredient[];
+  };
+};
+
 export type SearchViewMode = "list" | "map";
 
 export type SearchSort = "az" | "distance";
