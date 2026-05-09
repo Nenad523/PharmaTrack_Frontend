@@ -28,6 +28,33 @@ export type PharmacySearchApiResponse = {
   message?: string;
 };
 
+export type MedicationAlternative = {
+  id: number;
+  name: string;
+  description: string;
+  img_url?: string | null;
+  isActive?: boolean | number;
+};
+
+export type MedicationAlternativesApiResponse = {
+  success?: boolean;
+  data: MedicationAlternative[];
+  count?: number;
+  message?: string;
+};
+
+export type MedicationDose = {
+  id: number;
+  strength: string;
+};
+
+export type MedicationDosesApiResponse = {
+  success?: boolean;
+  data: MedicationDose[];
+  count?: number;
+  message?: string;
+};
+
 export type SearchViewMode = "list" | "map";
 
 export type SearchSort = "az" | "distance";
