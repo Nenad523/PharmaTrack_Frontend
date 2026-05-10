@@ -76,7 +76,7 @@ export default function SearchResults({
                                 <h3 className="text-xl font-semibold text-slate-900">
                                     {medicine.name}
                                 </h3>
-                                <p className="mt-2 max-w-2xl text-sm leading-7 text-slate-600">
+                                <p className="mt-2 max-w-2xl text-sm leading-7 text-slate-600 line-clamp-2">
                                     {medicine.description}
                                 </p>
                                 </div>

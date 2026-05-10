@@ -380,7 +380,7 @@ export default function MedicationsSearchPage() {
             />
 
             {shouldShowDetailsPanel && (
-              <div className="hidden xl:block xl:relative xl:z-20 xl:-ml-2 xl:w-[380px] xl:self-start">
+              <div className="hidden xl:block xl:relative xl:z-20 xl:-ml-2 xl:w-[440px] xl:self-start">
                 {isDetailsLoading ? (
                   <div className="rounded-[28px] border border-blue-200/80 bg-white p-6 shadow-sm">
                     <p className="text-sm font-semibold text-blue-600">
