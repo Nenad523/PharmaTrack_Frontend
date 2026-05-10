@@ -20,7 +20,7 @@ export type QuickAction =
       description: string;
       icon: typeof Search;
       locked: true;
-      href?: never;
+      href?: string;
     };
 
 export const quickActions: QuickAction[] = [
@@ -47,6 +47,7 @@ export const quickActions: QuickAction[] = [
     description: "Pronađite odgovarajuće ljekove prema simptomima.",
     icon: Stethoscope,
     locked: true,
+    href: "/api/v1/medications?mode=symptom",
   },
 ];
 

@@ -39,6 +39,24 @@ export default function HomeQuickActions() {
         }
 
         if (action.locked) {
+          if (action.href) {
+            return (
+              <Link
+                key={action.title}
+                href={action.href}
+                className={activeCardClassName}
+              >
+                <Icon className="h-5 w-5 text-blue-600" />
+                <h2 className="mt-5 text-lg font-semibold text-slate-900">
+                  {action.title}
+                </h2>
+                <p className="mt-2 text-sm leading-6 text-slate-500">
+                  {action.description}
+                </p>
+              </Link>
+            );
+          }
+
           return (
             <article
               key={action.title}

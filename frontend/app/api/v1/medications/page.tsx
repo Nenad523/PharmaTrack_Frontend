@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { apiUrl } from "@/lib/api";
 import MedicationsContent from "../../../_components/api/v1/medications/medications_content";
 import MedicineDetailsPanel, { MobileDetailsOverlay } from "../../../_components/api/v1/medications/MedicineDetailsPanel/medicine_details_panel";
@@ -19,6 +19,8 @@ const DEFAULT_WARNING =
 
 export default function MedicationsSearchPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const mode = searchParams.get("mode") === "symptom" ? "symptom" : "medication";
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedMedicineId, setSelectedMedicineId] = useState<number | null>(null);
   const [selectedDoses, setSelectedDoses] = useState<MedicationDose[]>([]);
@@ -49,10 +51,12 @@ export default function MedicationsSearchPage() {
     const controller = new AbortController();
     const timeoutId = setTimeout(async () => {
       try {
-        const response = await fetch(
-          apiUrl(`/api/v1/medication/search?name=${encodeURIComponent(trimmedSearch)}`),
-          { signal: controller.signal }
-        );
+        const searchPath =
+          mode === "symptom"
+            ? `/api/v1/medication/search?symptom=${encodeURIComponent(trimmedSearch)}`
+            : `/api/v1/medication/search?name=${encodeURIComponent(trimmedSearch)}`;
+
+        const response = await fetch(apiUrl(searchPath), { signal: controller.signal });
 
         if (!response.ok) {
           throw new Error("Failed to fetch medicines.");
@@ -354,6 +358,7 @@ export default function MedicationsSearchPage() {
             }`}
           >
             <MedicationsContent
+              mode={mode}
               handleSearchChange={handleSearchChange}
               searchTerm={searchTerm}
               hasMinimumChars={hasMinimumChars}
@@ -375,7 +380,7 @@ export default function MedicationsSearchPage() {
             />
 
             {shouldShowDetailsPanel && (
-              <div className="hidden xl:block xl:relative xl:z-20 xl:-ml-2 xl:w-[380px] xl:self-start">
+              <div className="hidden xl:block xl:relative xl:z-20 xl:-ml-2 xl:w-[440px] xl:self-start">
                 {isDetailsLoading ? (
                   <div className="rounded-[28px] border border-blue-200/80 bg-white p-6 shadow-sm">
                     <p className="text-sm font-semibold text-blue-600">
