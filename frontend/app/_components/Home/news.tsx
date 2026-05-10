@@ -55,17 +55,17 @@ export default async function HomeNews() {
 
   return (
     <section className="border-t border-slate-200/70 bg-white/70">
-      <div className="mx-auto max-w-6xl px-6 py-16">
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 md:py-16">
         <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight text-slate-900">
+            <h2 className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
               Aktuelnosti iz svijeta zdravlja
             </h2>
           </div>
         </div>
 
         {news.length > 0 ? (
-          <div className="mt-8 grid gap-5 md:grid-cols-2">
+          <div className="mt-5 grid gap-3 md:mt-8 md:grid-cols-2 md:gap-5">
             {news.map((item) => (
               <article
                 key={item.articleId}
@@ -75,13 +75,13 @@ export default async function HomeNews() {
                   <img
                     src={item.imageUrl}
                     alt={item.title}
-                    className="h-52 w-full object-cover"
+                    className="h-40 w-full object-cover sm:h-44 md:h-52"
                   />
                 )}
 
-                <div className="p-6">
-                  <div className="flex flex-wrap items-center gap-3 text-xs">
-                    <span className="rounded-full bg-blue-50 px-3 py-1 font-semibold text-blue-600">
+                <div className="p-4 sm:p-5 md:p-6">
+                  <div className="flex flex-wrap items-center gap-2 text-[11px] sm:gap-3 sm:text-xs">
+                    <span className="rounded-full bg-blue-50 px-2.5 py-1 font-semibold text-blue-600 sm:px-3">
                       {item.category ?? "Zdravlje"}
                     </span>
                     <span className="text-slate-400">
@@ -89,12 +89,12 @@ export default async function HomeNews() {
                     </span>
                   </div>
 
-                  <h3 className="mt-4 text-xl font-semibold leading-8 text-slate-900">
+                  <h3 className="mt-3 text-lg font-semibold leading-6 text-slate-900 md:mt-4 md:text-xl md:leading-8">
                     {item.title}
                   </h3>
 
                   {item.description && (
-                    <p className="mt-3 text-sm leading-7 text-slate-600 md:text-base">
+                    <p className="mt-2 text-xs leading-5 text-slate-600 sm:text-sm sm:leading-6 md:mt-3 md:text-base md:leading-7">
                       {item.description}
                     </p>
                   )}
@@ -103,7 +103,7 @@ export default async function HomeNews() {
                     href={item.link}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition-colors hover:text-blue-600"
+                    className="mt-4 inline-flex items-center gap-2 text-xs font-medium text-slate-500 transition-colors hover:text-blue-600 sm:text-sm md:mt-5"
                   >
                     <ExternalLink className="h-4 w-4" />
                     {item.source
@@ -115,7 +115,7 @@ export default async function HomeNews() {
             ))}
           </div>
         ) : (
-          <div className="mt-8 rounded-2xl border border-dashed border-slate-300 bg-white/80 p-6 text-sm leading-7 text-slate-600">
+          <div className="mt-5 rounded-2xl border border-dashed border-slate-300 bg-white/80 p-5 text-sm leading-6 text-slate-600 md:mt-8 md:p-6 md:leading-7">
             Vijesti trenutno nijesu dostupne. Nakon prvog uspjesnog backend
             sinhronizovanja pojavice se ovdje automatski.
           </div>

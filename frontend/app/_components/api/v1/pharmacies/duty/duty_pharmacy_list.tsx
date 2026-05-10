@@ -32,15 +32,15 @@ export default function DutyPharmacyList({
 
   return (
     <section className="min-w-0 xl:sticky xl:top-24 xl:flex xl:max-h-[calc(100vh-7rem)] xl:flex-col">
-      <div className="mb-5 flex flex-col gap-3 rounded-[24px] border border-slate-200 bg-white px-5 py-4 shadow-sm sm:flex-row sm:items-center sm:justify-between xl:flex-none">
+      <div className="mb-4 flex flex-col gap-3 rounded-[24px] border border-slate-200 bg-white px-4 py-4 shadow-sm sm:mb-5 sm:px-5 sm:flex-row sm:items-center sm:justify-between xl:flex-none">
         <div>
-          <p className="text-sm font-semibold text-blue-600">
+          <p className="text-xs font-semibold text-blue-600 sm:text-sm">
             {formatFullDate(selectedDate)}
           </p>
-          <h1 className="mt-1 text-2xl font-bold text-slate-900">
+          <h1 className="mt-1 text-xl font-bold text-slate-900 sm:text-2xl">
             Dežurne apoteke
           </h1>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-xs text-slate-500 sm:text-sm">
             {isLoading
               ? "Učitavanje rasporeda..."
               : `${pharmacies.length} ${countLabel} za prikaz`}
@@ -54,11 +54,11 @@ export default function DutyPharmacyList({
 
       <div className="xl:min-h-0 xl:flex-1 xl:overflow-y-auto xl:pb-2 xl:pr-2">
         {isLoading ? (
-          <div className="grid gap-4">
+          <div className="grid gap-3 sm:gap-4">
             {[1, 2, 3].map((item) => (
               <div
                 key={item}
-                className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+                className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5"
               >
                 <div className="flex animate-pulse gap-4">
                   <div className="h-10 w-10 rounded-2xl bg-slate-200" />
@@ -72,7 +72,7 @@ export default function DutyPharmacyList({
             ))}
           </div>
         ) : error ? (
-          <div className="rounded-2xl border border-red-200 bg-white p-6 shadow-sm">
+          <div className="rounded-2xl border border-red-200 bg-white p-5 shadow-sm sm:p-6">
             <div className="flex items-start gap-3">
               <span className="rounded-xl bg-red-50 p-2 text-red-600">
                 <AlertCircle className="h-5 w-5" />
@@ -94,7 +94,7 @@ export default function DutyPharmacyList({
             </div>
           </div>
         ) : pharmacies.length === 0 ? (
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
             <div className="flex items-start gap-3">
               <span className="rounded-xl bg-slate-100 p-2 text-slate-500">
                 <AlertCircle className="h-5 w-5" />
@@ -110,7 +110,7 @@ export default function DutyPharmacyList({
             </div>
           </div>
         ) : (
-          <div className="grid gap-4">
+          <div className="grid gap-3 sm:gap-4">
             {totalCount !== pharmacies.length && (
               <p className="text-sm text-slate-500">
                 Prikazano {pharmacies.length} od {totalCount} apoteka za ovaj

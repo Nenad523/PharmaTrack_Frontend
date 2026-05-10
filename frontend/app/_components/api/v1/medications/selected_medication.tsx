@@ -23,11 +23,11 @@ export default function SelectedMedication({
   isDoseActive,
 }: SelectedMedicationProps) {
     return(
-        <div className="mt-8">
+        <div className="mt-6 sm:mt-8">
           <article className="overflow-hidden rounded-2xl border border-blue-200 bg-white shadow-sm">
-            <div className="p-5">
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                <div className="flex items-start gap-4">
+            <div className="p-4 sm:p-5">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div className="flex items-start gap-3 sm:gap-4">
                   <button
                     type="button"
                     onClick={() => handleSelectMedicine(selectedMedicine.id)}
@@ -37,14 +37,14 @@ export default function SelectedMedication({
                     <CheckCircle2 className="h-4 w-4" />
                   </button>
 
-                  <div>
-                    <h3 className="text-xl font-semibold text-slate-900">
+                    <div>
+                    <h3 className="text-lg font-semibold text-slate-900 sm:text-xl">
                       {selectedMedicine.name}
                     </h3>
-                    <p className="mt-2 max-w-2xl text-sm leading-7 text-slate-600">
+                    <p className="mt-1.5 max-w-2xl text-xs leading-5 text-slate-600 sm:mt-2 sm:text-sm sm:leading-7">
                       {selectedMedicine.description}
                     </p>
-                  </div>
+                    </div>
                 </div>
 
                 <div className="flex gap-2 self-start">
@@ -70,8 +70,8 @@ export default function SelectedMedication({
               </div>
             </div>
 
-            <div className="border-t border-slate-200 px-5 py-5">
-              <p className="mb-4 text-sm font-semibold text-slate-700">
+            <div className="border-t border-slate-200 px-4 py-4 sm:px-5 sm:py-5">
+              <p className="mb-3 text-sm font-semibold text-slate-700 sm:mb-4">
                 Odaberite dozu
               </p>
 

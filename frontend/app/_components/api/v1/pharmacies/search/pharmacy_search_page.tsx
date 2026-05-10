@@ -121,7 +121,11 @@ export default function PharmacySearchPage() {
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
   const [isLocating, setIsLocating] = useState(false);
   const [locationError, setLocationError] = useState("");
+  const [pendingDistanceSort, setPendingDistanceSort] = useState(false);
   const [pharmacies, setPharmacies] = useState<PharmacySearchResult[]>([]);
+  const [focusedMapPharmacyId, setFocusedMapPharmacyId] = useState<number | null>(
+    null
+  );
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [searchError, setSearchError] = useState("");
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
@@ -310,10 +314,29 @@ export default function PharmacySearchPage() {
   }, [loadPharmacies]);
 
   useEffect(() => {
+    if (focusedMapPharmacyId === null) {
+      return;
+    }
+
+    if (!pharmacies.some((pharmacy) => pharmacy.id === focusedMapPharmacyId)) {
+      setFocusedMapPharmacyId(null);
+    }
+  }, [focusedMapPharmacyId, pharmacies]);
+
+  useEffect(() => {
     if (!userLocation && sort === "distance") {
       setSort("az");
     }
   }, [sort, userLocation]);
+
+  useEffect(() => {
+    if (!userLocation || !pendingDistanceSort) {
+      return;
+    }
+
+    setSort("distance");
+    setPendingDistanceSort(false);
+  }, [pendingDistanceSort, userLocation]);
 
   useEffect(() => {
     alternativesRequestId.current += 1;
@@ -343,6 +366,7 @@ export default function PharmacySearchPage() {
   const handleResetFilters = () => {
     setFilters(DEFAULT_FILTERS);
     setSort("az");
+    setFocusedMapPharmacyId(null);
     closeDetailsPanel();
   };
 
@@ -561,12 +585,22 @@ export default function PharmacySearchPage() {
 
   const handleSortChange = (value: SearchSort) => {
     if (value === "distance" && !userLocation) {
+      setPendingDistanceSort(true);
       requestLocation();
       return;
     }
 
+    setPendingDistanceSort(false);
     setSort(value);
     closeDetailsPanel();
+  };
+
+  const handleViewModeChange = (mode: SearchViewMode) => {
+    if (mode === "list") {
+      setFocusedMapPharmacyId(null);
+    }
+
+    setViewMode(mode);
   };
 
   const activeFiltersCount = useMemo(() => {
@@ -641,6 +675,19 @@ export default function PharmacySearchPage() {
     void loadPharmacies();
   };
 
+  const handleShowPharmacyOnMap = (pharmacy: PharmacyDetails) => {
+    setFocusedMapPharmacyId(pharmacy.id);
+    setViewMode("map");
+  };
+
+  const mapPharmacies = useMemo(() => {
+    if (focusedMapPharmacyId === null) {
+      return pharmacies;
+    }
+
+    return pharmacies.filter((pharmacy) => pharmacy.id === focusedMapPharmacyId);
+  }, [focusedMapPharmacyId, pharmacies]);
+
   const countLabel = pharmacies.length === 1 ? "apoteka" : "apoteka";
 
   return (
@@ -687,7 +734,10 @@ export default function PharmacySearchPage() {
               {userLocation ? "Lokacija uključena" : "Koristi lokaciju"}
             </button>
             <div className="hidden sm:block">
-              <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
+              <ViewToggle
+                viewMode={viewMode}
+                onViewModeChange={handleViewModeChange}
+              />
             </div>
           </div>
         </div>
@@ -704,13 +754,15 @@ export default function PharmacySearchPage() {
           onOpenFilters={() => setIsMobileFiltersOpen(true)}
           onRequestLocation={requestLocation}
           onSortChange={handleSortChange}
-          onViewModeChange={setViewMode}
+          onViewModeChange={handleViewModeChange}
         />
         {isMobileFiltersOpen && <div className="h-28 xl:hidden" />}
 
         <div
-          className={`flex flex-col gap-6 xl:flex-row xl:items-start ${
-            viewMode === "map" ? "xl:min-h-[calc(100vh-15rem)]" : ""
+          className={`flex flex-col gap-6 xl:flex-row ${
+            viewMode === "map"
+              ? "xl:items-stretch xl:min-h-[calc(100vh-15rem)]"
+              : "xl:items-start"
           }`}
         >
           <div className="hidden space-y-4 xl:sticky xl:top-24 xl:block xl:w-[300px] xl:flex-none">
@@ -731,7 +783,7 @@ export default function PharmacySearchPage() {
             <section
               className={`min-w-0 xl:sticky xl:top-24 xl:flex xl:flex-col ${
                 viewMode === "map"
-                  ? "xl:h-[calc(100vh-7rem)]"
+                  ? "xl:h-[calc(100vh-15rem)] xl:min-h-[42rem] xl:self-stretch"
                   : "xl:max-h-[calc(100vh-7rem)]"
               }`}
             >
@@ -782,8 +834,10 @@ export default function PharmacySearchPage() {
               >
                 {viewMode === "map" ? (
                   <MapPlaceholder
-                    pharmacies={pharmacies}
+                    pharmacies={mapPharmacies}
                     userLocation={userLocation}
+                    isLocating={isLocating}
+                    onRequestLocation={requestLocation}
                   />
                 ) : isSearchLoading ? (
                   <LoadingList />
@@ -837,6 +891,7 @@ export default function PharmacySearchPage() {
                 isLoading={isDetailsLoading}
                 error={detailsError}
                 onClose={closeDetailsPanel}
+                onShowOnMap={handleShowPharmacyOnMap}
               />
             </div>
           )}
@@ -884,6 +939,7 @@ export default function PharmacySearchPage() {
           isLoading={isDetailsLoading}
           error={detailsError}
           onClose={closeDetailsPanel}
+          onShowOnMap={handleShowPharmacyOnMap}
         />
       )}
 

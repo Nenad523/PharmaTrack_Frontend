@@ -19,9 +19,9 @@ export default function SearchResults({
   handleToggleDetails,
 }: SearchResultsProps) {
     return (
-        <div className="mt-8">
-            <div className="mb-5">
-                <p className="text-sm text-slate-500">
+        <div className="mt-6 sm:mt-8">
+            <div className="mb-4 sm:mb-5">
+                <p className="text-xs text-slate-500 sm:text-sm">
                 Rezultati pretrage:{" "}
                 <span className="font-semibold text-slate-900">
                     {trimmedSearch}
@@ -30,24 +30,24 @@ export default function SearchResults({
             </div>
 
             {filteredMedicines.length === 0 ? (
-                <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
                 <div className="flex items-start gap-3">
                     <div className="rounded-xl bg-slate-100 p-2 text-slate-500">
                     <Info className="h-5 w-5" />
                     </div>
 
                     <div>
-                    <h3 className="text-base font-semibold text-slate-900">
+                    <h3 className="text-sm font-semibold text-slate-900 sm:text-base">
                         Nema rezultata
                     </h3>
-                    <p className="mt-1 text-sm leading-6 text-slate-500">
+                    <p className="mt-1 text-xs leading-5 text-slate-500 sm:text-sm sm:leading-6">
                         Nismo pronašli lijek za pojam <b>{trimmedSearch}</b>.
                     </p>
                     </div>
                 </div>
                 </div>
             ) : (
-                <div className="grid gap-4">
+                <div className="grid gap-3 sm:gap-4">
                 {filteredMedicines.map((medicine) => {
                     const isSelected = selectedMedicineId === medicine.id;
                     const detailsOpen = detailsMedicineId === medicine.id;
@@ -55,10 +55,10 @@ export default function SearchResults({
                     return (
                         <article
                             key={medicine.id}
-                            className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-[0_12px_26px_-18px_rgba(15,23,42,0.35),0_6px_16px_-12px_rgba(37,99,235,0.32)]"
+                            className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-[0_12px_26px_-18px_rgba(15,23,42,0.35),0_6px_16px_-12px_rgba(37,99,235,0.32)] sm:p-5"
                         >
-                            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                            <div className="flex items-start gap-4">
+                            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                            <div className="flex items-start gap-3 sm:gap-4">
                                 <button
                                 type="button"
                                 onClick={() => handleSelectMedicine(medicine.id)}
@@ -73,10 +73,10 @@ export default function SearchResults({
                                 </button>
 
                                 <div>
-                                <h3 className="text-xl font-semibold text-slate-900">
+                                <h3 className="text-lg font-semibold text-slate-900 sm:text-xl">
                                     {medicine.name}
                                 </h3>
-                                <p className="mt-2 max-w-2xl text-sm leading-7 text-slate-600 line-clamp-2">
+                                <p className="mt-1.5 max-w-2xl text-xs leading-5 text-slate-600 line-clamp-2 sm:mt-2 sm:text-sm sm:leading-7">
                                     {medicine.description}
                                 </p>
                                 </div>

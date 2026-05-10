@@ -40,7 +40,7 @@ export default function SearchFilterPanel({
       }
     >
       {isMobile ? (
-        <div className="mb-4 flex justify-end">
+        <div className="mb-3 flex justify-end">
           <button
             type="button"
             onClick={onResetFilters}
@@ -77,7 +77,7 @@ export default function SearchFilterPanel({
         </div>
       )}
 
-      <div className="grid gap-4">
+      <div className={`grid ${isMobile ? "gap-3" : "gap-4"}`}>
         <label className="grid gap-1.5">
           <span className="text-xs font-semibold text-slate-500">
             Naziv apoteke
@@ -86,7 +86,7 @@ export default function SearchFilterPanel({
             value={filters.name}
             onChange={(event) => onFilterChange("name", event.target.value)}
             placeholder="Unesite naziv"
-            className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
+            className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-300 focus:ring-4 focus:ring-blue-100 sm:h-11"
           />
         </label>
 
@@ -98,7 +98,7 @@ export default function SearchFilterPanel({
             value={filters.address}
             onChange={(event) => onFilterChange("address", event.target.value)}
             placeholder="Unesite adresu"
-            className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
+            className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-300 focus:ring-4 focus:ring-blue-100 sm:h-11"
           />
         </label>
 
@@ -130,14 +130,14 @@ export default function SearchFilterPanel({
             {isCitiesLoading ? (
               <p className="px-2 py-2 text-sm text-slate-500">Ucitavanje gradova...</p>
             ) : (
-              <div className="grid max-h-52 gap-2 overflow-y-auto pr-1">
+              <div className="grid max-h-44 gap-2 overflow-y-auto pr-1 sm:max-h-52">
                 {cities.map((city) => {
                   const checked = filters.cities.includes(city.name);
 
                   return (
                     <label
                       key={city.id}
-                      className={`flex items-center justify-between gap-3 rounded-xl border px-3 py-2.5 transition ${
+                      className={`flex items-center justify-between gap-3 rounded-xl border px-3 py-2 transition ${
                         checked
                           ? "border-blue-200 bg-blue-50"
                           : "border-slate-200 bg-white"
@@ -197,7 +197,7 @@ export default function SearchFilterPanel({
               type="button"
               onClick={onRequestLocation}
               disabled={isLocating}
-              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-white text-blue-700 transition hover:bg-blue-50 disabled:cursor-wait disabled:opacity-70"
+              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-white text-blue-700 transition hover:bg-blue-50 disabled:cursor-wait disabled:opacity-70 sm:h-10 sm:w-10"
               aria-label="Koristi moju lokaciju"
             >
               <LocateFixed className="h-4 w-4" />
@@ -259,7 +259,7 @@ function ToggleRow({
   onChange: (checked: boolean) => void;
 }) {
   return (
-    <label className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2.5">
+    <label className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2">
       <span className="text-sm font-semibold text-slate-700">{label}</span>
       <input
         type="checkbox"

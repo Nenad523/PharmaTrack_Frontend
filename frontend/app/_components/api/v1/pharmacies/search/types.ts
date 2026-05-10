@@ -18,6 +18,7 @@ export type PharmacySearchResult = {
   city: string;
   latitude: number | string | null;
   longitude: number | string | null;
+  isActive: boolean | number;
   distance?: number | string | null;
   isOpenNow: boolean;
   isOnDuty: boolean;
