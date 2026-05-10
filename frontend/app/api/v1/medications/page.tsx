@@ -51,10 +51,12 @@ export default function MedicationsSearchPage() {
     const controller = new AbortController();
     const timeoutId = setTimeout(async () => {
       try {
-        const response = await fetch(
-          apiUrl(`/api/v1/medication/search?name=${encodeURIComponent(trimmedSearch)}`),
-          { signal: controller.signal }
-        );
+        const searchPath =
+          mode === "symptom"
+            ? `/api/v1/medication/search?symptom=${encodeURIComponent(trimmedSearch)}`
+            : `/api/v1/medication/search?name=${encodeURIComponent(trimmedSearch)}`;
+
+        const response = await fetch(apiUrl(searchPath), { signal: controller.signal });
 
         if (!response.ok) {
           throw new Error("Failed to fetch medicines.");
