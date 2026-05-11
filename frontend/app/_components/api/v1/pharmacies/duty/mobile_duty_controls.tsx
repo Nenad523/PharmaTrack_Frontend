@@ -19,7 +19,7 @@ export default function MobileDutyControls({
   onCityChange,
 }: MobileDutyControlsProps) {
   return (
-    <div className="sticky top-16 z-30 -mx-4 mb-4 border-y border-blue-100 bg-sky-50/95 px-4 py-3 shadow-sm backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 xl:hidden">
+    <div className="sticky top-14 z-30 -mx-4 mb-4 border-y border-blue-100 bg-sky-50/95 px-4 py-2.5 shadow-sm backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 xl:hidden">
       <div className="grid grid-cols-2 gap-2">
         <label className="min-w-0">
           <span className="mb-1 flex items-center gap-1.5 text-xs font-semibold uppercase text-slate-500">
@@ -34,7 +34,7 @@ export default function MobileDutyControls({
                 onDateChange(event.target.value);
               }
             }}
-            className="h-11 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-800 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
+            className="h-10 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-800 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100 sm:h-11"
           />
         </label>
 
@@ -47,7 +47,7 @@ export default function MobileDutyControls({
             value={selectedCity}
             onChange={(event) => onCityChange(event.target.value)}
             disabled={isCitiesLoading}
-            className="h-11 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-800 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
+            className="h-10 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-800 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 sm:h-11"
           >
             <option value={ALL_CITIES_VALUE}>Svi gradovi</option>
             {cities.map((city) => (

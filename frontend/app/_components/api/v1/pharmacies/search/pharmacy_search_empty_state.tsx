@@ -87,7 +87,7 @@ export default function PharmacySearchEmptyState({
               : "Nema rezultata za odabrani lijek i dozu."}
           </p>
 
-          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <div className="mt-4 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:gap-3">
             <button
               type="button"
               onClick={onLoadAlternatives}
@@ -122,7 +122,7 @@ export default function PharmacySearchEmptyState({
           )}
 
           {hasLoadedAlternatives && (
-            <div className="mt-6 border-t border-slate-100 pt-5">
+            <div className="mt-5 border-t border-slate-100 pt-4 sm:mt-6 sm:pt-5">
               {alternativesError && (
                 <p className="rounded-xl border border-amber-100 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-700">
                   {alternativesError}
@@ -135,7 +135,7 @@ export default function PharmacySearchEmptyState({
                     Odaberite alternativni lijek
                   </p>
 
-                  <div className="mt-4 grid gap-3">
+                  <div className="mt-4 grid gap-2.5 sm:gap-3">
                     {alternatives.map((alternative) => {
                       const selected = selectedAlternative?.id === alternative.id;
                       const detailsId = `alternative-details-${alternative.id}`;
@@ -150,8 +150,8 @@ export default function PharmacySearchEmptyState({
                           }`}
                         >
                           <div className="p-4">
-                            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                              <div className="flex min-w-0 items-start gap-4">
+                            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                              <div className="flex min-w-0 items-start gap-3 sm:gap-4">
                                 <button
                                   type="button"
                                   onClick={() => onSelectAlternative(alternative)}
@@ -170,10 +170,10 @@ export default function PharmacySearchEmptyState({
                                 </button>
 
                                 <div className="min-w-0 flex-1">
-                                  <h3 className="text-lg font-semibold text-slate-900">
+                                  <h3 className="text-base font-semibold text-slate-900 sm:text-lg">
                                     {alternative.name}
                                   </h3>
-                                  <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+                                  <p className="mt-1.5 max-w-2xl text-xs leading-5 text-slate-600 sm:mt-2 sm:text-sm sm:leading-6">
                                     {alternative.description ||
                                       "Opis alternative nije dostupan."}
                                   </p>
@@ -198,7 +198,7 @@ export default function PharmacySearchEmptyState({
                               id={detailsId}
                               className="border-t border-slate-200 px-4 py-4"
                             >
-                              <p className="mb-4 text-sm font-semibold text-slate-700">
+                              <p className="mb-3 text-sm font-semibold text-slate-700 sm:mb-4">
                                 Odaberite dozu
                               </p>
 

@@ -38,7 +38,7 @@ export default function MobileSearchControls({
 }: MobileSearchControlsProps) {
   return (
     <div
-      className={`z-30 border-y border-blue-100 bg-white/95 px-4 py-3 shadow-sm backdrop-blur sm:px-6 lg:px-8 xl:hidden ${
+      className={`z-30 border-y border-blue-100 bg-white/95 px-4 py-2.5 shadow-sm backdrop-blur sm:px-6 lg:px-8 xl:hidden ${
         isPinned
           ? "fixed inset-x-0 top-16"
           : "sticky top-16 -mx-4 mb-4 sm:-mx-6 lg:-mx-8"
@@ -48,7 +48,7 @@ export default function MobileSearchControls({
         <button
           type="button"
           onClick={onOpenFilters}
-          className="inline-flex h-11 shrink-0 items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm font-bold text-slate-800"
+          className="inline-flex h-10 shrink-0 items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3.5 text-sm font-bold text-slate-800"
         >
           <Filter className="h-4 w-4 text-blue-600" />
           Filteri
@@ -60,7 +60,7 @@ export default function MobileSearchControls({
         </button>
 
         {showSort && (
-          <label className="relative inline-flex h-11 shrink-0 items-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
+          <label className="relative inline-flex h-10 shrink-0 items-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
             <SlidersHorizontal className="ml-3 h-4 w-4 text-blue-600" />
             <select
               value={sort}
@@ -80,7 +80,7 @@ export default function MobileSearchControls({
           type="button"
           onClick={onRequestLocation}
           disabled={isLocating}
-          className={`inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-2xl border px-3 text-sm font-bold transition sm:px-4 ${
+          className={`inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-2xl border px-3 text-sm font-bold transition sm:px-4 ${
             userLocation
               ? "border-emerald-200 bg-emerald-50 text-emerald-700"
               : "border-slate-200 bg-slate-50 text-slate-800"
@@ -94,8 +94,8 @@ export default function MobileSearchControls({
         </button>
       </div>
 
-      <div className="mt-3 flex items-center justify-between gap-3">
-        <div className="inline-flex min-w-0 items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700">
+      <div className="mt-2.5 flex items-center justify-between gap-3">
+        <div className="inline-flex min-w-0 items-center gap-2 rounded-full bg-blue-50 px-3 py-1 text-[11px] font-semibold text-blue-700">
           <MapPin className="h-3.5 w-3.5 shrink-0" />
           <span className="truncate">
             {selectedCityLabel === "all" ? "Svi gradovi" : selectedCityLabel}
@@ -106,7 +106,7 @@ export default function MobileSearchControls({
           <button
             type="button"
             onClick={() => onViewModeChange("list")}
-            className={`rounded-xl px-3 py-2 text-xs font-bold transition ${
+            className={`rounded-xl px-3 py-1.5 text-[11px] font-bold transition ${
               viewMode === "list"
                 ? "bg-white text-slate-950 shadow-sm"
                 : "text-slate-500"
@@ -117,7 +117,7 @@ export default function MobileSearchControls({
           <button
             type="button"
             onClick={() => onViewModeChange("map")}
-            className={`rounded-xl px-3 py-2 text-xs font-bold transition ${
+            className={`rounded-xl px-3 py-1.5 text-[11px] font-bold transition ${
               viewMode === "map"
                 ? "bg-white text-slate-950 shadow-sm"
                 : "text-slate-500"

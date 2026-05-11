@@ -51,7 +51,7 @@ export default function MedicationsContent({
   mode = "medication",
 }: MedicationsContentProps) {
   return (
-    <div className="flex-1 max-w-2xl rounded-[28px] border border-blue-200/90 bg-white p-6 shadow-[0_22px_50px_-24px_rgba(37,99,235,0.5),0_10px_20px_-14px_rgba(15,23,42,0.3),inset_0_1px_0_rgba(255,255,255,0.7)] backdrop-blur md:p-8">
+    <div className="flex-1 max-w-2xl rounded-[24px] border border-blue-200/90 bg-white p-4 shadow-[0_22px_50px_-24px_rgba(37,99,235,0.5),0_10px_20px_-14px_rgba(15,23,42,0.3),inset_0_1px_0_rgba(255,255,255,0.7)] backdrop-blur sm:p-5 md:rounded-[28px] md:p-8">
       <SearchBarTitleText mode={mode} />
 
       <SearchBar
@@ -61,7 +61,7 @@ export default function MedicationsContent({
       />
 
       {!hasMinimumChars && mode === "symptom" && (
-        <div className="mt-8 rounded-2xl border border-amber-100 bg-amber-50 px-4 py-4">
+        <div className="mt-6 rounded-2xl border border-amber-100 bg-amber-50 px-3 py-3 sm:mt-8 sm:px-4 sm:py-4">
           <div className="flex items-start gap-3">
             <div className="rounded-xl bg-white/80 p-2 text-amber-500 shrink-0">
               <AlertTriangle className="h-4 w-4" />
