@@ -4,7 +4,6 @@ import {
   Clock3,
   MapPin,
   Navigation,
-  Power,
 } from "lucide-react";
 import { formatTime } from "../duty/date_utils";
 import { PharmacySearchResult } from "./types";
@@ -53,7 +52,6 @@ export default function PharmacySearchCard({
 }: PharmacySearchCardProps) {
   const detailsOpen = detailsPharmacyId === pharmacy.id;
   const distance = formatDistance(pharmacy.distance);
-  const isActive = pharmacy.isActive === true || pharmacy.isActive === 1;
 
   return (
     <article className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-[0_14px_28px_-20px_rgba(15,23,42,0.42),0_6px_16px_-12px_rgba(37,99,235,0.35)] sm:p-5">
@@ -91,19 +89,6 @@ export default function PharmacySearchCard({
               </div>
 
               <div className="mt-3 flex flex-wrap gap-2 sm:mt-4">
-                <span
-                  className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold ${
-                    isActive
-                      ? "border border-emerald-100 bg-emerald-50 text-emerald-700"
-                      : "border border-slate-200 bg-slate-100 text-slate-600"
-                  }`}
-                >
-                  <span className="inline-flex items-center gap-1.5">
-                    <Power className="h-3.5 w-3.5" />
-                    {isActive ? "Aktivna" : "Neaktivna"}
-                  </span>
-                </span>
-
                 {pharmacy.doses.map((dose) => (
                   <span
                     key={`${pharmacy.id}-${dose.doseId}`}

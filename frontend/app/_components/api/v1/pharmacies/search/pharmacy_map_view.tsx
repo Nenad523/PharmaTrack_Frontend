@@ -95,7 +95,6 @@ function MapBoundsController({
 }
 
 function PharmacyPopup({ pharmacy }: { pharmacy: PharmacySearchResult }) {
-  const isActive = pharmacy.isActive === true || pharmacy.isActive === 1;
   const openLabel = pharmacy.isOnDuty
     ? pharmacy.openUntil
       ? `Dežurna do ${formatTime(pharmacy.openUntil)}`
@@ -165,16 +164,6 @@ function PharmacyPopup({ pharmacy }: { pharmacy: PharmacySearchResult }) {
           <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-[10px] font-bold text-blue-700">
             <Clock3 className="h-3 w-3" />
             {openLabel}
-          </span>
-          <span
-            className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold ${
-              isActive
-                ? "border border-emerald-100 bg-emerald-50 text-emerald-700"
-                : "border border-slate-200 bg-slate-100 text-slate-600"
-            }`}
-          >
-            <Power className="h-3 w-3" />
-            {isActive ? "Aktivna" : "Neaktivna"}
           </span>
         </div>
 
