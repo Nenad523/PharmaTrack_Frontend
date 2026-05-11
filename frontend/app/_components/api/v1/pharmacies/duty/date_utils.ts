@@ -129,6 +129,14 @@ export const formatTime = (value: string) => {
   return value;
 };
 
+export const formatWorkingHoursRange = (openTime: string, closeTime: string) => {
+  if (formatTime(openTime) === "00:00" && formatTime(closeTime) === "00:00") {
+    return "24h";
+  }
+
+  return `${formatTime(openTime)} - ${formatTime(closeTime)}`;
+};
+
 export const formatDateTime = (value: string) => {
   if (!value) {
     return "Nije dostupno";

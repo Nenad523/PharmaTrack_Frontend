@@ -6,7 +6,7 @@ import {
   Route,
   X,
 } from "lucide-react";
-import { formatDateTime, formatTime } from "./date_utils";
+import { formatDateTime, formatWorkingHoursRange } from "./date_utils";
 import { PharmacyDetails } from "./types";
 
 type DetailsStateProps = {
@@ -188,7 +188,7 @@ function DetailsBody({
                     {item.day_of_week}
                   </span>
                   <span className="text-slate-600">
-                    {formatTime(item.open_time)} - {formatTime(item.close_time)}
+                    {formatWorkingHoursRange(item.open_time, item.close_time)}
                   </span>
                 </div>
               ))
