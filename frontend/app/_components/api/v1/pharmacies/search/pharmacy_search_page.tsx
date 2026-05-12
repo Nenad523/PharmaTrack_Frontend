@@ -31,10 +31,13 @@ import MobileSearchControls from "./mobile_search_controls";
 import SearchFilterPanel from "./search_filter_panel";
 import {
   buildPharmacySearchParams,
+  formatDistance,
   getErrorMessage,
+  getLatestInventoryUpdate,
   isAbortError,
   normalizeMedicineDetails,
   normalizePharmacyDetails,
+  formatRelativeUpdate,
 } from "./search_utils";
 import {
   City,
@@ -687,6 +690,28 @@ export default function PharmacySearchPage() {
   }, [focusedMapPharmacyId, pharmacies]);
 
   const countLabel = pharmacies.length === 1 ? "apoteka" : "apoteka";
+  const activeSearchPharmacy =
+    detailsPharmacyId === null
+      ? null
+      : pharmacies.find((pharmacy) => pharmacy.id === detailsPharmacyId) ?? null;
+
+  const pharmacyMedicineContext = useMemo(() => {
+    if (!activeSearchPharmacy) {
+      return null;
+    }
+
+    const latestInventoryUpdate = getLatestInventoryUpdate(activeSearchPharmacy.doses);
+
+    return {
+      medicineName,
+      selectedDoseStrengths: doseStrengths,
+      availableDoseStrengths: activeSearchPharmacy.doses.map((dose) => dose.strength),
+      distanceLabel: formatDistance(activeSearchPharmacy.distance),
+      latestUpdateLabel: latestInventoryUpdate
+        ? formatRelativeUpdate(latestInventoryUpdate)
+        : null,
+    };
+  }, [activeSearchPharmacy, doseStrengths, medicineName]);
 
   return (
     <div className="min-h-screen">
@@ -836,6 +861,8 @@ export default function PharmacySearchPage() {
                     userLocation={userLocation}
                     isLocating={isLocating}
                     onRequestLocation={requestLocation}
+                    medicineName={medicineName}
+                    doseStrengths={doseStrengths}
                   />
                 ) : isSearchLoading ? (
                   <LoadingList />
@@ -890,6 +917,7 @@ export default function PharmacySearchPage() {
                 error={detailsError}
                 onClose={closeDetailsPanel}
                 onShowOnMap={handleShowPharmacyOnMap}
+                medicineContext={pharmacyMedicineContext}
               />
             </div>
           )}
@@ -938,6 +966,7 @@ export default function PharmacySearchPage() {
           error={detailsError}
           onClose={closeDetailsPanel}
           onShowOnMap={handleShowPharmacyOnMap}
+          medicineContext={pharmacyMedicineContext}
         />
       )}
 

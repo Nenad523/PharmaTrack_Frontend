@@ -1,13 +1,25 @@
 import {
   Building2,
   CalendarClock,
+  Clock3,
+  MapPin,
+  Navigation,
   Phone,
   Power,
   Route,
+  Sparkles,
   X,
 } from "lucide-react";
 import { formatDateTime, formatWorkingHoursRange } from "./date_utils";
 import { PharmacyDetails } from "./types";
+
+type PharmacyMedicineContext = {
+  medicineName: string;
+  selectedDoseStrengths: string[];
+  availableDoseStrengths: string[];
+  distanceLabel?: string | null;
+  latestUpdateLabel?: string | null;
+};
 
 type DetailsStateProps = {
   pharmacy: PharmacyDetails | null;
@@ -15,6 +27,7 @@ type DetailsStateProps = {
   error: string;
   onClose: () => void;
   onShowOnMap?: (pharmacy: PharmacyDetails) => void;
+  medicineContext?: PharmacyMedicineContext | null;
 };
 
 function DetailsBody({
@@ -23,6 +36,7 @@ function DetailsBody({
   error,
   onClose,
   onShowOnMap,
+  medicineContext,
 }: DetailsStateProps) {
   if (isLoading) {
     return (
@@ -91,6 +105,136 @@ function DetailsBody({
       </div>
 
       <div className="space-y-5 px-6 py-6">
+        {medicineContext && (
+          <div className="overflow-hidden rounded-3xl border border-emerald-200/80 bg-[linear-gradient(135deg,rgba(236,253,245,0.95)_0%,rgba(255,255,255,1)_52%,rgba(239,246,255,0.95)_100%)] shadow-sm">
+            <div className="border-b border-emerald-100/80 px-5 py-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
+                Trazeni lijek
+              </p>
+              <h3 className="mt-1 text-lg font-bold text-slate-900">
+                {medicineContext.medicineName}
+              </h3>
+              <p className="mt-1 text-sm text-slate-600">
+                Apoteka ima izdvojene doze koje odgovaraju trenutnoj pretrazi.
+              </p>
+            </div>
+
+            <div className="grid gap-3 px-5 py-4 sm:grid-cols-2">
+              <div className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-sm">
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Trazene doze
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {medicineContext.selectedDoseStrengths.length > 0 ? (
+                    medicineContext.selectedDoseStrengths.map((dose) => (
+                      <span
+                        key={`selected-${dose}`}
+                        className="rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700"
+                      >
+                        {dose}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-sm text-slate-500">
+                      Nema izdvojenih doza.
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-sm">
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Dostupno u apoteci
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {medicineContext.availableDoseStrengths.length > 0 ? (
+                    medicineContext.availableDoseStrengths.map((dose) => (
+                      <span
+                        key={`available-${dose}`}
+                        className="rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700"
+                      >
+                        {dose}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-sm text-slate-500">
+                      Stanje doza nije dostupno.
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-sm">
+                <div className="flex items-start gap-3">
+                  <Navigation className="mt-0.5 h-5 w-5 text-blue-600" />
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      Udaljenost
+                    </p>
+                    <p className="mt-1 text-sm font-semibold text-slate-900">
+                      {medicineContext.distanceLabel || "Nije dostupna"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-sm">
+                <div className="flex items-start gap-3">
+                  <Clock3 className="mt-0.5 h-5 w-5 text-emerald-600" />
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      Zadnje azuriranje
+                    </p>
+                    <p className="mt-1 text-sm font-semibold text-slate-900">
+                      {medicineContext.latestUpdateLabel || "Nije dostupno"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="rounded-2xl border border-slate-200 bg-white p-4">
+            <div className="flex items-start gap-3">
+              <Power
+                className={`mt-0.5 h-5 w-5 ${
+                  pharmacy.isActive ? "text-emerald-600" : "text-slate-400"
+                }`}
+              />
+              <div>
+                <p className="text-sm font-semibold text-slate-900">
+                  Status apoteke
+                </p>
+                <p className="mt-1 text-sm text-slate-600">
+                  {pharmacy.isActive ? "Aktivna apoteka" : "Neaktivna apoteka"}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-slate-200 bg-white p-4">
+            <div className="flex items-start gap-3">
+              <Sparkles
+                className={`mt-0.5 h-5 w-5 ${
+                  pharmacy.isOnDuty ? "text-blue-600" : "text-slate-400"
+                }`}
+              />
+              <div>
+                <p className="text-sm font-semibold text-slate-900">
+                  Dezurstvo
+                </p>
+                <p className="mt-1 text-sm text-slate-600">
+                  {pharmacy.isOnDuty
+                    ? "Apoteka je trenutno dezurna."
+                    : "Nema aktivno dezurstvo."}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
           <div className="flex items-start gap-3">
             <span className="rounded-2xl border border-blue-100 bg-white p-3 text-blue-600 shadow-sm">
@@ -98,11 +242,14 @@ function DetailsBody({
             </span>
             <div className="min-w-0">
               <h3 className="text-sm font-semibold text-slate-900">
-                Osnovne informacije
+                Lokacija
               </h3>
               <p className="mt-2 flex items-start gap-2 text-sm leading-6 text-slate-600">
-                
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
                 {pharmacy.address}
+              </p>
+              <p className="mt-2 text-sm font-medium text-slate-500">
+                {pharmacy.city}
               </p>
             </div>
           </div>
@@ -125,26 +272,6 @@ function DetailsBody({
             ) : (
               <p className="text-sm text-slate-500">Nije dostupno.</p>
             )}
-          </div>
-        </div>
-
-        <div className="grid gap-3">
-          <div className="rounded-2xl border border-slate-200 bg-white p-4">
-            <div className="flex items-start gap-3">
-              <Power
-                className={`mt-0.5 h-5 w-5 ${
-                  pharmacy.isActive ? "text-emerald-600" : "text-slate-400"
-                }`}
-              />
-              <div>
-                <p className="text-sm font-semibold text-slate-900">
-                  Dostupnost
-                </p>
-                <p className="mt-1 text-sm text-slate-600">
-                  {pharmacy.isActive ? "Aktivna apoteka" : "Neaktivna apoteka"}
-                </p>
-              </div>
-            </div>
           </div>
         </div>
 

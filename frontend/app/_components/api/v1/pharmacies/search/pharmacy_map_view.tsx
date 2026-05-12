@@ -14,12 +14,16 @@ import {
   Clock3,
   LocateFixed,
   MapPin,
+  Navigation,
   Power,
   Sparkles,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { formatTime } from "../duty/date_utils";
 import {
+  formatDistance,
+  formatRelativeUpdate,
+  getLatestInventoryUpdate,
   normalizeNumber,
 } from "./search_utils";
 import { PharmacySearchResult, UserLocation } from "./types";
@@ -29,6 +33,8 @@ type PharmacyMapViewProps = {
   userLocation: UserLocation | null;
   isLocating: boolean;
   onRequestLocation: () => void;
+  medicineName: string;
+  doseStrengths: string[];
 };
 
 const DEFAULT_CENTER: [number, number] = [42.4411, 19.2636];
@@ -94,7 +100,15 @@ function MapBoundsController({
   return null;
 }
 
-function PharmacyPopup({ pharmacy }: { pharmacy: PharmacySearchResult }) {
+function PharmacyPopup({
+  pharmacy,
+  medicineName,
+  doseStrengths,
+}: {
+  pharmacy: PharmacySearchResult;
+  medicineName: string;
+  doseStrengths: string[];
+}) {
   const openLabel = pharmacy.isOnDuty
     ? pharmacy.openUntil
       ? `Dežurna do ${formatTime(pharmacy.openUntil)}`
@@ -124,64 +138,117 @@ function PharmacyPopup({ pharmacy }: { pharmacy: PharmacySearchResult }) {
         };
 
   const StatusIcon = statusBadge.icon;
+  const distanceLabel = formatDistance(pharmacy.distance);
+  const latestUpdate = getLatestInventoryUpdate(pharmacy.doses);
+  const latestUpdateLabel = latestUpdate
+    ? formatRelativeUpdate(latestUpdate)
+    : "Nije dostupno";
 
   return (
-    <div className="w-[272px] overflow-hidden rounded-[20px] bg-white">
-      <div className="border-b border-slate-100 bg-[linear-gradient(135deg,#eff6ff_0%,#ffffff_55%,#ecfdf5_100%)] px-3 py-3">
-        <div className="flex items-start gap-2">
-          <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white text-blue-600 shadow-sm ring-1 ring-blue-100">
-            <Building2 className="h-4.5 w-4.5" />
+    <div className="w-[248px] max-w-[78vw] overflow-hidden rounded-[16px] bg-white">
+      <div className="border-b border-slate-100 bg-[linear-gradient(135deg,#eff6ff_0%,#ffffff_50%,#ecfdf5_100%)] px-2.5 py-2.5">
+        <div className="flex items-start gap-1.5">
+          <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white text-blue-600 shadow-sm ring-1 ring-blue-100">
+            <Building2 className="h-3.5 w-3.5" />
           </span>
 
           <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-2">
-              <h3 className="text-sm font-bold leading-4 text-slate-900">
+            <div className="flex flex-wrap items-center gap-1">
+              <h3 className="line-clamp-2 text-[10px] font-bold leading-3.5 text-slate-900">
                 {pharmacy.name}
               </h3>
               <span
-                className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold shadow-sm ${statusBadge.className}`}
+                className={`inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[8px] font-bold shadow-sm ${statusBadge.className}`}
               >
-                <StatusIcon className="h-3 w-3" />
+                <StatusIcon className="h-2.5 w-2.5" />
                 {statusBadge.label}
               </span>
             </div>
-            <p className="mt-0.5 text-[11px] font-semibold text-slate-500">
+            <p className="mt-0.5 text-[9px] font-semibold text-slate-500">
               {pharmacy.city}
             </p>
           </div>
         </div>
 
-        <div className="mt-2 rounded-xl bg-white/95 px-2.5 py-1.5 ring-1 ring-slate-100">
-          <p className="flex items-start gap-1.5 text-[11px] leading-4 text-slate-600">
-            <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-slate-400" />
-            <span>{pharmacy.address}</span>
+        <div className="mt-1.5 rounded-lg bg-white/95 px-1.5 py-1.5 ring-1 ring-slate-100">
+          <p className="flex items-start gap-1 text-[8px] leading-3 text-slate-600">
+            <MapPin className="mt-0.5 h-2.5 w-2.5 shrink-0 text-slate-400" />
+            <span className="line-clamp-2">{pharmacy.address}</span>
           </p>
         </div>
       </div>
 
-      <div className="space-y-2.5 px-3 py-3">
-        <div className="flex flex-wrap gap-1.5">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-[10px] font-bold text-blue-700">
-            <Clock3 className="h-3 w-3" />
+      <div className="space-y-1.5 px-2.5 py-2">
+        <div className="flex flex-wrap gap-1">
+          <span className="inline-flex items-center gap-1 rounded-full border border-blue-100 bg-blue-50 px-1.5 py-0.5 text-[8px] font-bold text-blue-700">
+            <Clock3 className="h-2.5 w-2.5" />
             {openLabel}
           </span>
+          {distanceLabel && (
+            <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[8px] font-bold text-slate-700">
+              <Navigation className="h-2.5 w-2.5" />
+              {distanceLabel}
+            </span>
+          )}
+        </div>
+
+        <div className="rounded-lg border border-emerald-100 bg-[linear-gradient(135deg,#ecfdf5_0%,#ffffff_100%)] p-2">
+          <p className="text-[8px] font-bold uppercase tracking-wide text-emerald-700">
+            Trazeni lijek
+          </p>
+          <h4 className="mt-0.5 line-clamp-2 text-[10px] font-bold leading-3.5 text-slate-900">
+            {medicineName}
+          </h4>
+          <div className="mt-1 flex flex-wrap gap-1">
+            {doseStrengths.length > 0 ? (
+              doseStrengths.map((dose) => (
+                <span
+                  key={`requested-${pharmacy.id}-${dose}`}
+                  className="inline-flex rounded-full border border-blue-100 bg-blue-50 px-1.5 py-0.5 text-[8px] font-bold text-blue-700"
+                >
+                  {dose}
+                </span>
+              ))
+            ) : (
+              <span className="text-[8px] text-slate-500">Doze nijesu označene.</span>
+            )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-1">
+          <div className="rounded-lg border border-slate-200 bg-slate-50 p-1.5">
+            <p className="text-[8px] font-bold uppercase tracking-wide text-slate-500">
+              Doze u apoteci
+            </p>
+            <p className="mt-0.5 text-[10px] font-bold text-slate-900">
+              {pharmacy.doses.length}
+            </p>
+          </div>
+          <div className="rounded-lg border border-slate-200 bg-slate-50 p-1.5">
+            <p className="text-[8px] font-bold uppercase tracking-wide text-slate-500">
+              Zadnje ažuriranje
+            </p>
+            <p className="mt-0.5 text-[10px] font-bold leading-3 text-slate-900">
+              {latestUpdateLabel}
+            </p>
+          </div>
         </div>
 
         <div>
-          <div className="mb-1.5 flex items-center justify-between gap-3">
-            <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">
+          <div className="mb-1 flex items-center justify-between gap-2">
+            <p className="text-[8px] font-bold uppercase tracking-wide text-slate-500">
               Dostupne doze
             </p>
-            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-500">
+            <span className="rounded-full bg-slate-100 px-1 py-0.5 text-[8px] font-bold text-slate-500">
               {pharmacy.doses.length}
             </span>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1">
             {pharmacy.doses.map((dose) => (
               <span
                 key={`${pharmacy.id}-${dose.doseId}`}
-                className="inline-flex rounded-full border border-emerald-100 bg-emerald-50 px-2.5 py-1 text-[10px] font-bold leading-4 text-emerald-800"
+                className="inline-flex rounded-md border border-emerald-100 bg-emerald-50 px-1.5 py-0.5 text-[8px] font-bold leading-3 text-emerald-800"
               >
                 {dose.strength}
               </span>
@@ -210,9 +277,10 @@ export default function PharmacyMapView({
   userLocation,
   isLocating,
   onRequestLocation,
+  medicineName,
+  doseStrengths,
 }: PharmacyMapViewProps) {
   const [activePharmacyId, setActivePharmacyId] = useState<number | null>(null);
-
   const pharmaciesWithCoordinates = useMemo(
     () =>
       pharmacies
@@ -395,16 +463,21 @@ export default function PharmacyMapView({
             </Tooltip>
             <Popup
               className="pharmacy-map-popup"
-              minWidth={272}
+              minWidth={248}
+              maxWidth={248}
               eventHandlers={{
                 remove: () => {
-                  setActivePharmacyId((current) =>
-                    current === pharmacy.id ? null : current
-                  );
+                  if (activePharmacyId === pharmacy.id) {
+                    setActivePharmacyId(null);
+                  }
                 },
               }}
             >
-              <PharmacyPopup pharmacy={pharmacy} />
+              <PharmacyPopup
+                pharmacy={pharmacy}
+                medicineName={medicineName}
+                doseStrengths={doseStrengths}
+              />
             </Popup>
           </Marker>
         ))}
