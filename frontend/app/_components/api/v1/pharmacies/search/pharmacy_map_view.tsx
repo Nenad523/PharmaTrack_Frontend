@@ -32,6 +32,7 @@ type PharmacyMapViewProps = {
   pharmacies: PharmacySearchResult[];
   userLocation: UserLocation | null;
   isLocating: boolean;
+  isInteractionDisabled?: boolean;
   onRequestLocation: () => void;
   medicineName: string;
   doseStrengths: string[];
@@ -276,6 +277,7 @@ export default function PharmacyMapView({
   pharmacies,
   userLocation,
   isLocating,
+  isInteractionDisabled = false,
   onRequestLocation,
   medicineName,
   doseStrengths,
@@ -342,7 +344,7 @@ export default function PharmacyMapView({
 
   if (pharmacies.length === 0) {
     return (
-      <section className="relative h-[calc(100vh-13rem)] min-h-[32rem] overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm xl:h-full">
+      <section className="relative h-[calc(100svh-13rem)] min-h-[28rem] overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm xl:h-full">
         <div className="absolute inset-0 grid place-items-center bg-[linear-gradient(135deg,#eff6ff_0%,#f8fbff_45%,#ecfdf5_100%)] p-6">
           <div className="max-w-md text-center">
             <span className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-blue-600 shadow-sm">
@@ -362,7 +364,7 @@ export default function PharmacyMapView({
   }
 
   return (
-    <section className="relative h-[calc(100vh-13rem)] min-h-[32rem] overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm animate-fade-in xl:h-full">
+    <section className="relative h-[calc(100svh-13rem)] min-h-[28rem] overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm animate-fade-in xl:h-full">
       <div className="absolute right-4 top-4 z-[500]">
         <button
           type="button"
@@ -409,7 +411,11 @@ export default function PharmacyMapView({
         center={DEFAULT_CENTER}
         zoom={8}
         scrollWheelZoom={false}
-        className="h-full w-full"
+        dragging={!isInteractionDisabled}
+        doubleClickZoom={!isInteractionDisabled}
+        touchZoom={!isInteractionDisabled}
+        keyboard={!isInteractionDisabled}
+        className={`h-full w-full ${isInteractionDisabled ? "pointer-events-none" : ""}`}
       >
         <MapBoundsController points={mapPoints} />
         <TileLayer

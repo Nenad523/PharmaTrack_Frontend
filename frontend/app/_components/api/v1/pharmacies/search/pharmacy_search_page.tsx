@@ -713,6 +713,19 @@ export default function PharmacySearchPage() {
     };
   }, [activeSearchPharmacy, doseStrengths, medicineName]);
 
+  useEffect(() => {
+    if (!isMobileFiltersOpen) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isMobileFiltersOpen]);
+
   return (
     <div className="min-h-screen">
       <section className="mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-6 lg:px-8 lg:pb-16 lg:pt-10">
@@ -860,6 +873,7 @@ export default function PharmacySearchPage() {
                     pharmacies={mapPharmacies}
                     userLocation={userLocation}
                     isLocating={isLocating}
+                    isInteractionDisabled={isMobileFiltersOpen}
                     onRequestLocation={requestLocation}
                     medicineName={medicineName}
                     doseStrengths={doseStrengths}
@@ -978,9 +992,16 @@ export default function PharmacySearchPage() {
       )}
 
       {isMobileFiltersOpen && (
-        <div className="fixed inset-x-4 top-36 z-40 xl:hidden animate-fade-in">
-          <div className="max-h-[70vh] overflow-y-auto rounded-[28px] border border-slate-200 bg-white p-4 shadow-[0_24px_60px_-28px_rgba(15,23,42,0.45)]">
-            <div className="mb-4 flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
+        <div className="fixed inset-0 z-50 xl:hidden animate-fade-in">
+          <button
+            type="button"
+            onClick={() => setIsMobileFiltersOpen(false)}
+            className="absolute inset-0 bg-slate-950/25 backdrop-blur-[2px]"
+            aria-label="Zatvori filtere"
+          />
+
+          <div className="relative mx-4 mt-20 max-h-[calc(100svh-6rem)] overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_24px_60px_-28px_rgba(15,23,42,0.45)]">
+            <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-4 py-4">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-blue-600">
                   Pretraga apoteka
@@ -1016,18 +1037,20 @@ export default function PharmacySearchPage() {
               </div>
             </div>
 
-            <SearchFilterPanel
-              filters={filters}
-              cities={cities}
-              isCitiesLoading={isCitiesLoading}
-              userLocation={userLocation}
-              isLocating={isLocating}
-              locationError={locationError}
-              onFilterChange={handleFilterChange}
-              onRequestLocation={requestLocation}
-              onResetFilters={handleResetFilters}
-              variant="mobile"
-            />
+            <div className="max-h-[calc(100svh-11rem)] overflow-y-auto p-4">
+              <SearchFilterPanel
+                filters={filters}
+                cities={cities}
+                isCitiesLoading={isCitiesLoading}
+                userLocation={userLocation}
+                isLocating={isLocating}
+                locationError={locationError}
+                onFilterChange={handleFilterChange}
+                onRequestLocation={requestLocation}
+                onResetFilters={handleResetFilters}
+                variant="mobile"
+              />
+            </div>
           </div>
         </div>
       )}
