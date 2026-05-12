@@ -55,7 +55,6 @@ import ViewToggle from "./view_toggle";
 
 const DEFAULT_FILTERS: SearchFilters = {
   name: "",
-  address: "",
   cities: [],
   openNow: false,
   onDuty: false,
@@ -607,7 +606,6 @@ export default function PharmacySearchPage() {
     let count = 0;
 
     if (filters.name.trim()) count += 1;
-    if (filters.address.trim()) count += 1;
     if (filters.cities.length > 0) count += 1;
     if (filters.openNow) count += 1;
     if (filters.onDuty) count += 1;

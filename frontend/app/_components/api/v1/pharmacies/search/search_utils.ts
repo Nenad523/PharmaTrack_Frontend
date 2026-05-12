@@ -182,7 +182,6 @@ export const buildPharmacySearchParams = ({
   sort: "az" | "distance";
   filters: {
     name: string;
-    address: string;
     cities: string[];
     openNow: boolean;
     onDuty: boolean;
@@ -225,10 +224,6 @@ export const buildPharmacySearchParams = ({
 
   if (filters.name.trim()) {
     params.set("name", filters.name.trim());
-  }
-
-  if (filters.address.trim()) {
-    params.set("address", filters.address.trim());
   }
 
   if (trackSearch) {
