@@ -713,10 +713,35 @@ export default function PharmacySearchPage() {
     };
   }, [activeSearchPharmacy, doseStrengths, medicineName]);
 
+  useEffect(() => {
+    if (!isMobileFiltersOpen) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isMobileFiltersOpen]);
+
+  useEffect(() => {
+    if (viewMode !== "map") return;
+    if (window.matchMedia("(min-width: 1280px)").matches) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [viewMode]);
+
   return (
     <div className="min-h-screen">
       <section className="mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-6 lg:px-8 lg:pb-16 lg:pt-10">
-        <div className="mb-6 flex flex-col gap-4 rounded-[28px] border border-slate-200 bg-white px-5 py-5 shadow-sm md:flex-row md:items-center md:justify-between">
+        <div className={`mb-6 flex flex-col gap-4 rounded-[28px] border border-slate-200 bg-white px-5 py-5 shadow-sm md:flex-row md:items-center md:justify-between ${viewMode === "map" ? "hidden xl:flex" : ""}`}>
           <div className="min-w-0">
             <Link
               href="/api/v1/medications"
@@ -771,7 +796,7 @@ export default function PharmacySearchPage() {
           sort={sort}
           userLocation={userLocation}
           isLocating={isLocating}
-          isPinned={isMobileFiltersOpen}
+          isPinned={isMobileFiltersOpen || viewMode === "map"}
           viewMode={viewMode}
           showSort={viewMode === "list"}
           onOpenFilters={() => setIsMobileFiltersOpen(true)}
@@ -780,6 +805,7 @@ export default function PharmacySearchPage() {
           onViewModeChange={handleViewModeChange}
         />
         {isMobileFiltersOpen && <div className="h-28 xl:hidden" />}
+        {!isMobileFiltersOpen && viewMode === "map" && <div className="h-[5.5rem] xl:hidden" />}
 
         <div
           className={`flex flex-col gap-6 xl:flex-row ${
@@ -810,7 +836,7 @@ export default function PharmacySearchPage() {
                   : ""
               }`}
             >
-              <div className="mb-5 flex flex-col gap-3 rounded-[24px] border border-slate-200 bg-white px-5 py-4 shadow-sm sm:flex-row sm:items-center sm:justify-between xl:flex-none">
+              <div className={`mb-5 flex flex-col gap-3 rounded-[24px] border border-slate-200 bg-white px-5 py-4 shadow-sm sm:flex-row sm:items-center sm:justify-between xl:flex-none ${viewMode === "map" ? "hidden xl:flex" : ""}`}>
                 <div>
                   <p className="text-sm font-semibold text-blue-600">
                     {isSearchLoading
@@ -860,6 +886,7 @@ export default function PharmacySearchPage() {
                     pharmacies={mapPharmacies}
                     userLocation={userLocation}
                     isLocating={isLocating}
+                    isInteractionDisabled={isMobileFiltersOpen}
                     onRequestLocation={requestLocation}
                     medicineName={medicineName}
                     doseStrengths={doseStrengths}
@@ -978,14 +1005,25 @@ export default function PharmacySearchPage() {
       )}
 
       {isMobileFiltersOpen && (
-        <div className="fixed inset-x-4 top-36 z-40 xl:hidden animate-fade-in">
-          <div className="max-h-[70vh] overflow-y-auto rounded-[28px] border border-slate-200 bg-white p-4 shadow-[0_24px_60px_-28px_rgba(15,23,42,0.45)]">
-            <div className="mb-4 flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
+        <div className="xl:hidden">
+          <button
+            type="button"
+            onClick={() => setIsMobileFiltersOpen(false)}
+            className="fixed inset-0 z-[1000] bg-slate-950/40 backdrop-blur-[2px] animate-fade-in"
+            aria-label="Zatvori filtere"
+          />
+
+          <div className="fixed inset-x-0 bottom-0 z-[1001] flex max-h-[85svh] flex-col rounded-t-[28px] border-t border-slate-200 bg-white shadow-[0_-20px_60px_-20px_rgba(15,23,42,0.35)] animate-sheet-up">
+            <div className="flex justify-center pb-2 pt-3">
+              <div className="h-1 w-10 rounded-full bg-slate-200" />
+            </div>
+
+            <div className="flex items-center justify-between gap-4 border-b border-slate-100 px-4 pb-4">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-blue-600">
                   Pretraga apoteka
                 </p>
-                <h2 className="mt-1 text-lg font-bold text-slate-900">
+                <h2 className="mt-0.5 text-lg font-bold text-slate-900">
                   Filteri
                 </h2>
               </div>
@@ -1016,18 +1054,20 @@ export default function PharmacySearchPage() {
               </div>
             </div>
 
-            <SearchFilterPanel
-              filters={filters}
-              cities={cities}
-              isCitiesLoading={isCitiesLoading}
-              userLocation={userLocation}
-              isLocating={isLocating}
-              locationError={locationError}
-              onFilterChange={handleFilterChange}
-              onRequestLocation={requestLocation}
-              onResetFilters={handleResetFilters}
-              variant="mobile"
-            />
+            <div className="overflow-y-auto p-4">
+              <SearchFilterPanel
+                filters={filters}
+                cities={cities}
+                isCitiesLoading={isCitiesLoading}
+                userLocation={userLocation}
+                isLocating={isLocating}
+                locationError={locationError}
+                onFilterChange={handleFilterChange}
+                onRequestLocation={requestLocation}
+                onResetFilters={handleResetFilters}
+                variant="mobile"
+              />
+            </div>
           </div>
         </div>
       )}
