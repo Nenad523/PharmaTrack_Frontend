@@ -992,21 +992,25 @@ export default function PharmacySearchPage() {
       )}
 
       {isMobileFiltersOpen && (
-        <div className="fixed inset-0 z-50 xl:hidden animate-fade-in">
+        <div className="xl:hidden">
           <button
             type="button"
             onClick={() => setIsMobileFiltersOpen(false)}
-            className="absolute inset-0 bg-slate-950/25 backdrop-blur-[2px]"
+            className="fixed inset-0 z-[1000] bg-slate-950/40 backdrop-blur-[2px] animate-fade-in"
             aria-label="Zatvori filtere"
           />
 
-          <div className="relative mx-4 mt-20 max-h-[calc(100svh-6rem)] overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_24px_60px_-28px_rgba(15,23,42,0.45)]">
-            <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-4 py-4">
+          <div className="fixed inset-x-0 bottom-0 z-[1001] flex max-h-[85svh] flex-col rounded-t-[28px] border-t border-slate-200 bg-white shadow-[0_-20px_60px_-20px_rgba(15,23,42,0.35)] animate-sheet-up">
+            <div className="flex justify-center pb-2 pt-3">
+              <div className="h-1 w-10 rounded-full bg-slate-200" />
+            </div>
+
+            <div className="flex items-center justify-between gap-4 border-b border-slate-100 px-4 pb-4">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-blue-600">
                   Pretraga apoteka
                 </p>
-                <h2 className="mt-1 text-lg font-bold text-slate-900">
+                <h2 className="mt-0.5 text-lg font-bold text-slate-900">
                   Filteri
                 </h2>
               </div>
@@ -1037,7 +1041,7 @@ export default function PharmacySearchPage() {
               </div>
             </div>
 
-            <div className="max-h-[calc(100svh-11rem)] overflow-y-auto p-4">
+            <div className="overflow-y-auto p-4">
               <SearchFilterPanel
                 filters={filters}
                 cities={cities}
