@@ -217,6 +217,8 @@ body {
 }
 
 .pharmacy-map-popup.leaflet-popup .leaflet-popup-content-wrapper {
+  overflow: hidden;
+  padding: 0;
   border-radius: 20px;
   border: 1px solid rgba(226, 232, 240, 0.92);
   box-shadow: 0 18px 40px -20px rgba(15, 23, 42, 0.45);
@@ -224,4 +226,19 @@ body {
 
 .pharmacy-map-popup.leaflet-popup .leaflet-popup-content {
   margin: 0;
+  width: 248px !important;
+  max-width: 78vw;
+}
+
+.pharmacy-map-popup.leaflet-popup .leaflet-popup-close-button {
+  top: 8px;
+  right: 8px;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  color: #64748b;
+  font-size: 16px;
+  line-height: 1;
 }

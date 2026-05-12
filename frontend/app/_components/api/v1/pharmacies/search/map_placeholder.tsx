@@ -24,6 +24,8 @@ type MapPlaceholderProps = {
   userLocation: UserLocation | null;
   isLocating: boolean;
   onRequestLocation: () => void;
+  medicineName: string;
+  doseStrengths: string[];
 };
 
 export default function MapPlaceholder({
@@ -31,6 +33,8 @@ export default function MapPlaceholder({
   userLocation,
   isLocating,
   onRequestLocation,
+  medicineName,
+  doseStrengths,
 }: MapPlaceholderProps) {
   return (
     <PharmacyMapView
@@ -38,6 +42,8 @@ export default function MapPlaceholder({
       userLocation={userLocation}
       isLocating={isLocating}
       onRequestLocation={onRequestLocation}
+      medicineName={medicineName}
+      doseStrengths={doseStrengths}
     />
   );
 }
