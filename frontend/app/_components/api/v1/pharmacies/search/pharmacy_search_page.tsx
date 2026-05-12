@@ -726,10 +726,22 @@ export default function PharmacySearchPage() {
     };
   }, [isMobileFiltersOpen]);
 
+  useEffect(() => {
+    if (viewMode !== "map") return;
+    if (window.matchMedia("(min-width: 1280px)").matches) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [viewMode]);
+
   return (
     <div className="min-h-screen">
       <section className="mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-6 lg:px-8 lg:pb-16 lg:pt-10">
-        <div className="mb-6 flex flex-col gap-4 rounded-[28px] border border-slate-200 bg-white px-5 py-5 shadow-sm md:flex-row md:items-center md:justify-between">
+        <div className={`mb-6 flex flex-col gap-4 rounded-[28px] border border-slate-200 bg-white px-5 py-5 shadow-sm md:flex-row md:items-center md:justify-between ${viewMode === "map" ? "hidden xl:flex" : ""}`}>
           <div className="min-w-0">
             <Link
               href="/api/v1/medications"
@@ -784,7 +796,7 @@ export default function PharmacySearchPage() {
           sort={sort}
           userLocation={userLocation}
           isLocating={isLocating}
-          isPinned={isMobileFiltersOpen}
+          isPinned={isMobileFiltersOpen || viewMode === "map"}
           viewMode={viewMode}
           showSort={viewMode === "list"}
           onOpenFilters={() => setIsMobileFiltersOpen(true)}
@@ -793,6 +805,7 @@ export default function PharmacySearchPage() {
           onViewModeChange={handleViewModeChange}
         />
         {isMobileFiltersOpen && <div className="h-28 xl:hidden" />}
+        {!isMobileFiltersOpen && viewMode === "map" && <div className="h-[5.5rem] xl:hidden" />}
 
         <div
           className={`flex flex-col gap-6 xl:flex-row ${
@@ -823,7 +836,7 @@ export default function PharmacySearchPage() {
                   : ""
               }`}
             >
-              <div className="mb-5 flex flex-col gap-3 rounded-[24px] border border-slate-200 bg-white px-5 py-4 shadow-sm sm:flex-row sm:items-center sm:justify-between xl:flex-none">
+              <div className={`mb-5 flex flex-col gap-3 rounded-[24px] border border-slate-200 bg-white px-5 py-4 shadow-sm sm:flex-row sm:items-center sm:justify-between xl:flex-none ${viewMode === "map" ? "hidden xl:flex" : ""}`}>
                 <div>
                   <p className="text-sm font-semibold text-blue-600">
                     {isSearchLoading

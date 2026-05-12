@@ -344,7 +344,7 @@ export default function PharmacyMapView({
 
   if (pharmacies.length === 0) {
     return (
-      <section className="relative h-[calc(100svh-13rem)] min-h-[28rem] overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm xl:h-full">
+      <section className="relative isolate h-[calc(100svh-16rem)] min-h-[28rem] overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm xl:h-full">
         <div className="absolute inset-0 grid place-items-center bg-[linear-gradient(135deg,#eff6ff_0%,#f8fbff_45%,#ecfdf5_100%)] p-6">
           <div className="max-w-md text-center">
             <span className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-blue-600 shadow-sm">
@@ -364,7 +364,7 @@ export default function PharmacyMapView({
   }
 
   return (
-    <section className="relative h-[calc(100svh-13rem)] min-h-[28rem] overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm animate-fade-in xl:h-full">
+    <section className="relative isolate h-[calc(100svh-16rem)] min-h-[28rem] overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm animate-fade-in xl:h-full">
       <div className="absolute right-4 top-4 z-[500]">
         <button
           type="button"
