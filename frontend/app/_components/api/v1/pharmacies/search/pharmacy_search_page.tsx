@@ -765,7 +765,7 @@ export default function PharmacySearchPage() {
               : "xl:items-start"
           }`}
         >
-          <div className="hidden space-y-4 xl:sticky xl:top-24 xl:block xl:w-[300px] xl:flex-none">
+          <div className="hidden xl:sticky xl:top-24 xl:block xl:w-[300px] xl:flex-none xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto xl:pr-1 space-y-4">
             <SearchFilterPanel
               filters={filters}
               cities={cities}
@@ -781,10 +781,10 @@ export default function PharmacySearchPage() {
 
           <div className="min-w-0 flex-1">
             <section
-              className={`min-w-0 xl:sticky xl:top-24 xl:flex xl:flex-col ${
+              className={`min-w-0 ${
                 viewMode === "map"
-                  ? "xl:h-[calc(100vh-15rem)] xl:min-h-[42rem] xl:self-stretch"
-                  : "xl:max-h-[calc(100vh-7rem)]"
+                  ? "xl:sticky xl:top-24 xl:flex xl:flex-col xl:h-[calc(100vh-15rem)] xl:min-h-[42rem] xl:self-stretch"
+                  : ""
               }`}
             >
               <div className="mb-5 flex flex-col gap-3 rounded-[24px] border border-slate-200 bg-white px-5 py-4 shadow-sm sm:flex-row sm:items-center sm:justify-between xl:flex-none">
@@ -829,7 +829,7 @@ export default function PharmacySearchPage() {
                 className={`${
                   viewMode === "map"
                     ? "xl:min-h-0 xl:flex-1 xl:overflow-hidden"
-                    : "xl:min-h-0 xl:flex-1 xl:overflow-y-auto xl:pb-2 xl:pr-2"
+                    : ""
                 }`}
               >
                 {viewMode === "map" ? (
