@@ -90,18 +90,6 @@ export default function SearchFilterPanel({
           />
         </label>
 
-        <label className="grid gap-1.5">
-          <span className="text-xs font-semibold text-slate-500">
-            Adresa apoteke
-          </span>
-          <input
-            value={filters.address}
-            onChange={(event) => onFilterChange("address", event.target.value)}
-            placeholder="Unesite adresu"
-            className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-300 focus:ring-4 focus:ring-blue-100 sm:h-11"
-          />
-        </label>
-
         <div className="grid gap-1.5">
           <span className="text-xs font-semibold text-slate-500">Grad</span>
           <div className="rounded-2xl border border-slate-200 bg-white p-2">
