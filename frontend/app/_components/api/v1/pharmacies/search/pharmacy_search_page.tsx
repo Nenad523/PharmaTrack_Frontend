@@ -481,7 +481,7 @@ export default function PharmacySearchPage() {
 
       if (normalizedAlternatives.length === 0) {
         setAlternativesError(
-          data.message || "Nema dostupnih alternativa za ovaj lijek."
+          "Za odabrani lijek trenutno nema dostupnih alternativa."
         );
       }
     } catch {
@@ -730,11 +730,15 @@ export default function PharmacySearchPage() {
     if (viewMode !== "map") return;
     if (window.matchMedia("(min-width: 1280px)").matches) return;
 
+    window.scrollTo({ top: 0, behavior: "auto" });
     const previousOverflow = document.body.style.overflow;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
     document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
 
     return () => {
       document.body.style.overflow = previousOverflow;
+      document.documentElement.style.overflow = previousHtmlOverflow;
     };
   }, [viewMode]);
 

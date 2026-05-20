@@ -239,8 +239,8 @@ body {
 
 .pharmacy-map-popup.leaflet-popup .leaflet-popup-content {
   margin: 0;
-  width: 248px !important;
-  max-width: 78vw;
+  width: 228px !important;
+  max-width: 74vw;
 }
 
 .pharmacy-map-popup.leaflet-popup .leaflet-popup-close-button {
