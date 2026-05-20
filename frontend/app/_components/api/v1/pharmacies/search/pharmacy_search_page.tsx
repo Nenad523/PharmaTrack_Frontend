@@ -481,7 +481,7 @@ export default function PharmacySearchPage() {
 
       if (normalizedAlternatives.length === 0) {
         setAlternativesError(
-          data.message || "Nema dostupnih alternativa za ovaj lijek."
+          "Za odabrani lijek trenutno nema dostupnih alternativa."
         );
       }
     } catch {
