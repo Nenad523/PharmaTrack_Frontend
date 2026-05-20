@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Clock, Home, LogOut, Pill, UserRound } from "lucide-react";
+import { Clock, Home, LogOut, Pill, ShieldCheck, UserRound } from "lucide-react";
 import type { AuthUser } from "../auth/types";
 
-const navItems = [
+const baseNavItems = [
   { label: "Početna", href: "/api/v1/home", icon: Home },
   { label: "Pretraga", href: "/api/v1/medications", icon: Pill },
   { label: "Dežurne apoteke", href: "/api/v1/pharmacies/duty", icon: Clock },
@@ -27,6 +27,13 @@ export function Header({
   logoutLoading,
 }: HeaderProps) {
   const pathname = usePathname();
+  const navItems =
+    user?.role === "admin"
+      ? [
+          ...baseNavItems,
+          { label: "Admin", href: "/api/v1/admin", icon: ShieldCheck },
+        ]
+      : baseNavItems;
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/95 backdrop-blur">
