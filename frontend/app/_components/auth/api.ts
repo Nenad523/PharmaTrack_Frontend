@@ -8,7 +8,15 @@ function getAuthUrl(path: string) {
 
 let cachedCsrfToken: string | null = null;
 
-export async function getCsrfToken(): Promise<string> {
+export function clearCachedCsrfToken() {
+  cachedCsrfToken = null;
+}
+
+export async function getCsrfToken(forceRefresh = false): Promise<string> {
+  if (forceRefresh) {
+    cachedCsrfToken = null;
+  }
+
   if (cachedCsrfToken) return cachedCsrfToken;
 
   const response = await fetch(getAuthUrl("csrf-token"), {
@@ -18,8 +26,13 @@ export async function getCsrfToken(): Promise<string> {
   if (!response.ok) throw new Error("Failed to fetch CSRF token");
 
   const data = await response.json();
-  cachedCsrfToken = data.csrfToken as string;
-  return cachedCsrfToken;
+
+  if (typeof data.csrfToken !== "string" || !data.csrfToken) {
+    throw new Error("CSRF token is not available");
+  }
+
+  cachedCsrfToken = data.csrfToken;
+  return data.csrfToken;
 }
 
 export async function getAuthUserFromResponse(response: Response) {
@@ -57,9 +70,7 @@ export async function loginUser(email: string, password: string) {
     throw new Error("API URL is not configured");
   }
 
-  // Login is CSRF-exempt on the backend (no session yet), but fetching the
-  // token here ensures cachedCsrfToken is populated for subsequent calls.
-  try { cachedCsrfToken = null; await getCsrfToken(); } catch { /* ignore */ }
+  clearCachedCsrfToken();
 
   return fetch(getAuthUrl("login"), {
     method: "POST",
@@ -82,7 +93,7 @@ export async function logoutUser() {
     headers: { "X-CSRF-Token": csrfToken },
   });
 
-  cachedCsrfToken = null;
+  clearCachedCsrfToken();
 
   if (!response.ok) {
     throw new Error("Logout failed");

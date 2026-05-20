@@ -1,5 +1,5 @@
 import { apiUrl } from "@/lib/api";
-import { getCsrfToken } from "../../../auth/api";
+import { clearCachedCsrfToken, getCsrfToken } from "../../../auth/api";
 import type {
   ActiveIngredient,
   IngredientsResponse,
@@ -36,29 +36,47 @@ async function adminRequest<T>(
   path: string,
   options: RequestInit & { json?: unknown } = {}
 ): Promise<T> {
-  const headers = new Headers(options.headers);
   const method = options.method ?? "GET";
   const isSafeMethod = method === "GET" || method === "HEAD";
 
-  if (options.json !== undefined) {
-    headers.set("Content-Type", "application/json");
-  }
+  const send = async (forceFreshToken = false) => {
+    const headers = new Headers(options.headers);
 
-  if (!isSafeMethod) {
-    headers.set("X-CSRF-Token", await getCsrfToken());
-  }
+    if (options.json !== undefined) {
+      headers.set("Content-Type", "application/json");
+    }
 
-  const response = await fetch(apiUrl(path), {
-    ...options,
-    method,
-    credentials: "include",
-    headers,
-    body:
-      options.json !== undefined ? JSON.stringify(options.json) : options.body,
-  });
+    if (!isSafeMethod) {
+      headers.set("X-CSRF-Token", await getCsrfToken(forceFreshToken));
+    }
+
+    return fetch(apiUrl(path), {
+      ...options,
+      method,
+      credentials: "include",
+      headers,
+      body:
+        options.json !== undefined ? JSON.stringify(options.json) : options.body,
+    });
+  };
+
+  let response = await send();
 
   if (!response.ok) {
-    throw new Error(await responseMessage(response));
+    const message = await responseMessage(response);
+
+    if (!isSafeMethod && message.includes("CSRF token")) {
+      clearCachedCsrfToken();
+      response = await send(true);
+
+      if (response.ok) {
+        return response.json() as Promise<T>;
+      }
+
+      throw new Error(await responseMessage(response));
+    }
+
+    throw new Error(message);
   }
 
   return response.json() as Promise<T>;
