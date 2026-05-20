@@ -77,7 +77,7 @@ export default async function HomeNews() {
                   <img
                     src={item.imageUrl}
                     alt={item.title}
-                    className="h-18 w-full object-cover sm:h-44 md:h-44"
+                    className="h-30 w-full object-cover sm:h-44 md:h-44"
                   />
                 )}
 
