@@ -9,7 +9,7 @@ export default function HomePromoVideo() {
     <section className="mx-auto max-w-6xl px-4 py-8 sm:px-6 md:py-16">
       <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between md:gap-3">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
+          <h2 className="text-[1.7rem] font-extrabold tracking-tight text-slate-900 md:text-3xl md:font-bold">
             Pogledajte PharmaTrack u akciji
           </h2>
           <p className="mt-2 max-w-2xl text-xs leading-6 text-slate-600 sm:text-sm md:text-base md:leading-7">

@@ -54,11 +54,11 @@ export default async function HomeNews() {
   const news = await loadNews();
 
   return (
-    <section className="border-t border-slate-200/70 bg-white/70">
+    <section className="border-t border-slate-200/60 bg-white/50">
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 md:py-16">
         <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
-            <h2 className="text-xl font-bold tracking-tight text-slate-900 md:text-3xl">
+            <h2 className="text-lg font-bold tracking-tight text-slate-800 md:text-3xl md:text-slate-900">
               Aktuelnosti iz svijeta zdravlja
             </h2>
           </div>
@@ -77,11 +77,11 @@ export default async function HomeNews() {
                   <img
                     src={item.imageUrl}
                     alt={item.title}
-                    className="h-28 w-full object-cover sm:h-44 md:h-44"
+                    className="h-18 w-full object-cover sm:h-44 md:h-44"
                   />
                 )}
 
-                <div className="p-3.5 sm:p-5 md:p-5">
+                <div className="p-2.5 sm:p-5 md:p-5">
                   <div className="flex flex-wrap items-center gap-2 text-[11px] sm:gap-3 sm:text-xs">
                     <span className="rounded-full bg-blue-50 px-2.5 py-1 font-semibold text-blue-600 sm:px-3">
                       {item.category ?? "Zdravlje"}
@@ -91,7 +91,7 @@ export default async function HomeNews() {
                     </span>
                   </div>
 
-                  <h3 className="mt-2.5 text-base font-semibold leading-5 text-slate-900 md:mt-3 md:text-lg md:leading-7">
+                  <h3 className="mt-1.5 text-[15px] font-semibold leading-5 text-slate-900 md:mt-3 md:text-lg md:leading-7">
                     <a
                       href={item.link}
                       target="_blank"
@@ -103,7 +103,7 @@ export default async function HomeNews() {
                   </h3>
 
                   {item.description && (
-                    <p className="mt-1.5 text-xs leading-5 text-slate-600 sm:text-sm sm:leading-6 md:mt-2 md:text-sm md:leading-6">
+                    <p className="mt-0.5 line-clamp-2 text-[11px] leading-4.5 text-slate-500 sm:text-sm sm:leading-6 md:mt-2 md:text-sm md:leading-6 md:text-slate-600">
                       {item.description}
                     </p>
                   )}
@@ -112,7 +112,7 @@ export default async function HomeNews() {
                     href={item.link}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-3 inline-flex items-center gap-2 text-xs font-medium text-slate-500 transition-colors hover:text-blue-600 sm:text-sm md:mt-4"
+                    className="mt-1.5 inline-flex items-center gap-1.5 text-[11px] font-medium text-slate-500 transition-colors hover:text-blue-600 sm:text-sm md:mt-4"
                   >
                     <ExternalLink className="h-4 w-4" />
                     {item.source
