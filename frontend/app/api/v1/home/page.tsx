@@ -8,19 +8,19 @@ import HomeQuickActions from "@/app/_components/Home/quick_actions";
 export default function Home() {
   return (
     <div className="flex flex-col">
-      <div className="order-1">
+      <div>
         <HomeHero />
       </div>
-      <div className="order-2 md:order-4">
-        <HomePromoVideo />
-      </div>
-      <div className="order-3 md:order-2">
+      <div>
         <HomeQuickActions />
       </div>
-      <div className="order-4 md:order-3">
+      <div>
         <HomeFeatures />
       </div>
-      <div className="order-5">
+      <div>
+        <HomePromoVideo />
+      </div>
+      <div>
         <HomeNews />
       </div>
     </div>
