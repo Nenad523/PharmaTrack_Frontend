@@ -112,8 +112,8 @@ function PharmacyPopup({
 }) {
   const openLabel = pharmacy.isOnDuty
     ? pharmacy.openUntil
-      ? `Dežurna do ${formatTime(pharmacy.openUntil)}`
-      : "Dežurna"
+      ? `Dezurna do ${formatTime(pharmacy.openUntil)}`
+      : "Dezurna"
     : pharmacy.isOpenNow
       ? pharmacy.openUntil
         ? `Otvoreno do ${formatTime(pharmacy.openUntil)}`
@@ -122,7 +122,7 @@ function PharmacyPopup({
 
   const statusBadge = pharmacy.isOnDuty
     ? {
-        label: "Dežurna",
+        label: "Dezurna",
         className: "border border-blue-100 bg-blue-50 text-blue-700",
         icon: Sparkles,
       }
@@ -138,7 +138,7 @@ function PharmacyPopup({
           icon: Power,
         };
 
-  const StatusIcon = statusBadge.icon;
+  const MetaStatusIcon = statusBadge.icon;
   const distanceLabel = formatDistance(pharmacy.distance);
   const latestUpdate = getLatestInventoryUpdate(pharmacy.doses);
   const latestUpdateLabel = latestUpdate
@@ -146,115 +146,102 @@ function PharmacyPopup({
     : "Nije dostupno";
 
   return (
-    <div className="w-[248px] max-w-[78vw] overflow-hidden rounded-[16px] bg-white">
-      <div className="border-b border-slate-100 bg-[linear-gradient(135deg,#eff6ff_0%,#ffffff_50%,#ecfdf5_100%)] px-2.5 py-2.5">
-        <div className="flex items-start gap-1.5">
-          <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white text-blue-600 shadow-sm ring-1 ring-blue-100">
-            <Building2 className="h-3.5 w-3.5" />
+    <div className="w-[228px] max-w-[74vw] overflow-hidden rounded-[14px] bg-white">
+      <div className="border-b border-slate-100 bg-[linear-gradient(135deg,#eff6ff_0%,#ffffff_50%,#ecfdf5_100%)] px-1.5 py-1.5">
+        <div className="flex items-start gap-1">
+          <span className="inline-flex h-5.5 w-5.5 shrink-0 items-center justify-center rounded-md bg-white text-blue-600 shadow-sm ring-1 ring-blue-100">
+            <Building2 className="h-3 w-3" />
           </span>
 
           <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-1">
-              <h3 className="line-clamp-2 text-[10px] font-bold leading-3.5 text-slate-900">
+            <div className="flex items-start justify-between gap-1">
+              <h3 className="line-clamp-2 min-w-0 flex-1 text-[9px] font-bold leading-[1.05rem] text-slate-900">
                 {pharmacy.name}
               </h3>
-              <span
-                className={`inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[8px] font-bold shadow-sm ${statusBadge.className}`}
-              >
-                <StatusIcon className="h-2.5 w-2.5" />
-                {statusBadge.label}
-              </span>
             </div>
-            <p className="mt-0.5 text-[9px] font-semibold text-slate-500">
-              {pharmacy.city}
-            </p>
+
+            {distanceLabel && (
+              <div className="mt-0.5 flex flex-wrap items-center gap-x-1 gap-y-0 text-[7px] font-semibold leading-none text-slate-500">
+                <span className="inline-flex items-center gap-0.5 text-slate-600">
+                  <Navigation className="h-2 w-2" />
+                  {distanceLabel}
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
-        <div className="mt-1.5 rounded-lg bg-white/95 px-1.5 py-1.5 ring-1 ring-slate-100">
-          <p className="flex items-start gap-1 text-[8px] leading-3 text-slate-600">
-            <MapPin className="mt-0.5 h-2.5 w-2.5 shrink-0 text-slate-400" />
-            <span className="line-clamp-2">{pharmacy.address}</span>
-          </p>
+        <div className="mt-1 rounded-md bg-white/95 px-1.5 py-1 ring-1 ring-slate-100">
+          <div className="flex items-start gap-1 text-[7px] leading-[0.8rem] text-slate-600">
+            <MapPin className="mt-px h-2 w-2 shrink-0 text-slate-400" />
+            <span className="line-clamp-1">{pharmacy.address}</span>
+          </div>
         </div>
       </div>
 
-      <div className="space-y-1.5 px-2.5 py-2">
-        <div className="flex flex-wrap gap-1">
-          <span className="inline-flex items-center gap-1 rounded-full border border-blue-100 bg-blue-50 px-1.5 py-0.5 text-[8px] font-bold text-blue-700">
-            <Clock3 className="h-2.5 w-2.5" />
-            {openLabel}
+      <div className="space-y-0.5 px-1.5 py-1">
+        <div className="flex flex-wrap items-center gap-0.5">
+          <span
+            className={`inline-flex items-center gap-0.5 rounded-full px-1 py-0.5 text-[7px] font-bold leading-none ${statusBadge.className}`}
+          >
+            <MetaStatusIcon className="h-2 w-2" />
+            {statusBadge.label === "Ne radi" ? "Trenutno zatvoreno" : openLabel}
           </span>
-          {distanceLabel && (
-            <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[8px] font-bold text-slate-700">
-              <Navigation className="h-2.5 w-2.5" />
-              {distanceLabel}
-            </span>
-          )}
+          <span className="inline-flex items-center gap-0.5 rounded-full border border-slate-200 bg-slate-50 px-1 py-0.5 text-[7px] font-bold leading-none text-slate-700">
+            <Clock3 className="h-2 w-2" />
+            {latestUpdateLabel}
+          </span>
         </div>
 
-        <div className="rounded-lg border border-emerald-100 bg-[linear-gradient(135deg,#ecfdf5_0%,#ffffff_100%)] p-2">
-          <p className="text-[8px] font-bold uppercase tracking-wide text-emerald-700">
+        <div className="rounded-md border border-emerald-100 bg-[linear-gradient(135deg,#ecfdf5_0%,#ffffff_100%)] px-1.5 py-1">
+          <p className="text-[7px] font-bold uppercase tracking-wide text-emerald-700">
             Trazeni lijek
           </p>
-          <h4 className="mt-0.5 line-clamp-2 text-[10px] font-bold leading-3.5 text-slate-900">
-            {medicineName}
-          </h4>
-          <div className="mt-1 flex flex-wrap gap-1">
+          <div className="mt-px flex items-start justify-between gap-1">
+            <h4 className="line-clamp-2 min-w-0 flex-1 text-[9px] font-bold leading-[1.05rem] text-slate-900">
+              {medicineName}
+            </h4>
+            <span className="rounded-full border border-slate-200 bg-white px-1 py-0.5 text-[7px] font-bold leading-none text-slate-700">
+              {pharmacy.doses.length}
+            </span>
+          </div>
+          <div className="mt-px flex flex-wrap gap-0.5">
             {doseStrengths.length > 0 ? (
-              doseStrengths.map((dose) => (
+              doseStrengths.slice(0, 2).map((dose) => (
                 <span
                   key={`requested-${pharmacy.id}-${dose}`}
-                  className="inline-flex rounded-full border border-blue-100 bg-blue-50 px-1.5 py-0.5 text-[8px] font-bold text-blue-700"
+                  className="inline-flex rounded-full border border-blue-100 bg-blue-50 px-1 py-0.5 text-[7px] font-bold leading-none text-blue-700"
                 >
                   {dose}
                 </span>
               ))
             ) : (
-              <span className="text-[8px] text-slate-500">Doze nijesu označene.</span>
+              <span className="text-[7px] leading-none text-slate-500">
+                Doze nijesu oznacene.
+              </span>
             )}
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-1">
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-1.5">
-            <p className="text-[8px] font-bold uppercase tracking-wide text-slate-500">
-              Doze u apoteci
-            </p>
-            <p className="mt-0.5 text-[10px] font-bold text-slate-900">
-              {pharmacy.doses.length}
-            </p>
-          </div>
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-1.5">
-            <p className="text-[8px] font-bold uppercase tracking-wide text-slate-500">
-              Zadnje ažuriranje
-            </p>
-            <p className="mt-0.5 text-[10px] font-bold leading-3 text-slate-900">
-              {latestUpdateLabel}
-            </p>
-          </div>
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-0 text-[7px] leading-none">
+          <span className="inline-flex items-center gap-1 text-slate-500">
+            <span className="font-bold uppercase tracking-wide">Doze</span>
+            <span className="font-bold text-slate-900">{pharmacy.doses.length}</span>
+          </span>
         </div>
 
-        <div>
-          <div className="mb-1 flex items-center justify-between gap-2">
-            <p className="text-[8px] font-bold uppercase tracking-wide text-slate-500">
-              Dostupne doze
-            </p>
-            <span className="rounded-full bg-slate-100 px-1 py-0.5 text-[8px] font-bold text-slate-500">
-              {pharmacy.doses.length}
+        <div className="flex flex-wrap items-center gap-x-1 gap-y-0 text-[7px] leading-none">
+          <span className="font-bold uppercase tracking-wide text-slate-500">
+            Dostupne doze
+          </span>
+          {pharmacy.doses.map((dose) => (
+            <span
+              key={`${pharmacy.id}-${dose.doseId}`}
+              className="inline-flex rounded-md border border-emerald-100 bg-emerald-50 px-1 py-0.5 font-bold leading-none text-emerald-800"
+            >
+              {dose.strength}
             </span>
-          </div>
-
-          <div className="flex flex-wrap gap-1">
-            {pharmacy.doses.map((dose) => (
-              <span
-                key={`${pharmacy.id}-${dose.doseId}`}
-                className="inline-flex rounded-md border border-emerald-100 bg-emerald-50 px-1.5 py-0.5 text-[8px] font-bold leading-3 text-emerald-800"
-              >
-                {dose.strength}
-              </span>
-            ))}
-          </div>
+          ))}
         </div>
       </div>
     </div>
@@ -354,7 +341,7 @@ export default function PharmacyMapView({
               Nema rezultata za mapu
             </h2>
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              Kada pretraga vrati apoteke sa koordinatama, ovdje će se pojaviti
+              Kada pretraga vrati apoteke sa koordinatama, ovdje ce se pojaviti
               interaktivna mapa sa markerima i brzim pregledom.
             </p>
           </div>
@@ -365,7 +352,13 @@ export default function PharmacyMapView({
 
   return (
     <section className="relative isolate h-[calc(100svh-16rem)] min-h-[28rem] overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm animate-fade-in xl:h-full">
-      <div className="absolute right-4 top-4 z-[500]">
+      <div
+        className={`absolute z-[500] transition-all ${
+          activePharmacyId === null
+            ? "right-4 top-4"
+            : "bottom-4 right-3 top-auto sm:bottom-4 sm:right-4"
+        }`}
+      >
         <button
           type="button"
           onClick={onRequestLocation}
@@ -375,10 +368,10 @@ export default function PharmacyMapView({
               ? "border-emerald-200 bg-emerald-50/95 text-emerald-700"
               : "border-slate-200 bg-white/95 text-slate-800 hover:border-blue-200 hover:text-blue-700"
           } disabled:cursor-wait disabled:opacity-70`}
-          aria-label={userLocation ? "Lokacija aktivna" : "Prikaži moju lokaciju"}
+          aria-label={userLocation ? "Lokacija aktivna" : "Prikazi moju lokaciju"}
         >
           <LocateFixed className="h-4 w-4" />
-          {userLocation ? "Moja lokacija" : "Prikaži lokaciju"}
+          {userLocation ? "Moja lokacija" : "Prikazi lokaciju"}
         </button>
       </div>
 
@@ -390,7 +383,7 @@ export default function PharmacyMapView({
           <div className="mt-2 flex flex-col gap-2 text-xs font-semibold text-slate-700">
             <span className="inline-flex items-center gap-2">
               <span className="inline-flex rounded-full border border-blue-100 bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-blue-700">
-                Dežurna
+                Dezurna
               </span>
             </span>
             <span className="inline-flex items-center gap-2">
@@ -469,8 +462,8 @@ export default function PharmacyMapView({
             </Tooltip>
             <Popup
               className="pharmacy-map-popup"
-              minWidth={248}
-              maxWidth={248}
+              minWidth={228}
+              maxWidth={228}
               eventHandlers={{
                 remove: () => {
                   if (activePharmacyId === pharmacy.id) {
