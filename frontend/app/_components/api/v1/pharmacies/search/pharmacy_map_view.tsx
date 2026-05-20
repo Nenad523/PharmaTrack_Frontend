@@ -129,7 +129,7 @@ function PharmacyPopup({
     : pharmacy.isOpenNow
       ? {
           label: "Radi",
-          className: "border border-amber-100 bg-amber-50 text-amber-700",
+          className: "border border-emerald-100 bg-emerald-50 text-emerald-700",
           icon: Clock3,
         }
       : {
@@ -376,25 +376,19 @@ export default function PharmacyMapView({
       </div>
 
       {activePharmacyId === null && (
-        <div className="pointer-events-none absolute left-4 top-4 z-[500] rounded-2xl border border-slate-200/90 bg-white/95 px-4 py-3 shadow-lg backdrop-blur">
-          <p className="text-[11px] font-bold uppercase tracking-wide text-slate-500">
+        <div className="pointer-events-none absolute bottom-4 left-4 z-[500] rounded-2xl border border-slate-200/90 bg-white/95 px-2.5 py-2 shadow-lg backdrop-blur">
+          <p className="mb-1 text-[9px] font-bold uppercase tracking-wide text-slate-500">
             Status
           </p>
-          <div className="mt-2 flex flex-col gap-2 text-xs font-semibold text-slate-700">
-            <span className="inline-flex items-center gap-2">
-              <span className="inline-flex rounded-full border border-blue-100 bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-blue-700">
-                Dezurna
-              </span>
+          <div className="flex flex-wrap items-center gap-1 text-xs font-semibold text-slate-700">
+            <span className="inline-flex rounded-full border border-blue-100 bg-blue-50 px-2 py-0.5 text-[9px] font-bold leading-none text-blue-700">
+              Dezurna
             </span>
-            <span className="inline-flex items-center gap-2">
-              <span className="inline-flex rounded-full border border-amber-100 bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700">
-                Radi
-              </span>
+            <span className="inline-flex rounded-full border border-emerald-100 bg-emerald-50 px-2 py-0.5 text-[9px] font-bold leading-none text-emerald-700">
+              Radi
             </span>
-            <span className="inline-flex items-center gap-2">
-              <span className="inline-flex rounded-full border border-red-100 bg-red-50 px-2 py-0.5 text-[10px] font-bold text-red-700">
-                Ne radi
-              </span>
+            <span className="inline-flex rounded-full border border-red-100 bg-red-50 px-2 py-0.5 text-[9px] font-bold leading-none text-red-700">
+              Ne radi
             </span>
           </div>
         </div>
