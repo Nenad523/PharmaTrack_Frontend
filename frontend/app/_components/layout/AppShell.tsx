@@ -75,7 +75,7 @@ export function AppShell({ children }: AppShellProps) {
       </AuthProvider>
 
       <Footer />
-      <MobileNav />
+      <MobileNav user={user} />
 
       <LoginModal
         isOpen={loginOpen}

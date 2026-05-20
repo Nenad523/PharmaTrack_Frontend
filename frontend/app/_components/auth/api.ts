@@ -8,7 +8,7 @@ function getAuthUrl(path: string) {
 
 let cachedCsrfToken: string | null = null;
 
-async function getCsrfToken(): Promise<string> {
+export async function getCsrfToken(): Promise<string> {
   if (cachedCsrfToken) return cachedCsrfToken;
 
   const response = await fetch(getAuthUrl("csrf-token"), {

@@ -2,16 +2,28 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Clock, Home, Search } from "lucide-react";
+import { Clock, Home, Search, ShieldCheck } from "lucide-react";
+import type { AuthUser } from "../auth/types";
 
-const navItems = [
+const baseNavItems = [
   { label: "Početna", href: "/api/v1/home", icon: Home },
   { label: "Pretraga", href: "/api/v1/medications", icon: Search },
   { label: "Dežurne", href: "/api/v1/pharmacies/duty", icon: Clock },
 ];
 
-export function MobileNav() {
+type MobileNavProps = {
+  user?: AuthUser | null;
+};
+
+export function MobileNav({ user }: MobileNavProps) {
   const pathname = usePathname();
+  const navItems =
+    user?.role === "admin"
+      ? [
+          ...baseNavItems,
+          { label: "Admin", href: "/api/v1/admin", icon: ShieldCheck },
+        ]
+      : baseNavItems;
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-100 bg-white/95 pb-[max(0.35rem,env(safe-area-inset-bottom))] backdrop-blur-sm md:hidden">
