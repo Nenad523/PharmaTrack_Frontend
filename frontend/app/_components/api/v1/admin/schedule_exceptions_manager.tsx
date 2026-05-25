@@ -93,7 +93,7 @@ export function ScheduleExceptionsManager({
   };
 
   const inputClass =
-    "w-full rounded-lg border border-slate-200 px-3 py-1.5 text-sm outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-200 disabled:bg-slate-50";
+    "w-full rounded-lg border border-slate-200 px-3 py-1.5 text-sm text-slate-800 [color-scheme:light] outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-200 disabled:bg-slate-50";
   const labelClass = "mb-0.5 block text-xs text-slate-500";
 
   if (!pharmacy) {

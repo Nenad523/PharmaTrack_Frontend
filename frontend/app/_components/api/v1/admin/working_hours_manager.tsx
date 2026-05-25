@@ -29,7 +29,7 @@ function timeInput(value: string, onChange: (v: string) => void, disabled: boole
       value={value.slice(0, 5)}
       onChange={(e) => onChange(e.target.value + ":00")}
       disabled={disabled}
-      className="rounded border border-slate-200 px-2 py-1 text-sm outline-none focus:border-blue-400 disabled:bg-slate-50"
+      className="rounded border border-slate-200 px-2 py-1 text-sm text-slate-800 [color-scheme:light] outline-none focus:border-blue-400 disabled:bg-slate-50"
     />
   );
 }
