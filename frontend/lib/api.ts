@@ -14,9 +14,30 @@ const isPrivateNetworkHost = (hostname: string) =>
   /^192\.168\.\d{1,3}\.\d{1,3}$/.test(hostname) ||
   /^172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}$/.test(hostname);
 
+const shouldUseSameOriginProxy = (apiBaseUrl: string) => {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  try {
+    const apiUrl = new URL(apiBaseUrl);
+
+    return (
+      apiUrl.origin !== window.location.origin &&
+      !isPrivateNetworkHost(window.location.hostname)
+    );
+  } catch {
+    return false;
+  }
+};
+
 export const getApiBaseUrl = () => {
   if (typeof window === "undefined") {
     return configuredApiBaseUrl;
+  }
+
+  if (shouldUseSameOriginProxy(configuredApiBaseUrl)) {
+    return "/api/backend";
   }
 
   const pageHost = window.location.hostname;
