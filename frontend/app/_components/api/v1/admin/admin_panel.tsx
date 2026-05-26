@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Activity, Building2, FlaskConical, ShieldCheck } from "lucide-react";
+import { Building2, FlaskConical, ShieldCheck } from "lucide-react";
 import { useAuth } from "../../../auth/AuthContext";
 import { PharmacyPanel } from "./pharmacy_panel";
 import {
@@ -273,7 +273,7 @@ export default function AdminPanel() {
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <div className="flex rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
+            <div className="flex rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
               <button
                 type="button"
                 onClick={() => setView("medications")}
@@ -299,15 +299,6 @@ export default function AdminPanel() {
                 Apoteke
               </button>
             </div>
-
-            {view === "medications" && (
-              <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-600 shadow-sm">
-                <Activity className="h-4 w-4 text-emerald-600" />
-                {selectedMedication
-                  ? `Izabran: ${selectedMedication.name}`
-                  : "Nema izabranog lijeka"}
-              </div>
-            )}
           </div>
         </div>
 
