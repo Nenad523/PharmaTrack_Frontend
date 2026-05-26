@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { X, Mail, Lock } from "lucide-react";
 import InputField from "../ui/InputField";
-import { fetchCurrentUser, getAuthUserFromResponse, loginUser } from "../auth/api";
+import { fetchCurrentUser, loginUser } from "../auth/api";
 import type { AuthUser } from "../auth/types";
 
 interface LoginModalProps {
@@ -102,10 +102,10 @@ export default function LoginModal({
                 return;
             }
 
-            const user = await getAuthUserFromResponse(response) ?? await fetchCurrentUser();
+            const user = await fetchCurrentUser();
 
             if (!user) {
-                setGeneralError('Prijava je uspjela, ali podaci korisnika nisu učitani.');
+                setGeneralError('Prijava je uspjela, ali sesija nije sačuvana. Provjerite cookie postavke u browseru.');
                 return;
             }
 
