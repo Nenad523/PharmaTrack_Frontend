@@ -272,7 +272,7 @@ export default function AdminPanel() {
             </h1>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <div className="flex rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
               <button
                 type="button"

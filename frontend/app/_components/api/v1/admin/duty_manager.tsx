@@ -58,11 +58,11 @@ export function DutyManager({ pharmacy, duties, isBusy, onAdd, onDelete }: Props
               key={d.id}
               className="flex items-center gap-2 rounded-lg border border-slate-100 px-3 py-2 text-sm"
             >
-              <div className="flex-1">
+              <div className="min-w-0 flex-1 flex flex-wrap items-center gap-x-1">
                 <span className="text-slate-700">
                   {toDisplayDatetime(d.start_datetime)}
                 </span>
-                <span className="mx-2 text-slate-400">→</span>
+                <span className="text-slate-400">→</span>
                 <span className="text-slate-700">
                   {toDisplayDatetime(d.end_datetime)}
                 </span>

@@ -97,33 +97,35 @@ export function WorkingHoursManager({
         <ul className="mb-4 space-y-1">
           {workingHours.map((wh) =>
             editingId === wh.id ? (
-              <li key={wh.id} className="flex items-center gap-2 rounded-lg bg-blue-50 px-3 py-2">
-                <span className="w-28 text-sm font-medium text-slate-700">{dayLabel(wh.day_of_week)}</span>
-                {timeInput(editOpen, setEditOpen, isBusy)}
-                <span className="text-slate-400">–</span>
-                {timeInput(editClose, setEditClose, isBusy)}
-                <button
-                  type="button"
-                  onClick={() => confirmEdit(wh.id)}
-                  disabled={isBusy}
-                  className="ml-auto rounded p-1 text-emerald-600 hover:bg-emerald-50 disabled:opacity-50"
-                >
-                  <Check className="h-4 w-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={cancelEdit}
-                  className="rounded p-1 text-slate-400 hover:bg-slate-100"
-                >
-                  <X className="h-4 w-4" />
-                </button>
+              <li key={wh.id} className="rounded-lg bg-blue-50 px-3 py-2 space-y-1.5">
+                <span className="text-sm font-medium text-slate-700">{dayLabel(wh.day_of_week)}</span>
+                <div className="flex items-center gap-2">
+                  {timeInput(editOpen, setEditOpen, isBusy)}
+                  <span className="text-slate-400">–</span>
+                  {timeInput(editClose, setEditClose, isBusy)}
+                  <button
+                    type="button"
+                    onClick={() => confirmEdit(wh.id)}
+                    disabled={isBusy}
+                    className="ml-auto rounded p-1 text-emerald-600 hover:bg-emerald-50 disabled:opacity-50"
+                  >
+                    <Check className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={cancelEdit}
+                    className="rounded p-1 text-slate-400 hover:bg-slate-100"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
               </li>
             ) : (
               <li
                 key={wh.id}
                 className="flex items-center gap-2 rounded-lg border border-slate-100 px-3 py-2 text-sm"
               >
-                <span className="w-28 font-medium text-slate-700">{dayLabel(wh.day_of_week)}</span>
+                <span className="w-24 shrink-0 font-medium text-slate-700 sm:w-28">{dayLabel(wh.day_of_week)}</span>
                 <span className="text-slate-500">
                   {wh.open_time.slice(0, 5)} – {wh.close_time.slice(0, 5)}
                 </span>
@@ -165,7 +167,7 @@ export function WorkingHoursManager({
             </option>
           ))}
         </select>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {timeInput(newOpen, setNewOpen, isBusy)}
           <span className="text-slate-400">–</span>
           {timeInput(newClose, setNewClose, isBusy)}

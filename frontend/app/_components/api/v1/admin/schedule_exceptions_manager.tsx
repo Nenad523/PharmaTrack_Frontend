@@ -115,7 +115,7 @@ export function ScheduleExceptionsManager({
           {exceptions.map((ex) =>
             editingId === ex.id ? (
               <li key={ex.id} className="rounded-lg border border-blue-200 bg-blue-50 p-3 space-y-2">
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                   <div>
                     <label className={labelClass}>Datum</label>
                     <input type="date" className={inputClass} value={editState.exception_date}

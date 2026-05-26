@@ -110,7 +110,7 @@ export function PharmacyEditor({
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           <div>
             <label className={labelClass}>Geografska širina</label>
             <input
