@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Activity, ShieldCheck } from "lucide-react";
+import { Activity, Building2, FlaskConical, ShieldCheck } from "lucide-react";
 import { useAuth } from "../../../auth/AuthContext";
+import { PharmacyPanel } from "./pharmacy_panel";
 import {
   createDoses,
   createIngredient,
@@ -40,9 +41,12 @@ function getErrorMessage(error: unknown) {
     : "Došlo je do neočekivane greške.";
 }
 
+type View = "medications" | "pharmacies";
+
 export default function AdminPanel() {
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
+  const [view, setView] = useState<View>("medications");
   const [notice, setNotice] = useState<AdminNoticeType | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<MedicationSearchResult[]>([]);
@@ -264,62 +268,100 @@ export default function AdminPanel() {
               Admin panel
             </div>
             <h1 className="mt-1 text-2xl font-bold text-slate-950 sm:text-3xl">
-              Upravljanje lijekovima
+              {view === "medications" ? "Upravljanje lijekovima" : "Upravljanje apotekama"}
             </h1>
           </div>
-          <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-600 shadow-sm">
-            <Activity className="h-4 w-4 text-emerald-600" />
-            {selectedMedication
-              ? `Izabran: ${selectedMedication.name}`
-              : "Nema izabranog lijeka"}
+
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
+              <button
+                type="button"
+                onClick={() => setView("medications")}
+                className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold transition ${
+                  view === "medications"
+                    ? "bg-blue-600 text-white"
+                    : "text-slate-600 hover:bg-slate-50"
+                }`}
+              >
+                <FlaskConical className="h-4 w-4" />
+                Lijekovi
+              </button>
+              <button
+                type="button"
+                onClick={() => setView("pharmacies")}
+                className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold transition ${
+                  view === "pharmacies"
+                    ? "bg-blue-600 text-white"
+                    : "text-slate-600 hover:bg-slate-50"
+                }`}
+              >
+                <Building2 className="h-4 w-4" />
+                Apoteke
+              </button>
+            </div>
+
+            {view === "medications" && (
+              <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-600 shadow-sm">
+                <Activity className="h-4 w-4 text-emerald-600" />
+                {selectedMedication
+                  ? `Izabran: ${selectedMedication.name}`
+                  : "Nema izabranog lijeka"}
+              </div>
+            )}
           </div>
         </div>
 
-        <div className="mb-4">
-          <AdminNotice notice={notice} />
-        </div>
+        {view === "medications" ? (
+          <>
+            <div className="mb-4">
+              <AdminNotice notice={notice} />
+            </div>
 
-        <div className="grid gap-4 lg:grid-cols-[minmax(280px,360px)_1fr]">
-          <MedicationSearchPanel
-            searchTerm={searchTerm}
-            results={searchResults}
-            selectedMedication={selectedMedication}
-            isSearching={isSearching || isSelecting}
-            onSearchChange={setSearchTerm}
-            onSelectMedication={selectMedication}
-          />
+            <div className="grid gap-4 lg:grid-cols-[minmax(280px,360px)_1fr]">
+              <MedicationSearchPanel
+                searchTerm={searchTerm}
+                results={searchResults}
+                selectedMedication={selectedMedication}
+                isSearching={isSearching || isSelecting}
+                onSearchChange={setSearchTerm}
+                onSelectMedication={selectMedication}
+              />
 
-          <div className="grid gap-4 xl:grid-cols-2">
-            <MedicationEditor
-              key={selectedMedication?.id ?? "new-medication"}
-              selectedMedication={selectedMedication}
-              isBusy={isBusy}
-              onCreateMedication={handleCreateMedication}
-              onUpdateMedication={handleUpdateMedication}
-              onDeleteMedication={handleDeleteMedication}
-            />
-            <ImageUploadPanel
-              medication={selectedMedication}
-              isBusy={isBusy}
-              onUploadImage={handleUploadImage}
-            />
-            <IngredientsManager
-              medication={selectedMedication}
-              ingredients={ingredients}
-              isBusy={isBusy}
-              onCreateIngredient={handleCreateIngredient}
-              onLinkIngredients={handleLinkIngredients}
-              onUnlinkIngredient={handleUnlinkIngredient}
-            />
-            <DosesManager
-              medication={selectedMedication}
-              doses={selectedDoses}
-              isBusy={isBusy}
-              onCreateDoses={handleCreateDoses}
-              onDeleteDose={handleDeleteDose}
-            />
-          </div>
-        </div>
+              <div className="grid gap-4 xl:grid-cols-2">
+                <MedicationEditor
+                  key={selectedMedication?.id ?? "new-medication"}
+                  selectedMedication={selectedMedication}
+                  isBusy={isBusy}
+                  onCreateMedication={handleCreateMedication}
+                  onUpdateMedication={handleUpdateMedication}
+                  onDeleteMedication={handleDeleteMedication}
+                />
+                <ImageUploadPanel
+                  medication={selectedMedication}
+                  isBusy={isBusy}
+                  onUploadImage={handleUploadImage}
+                />
+                <IngredientsManager
+                  medication={selectedMedication}
+                  ingredients={ingredients}
+                  isBusy={isBusy}
+                  onCreateIngredient={handleCreateIngredient}
+                  onLinkIngredients={handleLinkIngredients}
+                  onUnlinkIngredient={handleUnlinkIngredient}
+                />
+                <DosesManager
+                  medication={selectedMedication}
+                  doses={selectedDoses}
+                  isBusy={isBusy}
+                  onCreateDoses={handleCreateDoses}
+                  onDeleteDose={handleDeleteDose}
+                />
+              </div>
+            </div>
+          </>
+        ) : (
+          <PharmacyPanel />
+        )}
       </div>
     </main>
   );
