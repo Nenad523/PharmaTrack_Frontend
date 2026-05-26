@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { X, User, Mail, Lock } from "lucide-react"
 import InputField from "../ui/InputField"
+import { apiUrl } from "@/lib/api"
 
 interface RegisterModalProps {
     isOpen: boolean
@@ -106,7 +107,7 @@ export default function RegisterModal({
             const trimmedEmail = email.trim();
             const fullName = username.trim();
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/register`, {
+            const response = await fetch(apiUrl("/api/v1/auth/register"), {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type' : 'application/json'},

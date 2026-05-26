@@ -1,9 +1,8 @@
 import { normalizeAuthUser } from "./types";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+import { apiUrl } from "@/lib/api";
 
 function getAuthUrl(path: string) {
-  return `${API_URL}/api/v1/auth/${path}`;
+  return apiUrl(`/api/v1/auth/${path}`);
 }
 
 let cachedCsrfToken: string | null = null;
@@ -50,10 +49,6 @@ export async function getAuthUserFromResponse(response: Response) {
 }
 
 export async function fetchCurrentUser() {
-  if (!API_URL) {
-    return null;
-  }
-
   const response = await fetch(getAuthUrl("me"), {
     credentials: "include",
   });
@@ -66,10 +61,6 @@ export async function fetchCurrentUser() {
 }
 
 export async function loginUser(email: string, password: string) {
-  if (!API_URL) {
-    throw new Error("API URL is not configured");
-  }
-
   clearCachedCsrfToken();
 
   return fetch(getAuthUrl("login"), {
@@ -81,10 +72,6 @@ export async function loginUser(email: string, password: string) {
 }
 
 export async function logoutUser() {
-  if (!API_URL) {
-    return;
-  }
-
   const csrfToken = await getCsrfToken();
 
   const response = await fetch(getAuthUrl("logout"), {
