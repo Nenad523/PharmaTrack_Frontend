@@ -62,7 +62,9 @@ export function PharmacySearchPanel({
       )}
 
       {!isSearching && searchTerm.length >= 2 && results.length === 0 && (
-        <p className="mt-3 text-xs text-slate-400">Nema rezultata za "{searchTerm}".</p>
+        <p className="mt-3 text-xs text-slate-400">
+          Nema rezultata za &quot;{searchTerm}&quot;.
+        </p>
       )}
     </div>
   );

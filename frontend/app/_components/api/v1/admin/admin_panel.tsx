@@ -259,8 +259,8 @@ export default function AdminPanel() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 px-4 py-6 sm:px-6 lg:py-8">
-      <div className="mx-auto max-w-6xl">
+    <main className="min-h-screen bg-slate-50 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+      <div className="mx-auto max-w-[88rem]">
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2 text-sm font-bold text-blue-700">
@@ -308,7 +308,7 @@ export default function AdminPanel() {
               <AdminNotice notice={notice} />
             </div>
 
-            <div className="grid gap-4 lg:grid-cols-[minmax(280px,360px)_1fr]">
+            <div className="grid gap-4 lg:grid-cols-[minmax(280px,360px)_minmax(0,1fr)]">
               <MedicationSearchPanel
                 searchTerm={searchTerm}
                 results={searchResults}
@@ -318,7 +318,7 @@ export default function AdminPanel() {
                 onSelectMedication={selectMedication}
               />
 
-              <div className="grid gap-4 xl:grid-cols-2">
+              <div className="grid gap-4 xl:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.92fr)]">
                 <MedicationEditor
                   key={selectedMedication?.id ?? "new-medication"}
                   selectedMedication={selectedMedication}

@@ -238,7 +238,7 @@ export function PharmacyPanel() {
         <AdminNotice notice={notice} />
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(280px,360px)_1fr]">
+      <div className="grid gap-4 lg:grid-cols-[minmax(280px,360px)_minmax(0,1fr)]">
         <PharmacySearchPanel
           searchTerm={searchTerm}
           results={searchResults}
@@ -248,7 +248,7 @@ export function PharmacyPanel() {
           onSelectPharmacy={selectPharmacy}
         />
 
-        <div className="grid gap-4 xl:grid-cols-2">
+        <div className="grid gap-4 xl:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.92fr)]">
           <PharmacyEditor
             key={selectedPharmacy?.id ?? "new-pharmacy"}
             selectedPharmacy={selectedPharmacy}

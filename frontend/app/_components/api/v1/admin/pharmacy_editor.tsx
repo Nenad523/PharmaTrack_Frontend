@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Trash2 } from "lucide-react";
 import type { City, PharmacyDetails, PharmacyPayload } from "./pharmacy_types";
 
@@ -15,6 +15,14 @@ type Props = {
 
 const empty = { name: "", address: "", latitude: "", longitude: "", city_id: "" };
 
+const mapPharmacyToForm = (pharmacy: PharmacyDetails) => ({
+  name: pharmacy.name,
+  address: pharmacy.address,
+  latitude: String(pharmacy.latitude),
+  longitude: String(pharmacy.longitude),
+  city_id: String(pharmacy.city_id),
+});
+
 export function PharmacyEditor({
   selectedPharmacy,
   cities,
@@ -23,21 +31,9 @@ export function PharmacyEditor({
   onUpdatePharmacy,
   onDeletePharmacy,
 }: Props) {
-  const [form, setForm] = useState(empty);
-
-  useEffect(() => {
-    if (selectedPharmacy) {
-      setForm({
-        name: selectedPharmacy.name,
-        address: selectedPharmacy.address,
-        latitude: String(selectedPharmacy.latitude),
-        longitude: String(selectedPharmacy.longitude),
-        city_id: String(selectedPharmacy.city_id),
-      });
-    } else {
-      setForm(empty);
-    }
-  }, [selectedPharmacy]);
+  const [form, setForm] = useState(() =>
+    selectedPharmacy ? mapPharmacyToForm(selectedPharmacy) : empty
+  );
 
   const set = (field: keyof typeof empty, value: string) =>
     setForm((prev) => ({ ...prev, [field]: value }));
