@@ -104,7 +104,7 @@ export default function PharmacySearchCard({
                 ))}
 
                 {pharmacy.isOnDuty && (
-                  <span className="rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-700">
+                  <span className="inline-flex min-h-10 items-center justify-center rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-center text-xs font-bold text-blue-700 sm:min-h-12">
                     Dežurna
                   </span>
                 )}

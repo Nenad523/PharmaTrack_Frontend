@@ -164,6 +164,7 @@ export default function SearchFilterPanel({
             label="Dežurna"
             checked={filters.onDuty}
             onChange={(checked) => onFilterChange("onDuty", checked)}
+            centerLabel
           />
         </div>
 
@@ -238,23 +239,43 @@ export default function SearchFilterPanel({
 function ToggleRow({
   label,
   checked,
+  centerLabel,
   disabled,
   onChange,
 }: {
   label: string;
   checked: boolean;
+  centerLabel?: boolean;
   disabled?: boolean;
   onChange: (checked: boolean) => void;
 }) {
   return (
-    <label className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2">
-      <span className="text-sm font-semibold text-slate-700">{label}</span>
+    <label
+      className={`items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2 ${
+        centerLabel
+          ? "grid grid-cols-[1.25rem_1fr_1.25rem]"
+          : "flex justify-between"
+      } ${
+        disabled ? "opacity-60" : ""
+      }`}
+    >
+      <span
+        className={`text-sm font-semibold text-slate-700 ${
+          centerLabel ? "col-start-2" : ""
+        } ${
+          centerLabel ? "text-center" : "text-left"
+        }`}
+      >
+        {label}
+      </span>
       <input
         type="checkbox"
         checked={checked}
         disabled={disabled}
         onChange={(event) => onChange(event.target.checked)}
-        className="h-5 w-5 rounded border-slate-300 accent-blue-600 disabled:cursor-not-allowed"
+        className={`h-5 w-5 rounded border-slate-300 accent-blue-600 disabled:cursor-not-allowed ${
+          centerLabel ? "col-start-3" : ""
+        }`}
       />
     </label>
   );

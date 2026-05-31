@@ -30,6 +30,65 @@ type DetailsStateProps = {
   medicineContext?: PharmacyMedicineContext | null;
 };
 
+const parseLocalDateTime = (value: string) => {
+  const match = value.match(
+    /^(\d{4})-(\d{2})-(\d{2})(?:T| )(\d{2}):(\d{2})(?::(\d{2}))?/
+  );
+
+  if (!match) {
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+  }
+
+  return new Date(
+    Number(match[1]),
+    Number(match[2]) - 1,
+    Number(match[3]),
+    Number(match[4]),
+    Number(match[5]),
+    Number(match[6] ?? 0)
+  );
+};
+
+function getDutyStatus(pharmacy: PharmacyDetails) {
+  if (pharmacy.isOnDuty) {
+    return {
+      isHighlighted: true,
+      title: "Dežurna sada",
+    };
+  }
+
+  if (!pharmacy.dutySchedule) {
+    return {
+      isHighlighted: false,
+      title: "Nije trenutno dežurna",
+    };
+  }
+
+  const start = parseLocalDateTime(pharmacy.dutySchedule.startDatetime);
+  const end = parseLocalDateTime(pharmacy.dutySchedule.endDatetime);
+  const now = new Date();
+
+  if (start && now < start) {
+    return {
+      isHighlighted: false,
+      title: "Dežurstvo zakazano",
+    };
+  }
+
+  if (end && now > end) {
+    return {
+      isHighlighted: false,
+      title: "Dežurstvo završeno",
+    };
+  }
+
+  return {
+    isHighlighted: false,
+    title: "Nije trenutno dežurna",
+  };
+}
+
 function DetailsBody({
   pharmacy,
   isLoading,
@@ -67,6 +126,8 @@ function DetailsBody({
       </div>
     );
   }
+
+  const dutyStatus = getDutyStatus(pharmacy);
 
   return (
     <div className="overflow-hidden rounded-[28px] border border-blue-200/80 bg-white/95 shadow-[0_24px_55px_-30px_rgba(15,23,42,0.45),0_14px_30px_-22px_rgba(37,99,235,0.55)] ring-1 ring-blue-100/60 backdrop-blur xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto">
@@ -218,17 +279,19 @@ function DetailsBody({
             <div className="flex items-start gap-3">
               <Sparkles
                 className={`mt-0.5 h-5 w-5 ${
-                  pharmacy.isOnDuty ? "text-blue-600" : "text-slate-400"
+                  dutyStatus.isHighlighted ? "text-blue-600" : "text-slate-400"
                 }`}
               />
               <div>
                 <p className="text-sm font-semibold text-slate-900">
-                  Dezurstvo
+                  Dežurstvo
                 </p>
-                <p className="mt-1 text-sm text-slate-600">
-                  {pharmacy.isOnDuty
-                    ? "Apoteka je trenutno dezurna."
-                    : "Nema aktivno dezurstvo."}
+                <p
+                  className={`mt-1 text-sm font-semibold ${
+                    dutyStatus.isHighlighted ? "text-blue-700" : "text-slate-700"
+                  }`}
+                >
+                  {dutyStatus.title}
                 </p>
               </div>
             </div>

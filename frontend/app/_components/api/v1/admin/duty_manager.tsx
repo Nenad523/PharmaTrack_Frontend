@@ -2,11 +2,8 @@
 
 import { useState } from "react";
 import { Trash2 } from "lucide-react";
+import { formatDateTime } from "../pharmacies/duty/date_utils";
 import type { DutyEntry, DutyPayload, PharmacyDetails } from "./pharmacy_types";
-
-function toDisplayDatetime(raw: string) {
-  return raw.replace("T", " ").slice(0, 16).replace(" ", " ").replace("T", " ");
-}
 
 type Props = {
   pharmacy: PharmacyDetails | null;
@@ -60,11 +57,11 @@ export function DutyManager({ pharmacy, duties, isBusy, onAdd, onDelete }: Props
             >
               <div className="min-w-0 flex-1 flex flex-wrap items-center gap-x-1">
                 <span className="text-slate-700">
-                  {toDisplayDatetime(d.start_datetime)}
+                  {formatDateTime(d.start_datetime)}
                 </span>
                 <span className="text-slate-400">→</span>
                 <span className="text-slate-700">
-                  {toDisplayDatetime(d.end_datetime)}
+                  {formatDateTime(d.end_datetime)}
                 </span>
               </div>
               <button

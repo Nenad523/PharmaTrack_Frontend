@@ -107,15 +107,6 @@ export const formatTime = (value: string) => {
     return "Nije dostupno";
   }
 
-  if (hasTimezone(value)) {
-    const date = new Date(value);
-
-    if (!Number.isNaN(date.getTime())) {
-      const parts = getZonedDateTimeParts(date);
-      return `${parts.hour}:${parts.minute}`;
-    }
-  }
-
   const parts = parseDateTimeParts(value) ?? value.match(/^(\d{2}):(\d{2})/);
 
   if (parts && Array.isArray(parts)) {
@@ -124,6 +115,15 @@ export const formatTime = (value: string) => {
 
   if (parts && "hour" in parts) {
     return `${parts.hour}:${parts.minute}`;
+  }
+
+  if (hasTimezone(value)) {
+    const date = new Date(value);
+
+    if (!Number.isNaN(date.getTime())) {
+      const parts = getZonedDateTimeParts(date);
+      return `${parts.hour}:${parts.minute}`;
+    }
   }
 
   return value;
@@ -142,6 +142,12 @@ export const formatDateTime = (value: string) => {
     return "Nije dostupno";
   }
 
+  const parts = parseDateTimeParts(value);
+
+  if (parts) {
+    return `${parts.day}.${parts.month}.${parts.year}. ${parts.hour}:${parts.minute}`;
+  }
+
   if (hasTimezone(value)) {
     const date = new Date(value);
 
@@ -151,13 +157,7 @@ export const formatDateTime = (value: string) => {
     }
   }
 
-  const parts = parseDateTimeParts(value);
-
-  if (!parts) {
-    return value;
-  }
-
-  return `${parts.day}.${parts.month}.${parts.year}. ${parts.hour}:${parts.minute}`;
+  return value;
 };
 
 export const formatDutyTimeRange = (start: string, end: string) =>
