@@ -1,7 +1,10 @@
+import { useState } from "react";
 import {
   Building2,
   CalendarClock,
+  Check,
   Clock3,
+  Copy,
   MapPin,
   Navigation,
   Phone,
@@ -28,6 +31,31 @@ type DetailsStateProps = {
   onClose: () => void;
   onShowOnMap?: (pharmacy: PharmacyDetails) => void;
   medicineContext?: PharmacyMedicineContext | null;
+};
+
+const buildMapsAddress = (pharmacy: PharmacyDetails) => {
+  const address = pharmacy.address.trim();
+  const city = pharmacy.city.trim();
+  const hasCity = address.toLowerCase().includes(city.toLowerCase());
+
+  return [address, hasCity ? null : city, "Crna Gora"].filter(Boolean).join(", ");
+};
+
+const copyText = async (text: string) => {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  document.body.removeChild(textarea);
 };
 
 const parseLocalDateTime = (value: string) => {
@@ -97,6 +125,8 @@ function DetailsBody({
   onShowOnMap,
   medicineContext,
 }: DetailsStateProps) {
+  const [copiedAddress, setCopiedAddress] = useState("");
+
   if (isLoading) {
     return (
       <div className="rounded-[28px] border border-blue-200/80 bg-white p-6 shadow-sm">
@@ -128,6 +158,16 @@ function DetailsBody({
   }
 
   const dutyStatus = getDutyStatus(pharmacy);
+  const mapsAddress = buildMapsAddress(pharmacy);
+  const isAddressCopied = copiedAddress === mapsAddress;
+
+  const handleCopyAddress = async () => {
+    await copyText(mapsAddress);
+    setCopiedAddress(mapsAddress);
+    window.setTimeout(() => {
+      setCopiedAddress((current) => (current === mapsAddress ? "" : current));
+    }, 1800);
+  };
 
   return (
     <div className="overflow-hidden rounded-[28px] border border-blue-200/80 bg-white/95 shadow-[0_24px_55px_-30px_rgba(15,23,42,0.45),0_14px_30px_-22px_rgba(37,99,235,0.55)] ring-1 ring-blue-100/60 backdrop-blur xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto">
@@ -303,10 +343,29 @@ function DetailsBody({
             <span className="rounded-2xl border border-blue-100 bg-white p-3 text-blue-600 shadow-sm">
               <Building2 className="h-5 w-5" />
             </span>
-            <div className="min-w-0">
-              <h3 className="text-sm font-semibold text-slate-900">
-                Lokacija
-              </h3>
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h3 className="text-sm font-semibold text-slate-900">
+                  Lokacija
+                </h3>
+                <button
+                  type="button"
+                  onClick={handleCopyAddress}
+                  className={`inline-flex h-9 items-center gap-2 rounded-xl border px-3 text-xs font-semibold transition ${
+                    isAddressCopied
+                      ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                      : "border-blue-200 bg-white text-blue-700 hover:bg-blue-50"
+                  }`}
+                  aria-label={`Kopiraj adresu apoteke ${pharmacy.name}`}
+                >
+                  {isAddressCopied ? (
+                    <Check className="h-3.5 w-3.5" />
+                  ) : (
+                    <Copy className="h-3.5 w-3.5" />
+                  )}
+                  {isAddressCopied ? "Kopirano" : "Kopiraj"}
+                </button>
+              </div>
               <p className="mt-2 flex items-start gap-2 text-sm leading-6 text-slate-600">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
                 {pharmacy.address}
