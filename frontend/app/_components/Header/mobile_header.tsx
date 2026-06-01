@@ -18,13 +18,17 @@ type MobileNavProps = {
 
 export function MobileNav({ user }: MobileNavProps) {
   const pathname = usePathname();
+  const shouldHideNotifications = user?.role === "admin";
+  const visibleBaseNavItems = shouldHideNotifications
+    ? baseNavItems.filter((item) => item.href !== "/api/v1/notifications")
+    : baseNavItems;
   const navItems =
     user?.role === "admin"
       ? [
-          ...baseNavItems,
+          ...visibleBaseNavItems,
           { label: "Admin", href: "/api/v1/admin", icon: ShieldCheck },
         ]
-      : baseNavItems;
+      : visibleBaseNavItems;
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-100 bg-white/95 pb-[max(0.35rem,env(safe-area-inset-bottom))] backdrop-blur-sm md:hidden">

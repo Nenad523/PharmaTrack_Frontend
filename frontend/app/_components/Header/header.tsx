@@ -36,13 +36,17 @@ export function Header({
   logoutLoading,
 }: HeaderProps) {
   const pathname = usePathname();
+  const shouldHideNotifications = user?.role === "admin";
+  const visibleBaseNavItems = shouldHideNotifications
+    ? baseNavItems.filter((item) => item.href !== "/api/v1/notifications")
+    : baseNavItems;
   const navItems =
     user?.role === "admin"
       ? [
-          ...baseNavItems,
+          ...visibleBaseNavItems,
           { label: "Admin", href: "/api/v1/admin", icon: ShieldCheck },
         ]
-      : baseNavItems;
+      : visibleBaseNavItems;
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/95 backdrop-blur">
