@@ -55,6 +55,8 @@ import {
   UserLocation,
 } from "./types";
 import ViewToggle from "./view_toggle";
+import { useAuth } from "../../../../auth/AuthContext";
+import { subscribeToNotifications } from "../../notifications/notifications_api";
 
 const DEFAULT_FILTERS: SearchFilters = {
   name: "",
@@ -106,6 +108,7 @@ const parseMedicineId = (searchParams: URLSearchParams) => {
 };
 
 export default function PharmacySearchPage() {
+  const { user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const medicineId = useMemo(() => parseMedicineId(searchParams), [searchParams]);
@@ -159,6 +162,9 @@ export default function PharmacySearchPage() {
   const [isAlternativeDosesLoading, setIsAlternativeDosesLoading] =
     useState(false);
   const [alternativeDosesError, setAlternativeDosesError] = useState("");
+  const [isNotificationLoading, setIsNotificationLoading] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const [notificationError, setNotificationError] = useState("");
   const alternativesRequestId = useRef(0);
   const alternativeDosesRequestId = useRef(0);
 
@@ -351,6 +357,9 @@ export default function PharmacySearchPage() {
     setSelectedAlternativeDoseIds([]);
     setAlternativeDosesError("");
     setIsAlternativeDosesLoading(false);
+    setIsNotificationLoading(false);
+    setNotificationMessage("");
+    setNotificationError("");
     closeMedicineDetailsPanel();
   }, [closeMedicineDetailsPanel, medicineId]);
 
@@ -583,6 +592,40 @@ export default function PharmacySearchPage() {
     closeDetailsPanel();
     pendingTrackSearch.current = true;
     router.push(`/api/v1/pharmacies/search?${params.toString()}`);
+  };
+
+  const handleSubscribeToNotifications = async () => {
+    if (!user || doseIds.length === 0) {
+      return;
+    }
+
+    setIsNotificationLoading(true);
+    setNotificationMessage("");
+    setNotificationError("");
+
+    try {
+      const result = await subscribeToNotifications(doseIds);
+
+      if (result.successfulCount > 0) {
+        setNotificationMessage(
+          result.successfulCount === doseIds.length
+            ? "Bicete obavijesteni kada lijek bude dostupan u nekoj apoteci."
+            : "Dio obavjestenja je sacuvan. Provjerite poruku ispod za ostale doze."
+        );
+      }
+
+      if (result.failedMessages.length > 0) {
+        setNotificationError(result.failedMessages[0]);
+      }
+    } catch (error) {
+      setNotificationError(
+        error instanceof Error
+          ? error.message
+          : "Doslo je do greske pri cuvanju obavjestenja."
+      );
+    } finally {
+      setIsNotificationLoading(false);
+    }
   };
 
   const handleSortChange = (value: SearchSort) => {
@@ -902,6 +945,10 @@ export default function PharmacySearchPage() {
                 ) : pharmacies.length === 0 ? (
                   <PharmacySearchEmptyState
                     medicineId={medicineId}
+                    canSubscribeToNotifications={Boolean(user)}
+                    isNotificationLoading={isNotificationLoading}
+                    notificationMessage={notificationMessage}
+                    notificationError={notificationError}
                     hasActiveFilters={activeFiltersCount > 0}
                     alternatives={alternatives}
                     isAlternativesLoading={isAlternativesLoading}
@@ -912,6 +959,9 @@ export default function PharmacySearchPage() {
                     isAlternativeDosesLoading={isAlternativeDosesLoading}
                     alternativeDosesError={alternativeDosesError}
                     onLoadAlternatives={loadAlternatives}
+                    onSubscribeToNotifications={() =>
+                      void handleSubscribeToNotifications()
+                    }
                     onSelectAlternative={(alternative) =>
                       void loadAlternativeDoses(alternative)
                     }

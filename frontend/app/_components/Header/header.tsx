@@ -2,13 +2,22 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Clock, Home, LogOut, Pill, ShieldCheck, UserRound } from "lucide-react";
+import {
+  Bell,
+  Clock,
+  Home,
+  LogOut,
+  Pill,
+  ShieldCheck,
+  UserRound,
+} from "lucide-react";
 import type { AuthUser } from "../auth/types";
 
 const baseNavItems = [
   { label: "Početna", href: "/api/v1/home", icon: Home },
   { label: "Pretraga", href: "/api/v1/medications", icon: Pill },
   { label: "Dežurne apoteke", href: "/api/v1/pharmacies/duty", icon: Clock },
+  { label: "Notifikacije", href: "/api/v1/notifications", icon: Bell },
 ];
 
 type HeaderProps = {
