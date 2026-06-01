@@ -26,6 +26,7 @@ export default function MedicationsSearchPage() {
   const [selectedDoses, setSelectedDoses] = useState<MedicationDose[]>([]);
   const [selectedMedicineDoses, setSelectedMedicineDoses] = useState<MedicationDose[]>([]);
   const [filteredMedicines, setFilteredMedicines] = useState<MedicineSearchResult[]>([]);
+  const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [isLoadingDoses, setIsLoadingDoses] = useState(false);
   const [detailsMedicineId, setDetailsMedicineId] = useState<number | null>(null);
   const [detailsMedicine, setDetailsMedicine] = useState<MedicineDetails | null>(null);
@@ -45,10 +46,13 @@ export default function MedicationsSearchPage() {
   useEffect(() => {
     if (!hasMinimumChars) {
       setFilteredMedicines([]);
+      setIsSearchLoading(false);
       return;
     }
 
     const controller = new AbortController();
+    setIsSearchLoading(true);
+    setFilteredMedicines([]);
     const timeoutId = setTimeout(async () => {
       try {
         const searchPath =
@@ -73,6 +77,10 @@ export default function MedicationsSearchPage() {
         }
 
         setFilteredMedicines([]);
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsSearchLoading(false);
+        }
       }
     }, 300);
 
@@ -80,7 +88,7 @@ export default function MedicationsSearchPage() {
       clearTimeout(timeoutId);
       controller.abort();
     };
-  }, [trimmedSearch, hasMinimumChars]);
+  }, [trimmedSearch, hasMinimumChars, mode]);
 
   useEffect(() => {
     if (selectedMedicineId === null) {
@@ -366,6 +374,7 @@ export default function MedicationsSearchPage() {
               handlePopularClick={handlePopularClick}
               trimmedSearch={trimmedSearch}
               filteredMedicines={filteredMedicines}
+              isSearchLoading={isSearchLoading}
               selectedMedicineId={selectedMedicineId}
               selectedMedicineDoses={selectedMedicineDoses}
               isLoadingDoses={isLoadingDoses}

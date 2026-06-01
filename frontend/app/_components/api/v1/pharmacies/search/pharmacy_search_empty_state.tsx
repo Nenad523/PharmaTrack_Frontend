@@ -1,5 +1,6 @@
 import {
   AlertCircle,
+  Bell,
   CheckCircle2,
   ChevronRight,
   Pill,
@@ -11,6 +12,10 @@ import { MedicationAlternative, MedicationDose } from "./types";
 
 type PharmacySearchEmptyStateProps = {
   medicineId: number | null;
+  canSubscribeToNotifications: boolean;
+  isNotificationLoading: boolean;
+  notificationMessage: string;
+  notificationError: string;
   hasActiveFilters: boolean;
   alternatives: MedicationAlternative[];
   isAlternativesLoading: boolean;
@@ -21,6 +26,7 @@ type PharmacySearchEmptyStateProps = {
   isAlternativeDosesLoading: boolean;
   alternativeDosesError: string;
   onLoadAlternatives: () => void;
+  onSubscribeToNotifications: () => void;
   onSelectAlternative: (alternative: MedicationAlternative) => void;
   onToggleAlternativeDose: (doseId: number) => void;
   onSearchAlternative: () => void;
@@ -30,6 +36,10 @@ type PharmacySearchEmptyStateProps = {
 
 export default function PharmacySearchEmptyState({
   medicineId,
+  canSubscribeToNotifications,
+  isNotificationLoading,
+  notificationMessage,
+  notificationError,
   hasActiveFilters,
   alternatives,
   isAlternativesLoading,
@@ -40,6 +50,7 @@ export default function PharmacySearchEmptyState({
   isAlternativeDosesLoading,
   alternativeDosesError,
   onLoadAlternatives,
+  onSubscribeToNotifications,
   onSelectAlternative,
   onToggleAlternativeDose,
   onSearchAlternative,
@@ -72,7 +83,7 @@ export default function PharmacySearchEmptyState({
   };
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm animate-fade-in sm:p-6">
+    <div className="animate-fade-in rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
         <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
           <AlertCircle className="h-5 w-5" />
@@ -88,6 +99,22 @@ export default function PharmacySearchEmptyState({
           </p>
 
           <div className="mt-4 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:gap-3">
+            {canSubscribeToNotifications && (
+              <button
+                type="button"
+                onClick={onSubscribeToNotifications}
+                disabled={!medicineId || isNotificationLoading}
+                className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-bold text-emerald-700 transition hover:bg-emerald-100 disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-100 disabled:text-slate-400 sm:w-auto"
+              >
+                {isNotificationLoading ? (
+                  <RotateCw className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Bell className="h-4 w-4" />
+                )}
+                {isNotificationLoading ? "Čuvanje..." : "Obavijesti me"}
+              </button>
+            )}
+
             <button
               type="button"
               onClick={onLoadAlternatives}
@@ -118,6 +145,24 @@ export default function PharmacySearchEmptyState({
             <p className="mt-3 text-sm font-semibold text-amber-700">
               Lijek nije dostupan u URL parametrima, pa alternative nije moguće
               učitati sa ove stranice.
+            </p>
+          )}
+
+          {!canSubscribeToNotifications && (
+            <p className="mt-3 text-sm font-semibold text-slate-600">
+              Za obavještenja o dostupnosti potrebno je da budete prijavljeni.
+            </p>
+          )}
+
+          {notificationMessage && (
+            <p className="mt-3 rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+              {notificationMessage}
+            </p>
+          )}
+
+          {notificationError && (
+            <p className="mt-3 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+              {notificationError}
             </p>
           )}
 

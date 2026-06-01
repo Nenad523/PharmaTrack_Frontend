@@ -15,6 +15,7 @@ type MedicationsContentProps = {
   handlePopularClick: (medicineName: string) => void;
   trimmedSearch: string;
   filteredMedicines: MedicineSearchResult[];
+  isSearchLoading: boolean;
   selectedMedicineId: number | null;
   selectedMedicineDoses: MedicationDose[];
   isLoadingDoses: boolean;
@@ -37,6 +38,7 @@ export default function MedicationsContent({
   handlePopularClick,
   trimmedSearch,
   filteredMedicines,
+  isSearchLoading,
   selectedMedicineId,
   selectedMedicineDoses,
   isLoadingDoses,
@@ -91,6 +93,7 @@ export default function MedicationsContent({
         <SearchResults
           trimmedSearch={trimmedSearch}
           filteredMedicines={filteredMedicines}
+          isSearchLoading={isSearchLoading}
           selectedMedicineId={selectedMedicineId}
           detailsMedicineId={detailsMedicineId}
           handleSelectMedicine={handleSelectMedicine}

@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Clock, Home, Search, ShieldCheck } from "lucide-react";
+import { Bell, Clock, Home, Search, ShieldCheck } from "lucide-react";
 import type { AuthUser } from "../auth/types";
 
 const baseNavItems = [
   { label: "Početna", href: "/api/v1/home", icon: Home },
   { label: "Pretraga", href: "/api/v1/medications", icon: Search },
   { label: "Dežurne", href: "/api/v1/pharmacies/duty", icon: Clock },
+  { label: "Notif", href: "/api/v1/notifications", icon: Bell },
 ];
 
 type MobileNavProps = {
