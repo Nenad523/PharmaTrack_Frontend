@@ -146,24 +146,24 @@ function PharmacyPopup({
     : "Nije dostupno";
 
   return (
-    <div className="w-[228px] max-w-[74vw] overflow-hidden rounded-[14px] bg-white">
-      <div className="border-b border-slate-100 bg-[linear-gradient(135deg,#eff6ff_0%,#ffffff_50%,#ecfdf5_100%)] px-1.5 py-1.5">
-        <div className="flex items-start gap-1">
-          <span className="inline-flex h-5.5 w-5.5 shrink-0 items-center justify-center rounded-md bg-white text-blue-600 shadow-sm ring-1 ring-blue-100">
-            <Building2 className="h-3 w-3" />
+    <div className="w-[228px] max-w-[74vw] overflow-hidden rounded-[14px] bg-white md:w-[320px] md:max-w-[320px]">
+      <div className="border-b border-slate-100 bg-[linear-gradient(135deg,#eff6ff_0%,#ffffff_50%,#ecfdf5_100%)] px-1.5 py-1.5 md:px-3 md:py-2.5">
+        <div className="flex items-start gap-1 md:gap-2">
+          <span className="inline-flex h-5.5 w-5.5 shrink-0 items-center justify-center rounded-md bg-white text-blue-600 shadow-sm ring-1 ring-blue-100 md:h-8 md:w-8">
+            <Building2 className="h-3 w-3 md:h-4 md:w-4" />
           </span>
 
           <div className="min-w-0 flex-1">
-            <div className="flex items-start justify-between gap-1">
-              <h3 className="line-clamp-2 min-w-0 flex-1 text-[9px] font-bold leading-[1.05rem] text-slate-900">
+            <div className="flex items-start justify-between gap-1 md:gap-2">
+              <h3 className="line-clamp-2 min-w-0 flex-1 text-[9px] font-bold leading-[1.05rem] text-slate-900 md:text-sm md:leading-5">
                 {pharmacy.name}
               </h3>
             </div>
 
             {distanceLabel && (
-              <div className="mt-0.5 flex flex-wrap items-center gap-x-1 gap-y-0 text-[7px] font-semibold leading-none text-slate-500">
+              <div className="mt-0.5 flex flex-wrap items-center gap-x-1 gap-y-0 text-[7px] font-semibold leading-none text-slate-500 md:mt-1 md:text-[11px]">
                 <span className="inline-flex items-center gap-0.5 text-slate-600">
-                  <Navigation className="h-2 w-2" />
+                  <Navigation className="h-2 w-2 md:h-3 md:w-3" />
                   {distanceLabel}
                 </span>
               </div>
@@ -171,52 +171,52 @@ function PharmacyPopup({
           </div>
         </div>
 
-        <div className="mt-1 rounded-md bg-white/95 px-1.5 py-1 ring-1 ring-slate-100">
-          <div className="flex items-start gap-1 text-[7px] leading-[0.8rem] text-slate-600">
-            <MapPin className="mt-px h-2 w-2 shrink-0 text-slate-400" />
+        <div className="mt-1 rounded-md bg-white/95 px-1.5 py-1 ring-1 ring-slate-100 md:mt-2 md:px-2.5 md:py-1.5">
+          <div className="flex items-start gap-1 text-[7px] leading-[0.8rem] text-slate-600 md:gap-1.5 md:text-[11px] md:leading-4">
+            <MapPin className="mt-px h-2 w-2 shrink-0 text-slate-400 md:h-3 md:w-3" />
             <span className="line-clamp-1">{pharmacy.address}</span>
           </div>
         </div>
       </div>
 
-      <div className="space-y-0.5 px-1.5 py-1">
-        <div className="flex flex-wrap items-center gap-0.5">
+      <div className="space-y-0.5 px-1.5 py-1 md:space-y-2 md:px-3 md:py-2.5">
+        <div className="flex flex-wrap items-center gap-0.5 md:gap-1">
           <span
-            className={`inline-flex items-center gap-0.5 rounded-full px-1 py-0.5 text-[7px] font-bold leading-none ${statusBadge.className}`}
+            className={`inline-flex items-center gap-0.5 rounded-full px-1 py-0.5 text-[7px] font-bold leading-none md:gap-1 md:px-2 md:py-1 md:text-[11px] ${statusBadge.className}`}
           >
-            <MetaStatusIcon className="h-2 w-2" />
+            <MetaStatusIcon className="h-2 w-2 md:h-3 md:w-3" />
             {statusBadge.label === "Ne radi" ? "Trenutno zatvoreno" : openLabel}
           </span>
-          <span className="inline-flex items-center gap-0.5 rounded-full border border-slate-200 bg-slate-50 px-1 py-0.5 text-[7px] font-bold leading-none text-slate-700">
-            <Clock3 className="h-2 w-2" />
+          <span className="inline-flex items-center gap-0.5 rounded-full border border-slate-200 bg-slate-50 px-1 py-0.5 text-[7px] font-bold leading-none text-slate-700 md:gap-1 md:px-2 md:py-1 md:text-[11px]">
+            <Clock3 className="h-2 w-2 md:h-3 md:w-3" />
             {latestUpdateLabel}
           </span>
         </div>
 
-        <div className="rounded-md border border-emerald-100 bg-[linear-gradient(135deg,#ecfdf5_0%,#ffffff_100%)] px-1.5 py-1">
-          <p className="text-[7px] font-bold uppercase tracking-wide text-emerald-700">
+        <div className="rounded-md border border-emerald-100 bg-[linear-gradient(135deg,#ecfdf5_0%,#ffffff_100%)] px-1.5 py-1 md:px-2.5 md:py-2">
+          <p className="text-[7px] font-bold uppercase tracking-wide text-emerald-700 md:text-[11px]">
             Trazeni lijek
           </p>
-          <div className="mt-px flex items-start justify-between gap-1">
-            <h4 className="line-clamp-2 min-w-0 flex-1 text-[9px] font-bold leading-[1.05rem] text-slate-900">
+          <div className="mt-px flex items-start justify-between gap-1 md:mt-1 md:gap-2">
+            <h4 className="line-clamp-2 min-w-0 flex-1 text-[9px] font-bold leading-[1.05rem] text-slate-900 md:text-sm md:leading-5">
               {medicineName}
             </h4>
-            <span className="rounded-full border border-slate-200 bg-white px-1 py-0.5 text-[7px] font-bold leading-none text-slate-700">
+            <span className="rounded-full border border-slate-200 bg-white px-1 py-0.5 text-[7px] font-bold leading-none text-slate-700 md:px-2 md:py-1 md:text-[11px]">
               {pharmacy.doses.length}
             </span>
           </div>
-          <div className="mt-px flex flex-wrap gap-0.5">
+          <div className="mt-px flex flex-wrap gap-0.5 md:mt-1 md:gap-1">
             {doseStrengths.length > 0 ? (
               doseStrengths.slice(0, 2).map((dose) => (
                 <span
                   key={`requested-${pharmacy.id}-${dose}`}
-                  className="inline-flex rounded-full border border-blue-100 bg-blue-50 px-1 py-0.5 text-[7px] font-bold leading-none text-blue-700"
+                  className="inline-flex rounded-full border border-blue-100 bg-blue-50 px-1 py-0.5 text-[7px] font-bold leading-none text-blue-700 md:px-2 md:py-1 md:text-[11px]"
                 >
                   {dose}
                 </span>
               ))
             ) : (
-              <span className="text-[7px] leading-none text-slate-500">
+              <span className="text-[7px] leading-none text-slate-500 md:text-[11px]">
                 Doze nijesu oznacene.
               </span>
             )}
