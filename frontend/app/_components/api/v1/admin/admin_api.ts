@@ -201,6 +201,20 @@ export async function updateDose(medicationId: number, doseId: number, is_refund
   );
 }
 
+export async function removeMedicationImage(medicationId: number) {
+  return adminRequest<{ success: boolean }>(
+    `/api/v1/upload/medication-image/${medicationId}`,
+    { method: "DELETE" }
+  );
+}
+
+export async function removePharmacyImage(pharmacyId: number) {
+  return adminRequest<{ success: boolean }>(
+    `/api/v1/upload/pharmacy-image/${pharmacyId}`,
+    { method: "DELETE" }
+  );
+}
+
 export async function uploadPharmacyImage(pharmacyId: number, file: File) {
   const formData = new FormData();
   formData.append("pharmacyId", String(pharmacyId));

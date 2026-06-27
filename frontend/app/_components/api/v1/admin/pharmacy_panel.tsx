@@ -20,7 +20,7 @@ import {
   updateScheduleException,
   updateWorkingHours,
 } from "./pharmacy_api";
-import { uploadPharmacyImage } from "./admin_api";
+import { uploadPharmacyImage, removePharmacyImage } from "./admin_api";
 import { PharmacyImageUploadPanel } from "./pharmacy_image_upload_panel";
 import { AdminNotice } from "./admin_notice";
 import { DutyManager } from "./duty_manager";
@@ -234,6 +234,14 @@ export function PharmacyPanel() {
     }, "Slika apoteke je uploadovana.");
   };
 
+  const handleRemoveImage = async () => {
+    if (!selectedPharmacy) return;
+    await runAction(async () => {
+      await removePharmacyImage(selectedPharmacy.id);
+      await refreshPharmacyData(selectedPharmacy.id);
+    }, "Slika apoteke je uklonjena.");
+  };
+
   const handleDeleteException = async (exId: number) => {
     if (!selectedPharmacy) return;
     await runAction(async () => {
@@ -295,6 +303,7 @@ export function PharmacyPanel() {
             pharmacy={selectedPharmacy}
             isBusy={isBusy || isSelecting}
             onUploadImage={handleUploadImage}
+            onRemoveImage={handleRemoveImage}
           />
         </div>
       </div>

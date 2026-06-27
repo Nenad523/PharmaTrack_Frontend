@@ -20,6 +20,7 @@ import {
   updateDose,
   updateMedication,
   uploadMedicationImage,
+  removeMedicationImage,
 } from "./admin_api";
 import { AdminNotice } from "./admin_notice";
 import { DosesManager } from "./doses_manager";
@@ -240,11 +241,18 @@ export default function AdminPanel() {
 
   const handleUploadImage = async (file: File) => {
     if (!selectedMedication) return;
-
     await runAction(async () => {
       await uploadMedicationImage(selectedMedication.name, file);
       await refreshMedication(selectedMedication.id);
     }, "Slika lijeka je uploadovana.");
+  };
+
+  const handleRemoveImage = async () => {
+    if (!selectedMedication) return;
+    await runAction(async () => {
+      await removeMedicationImage(selectedMedication.id);
+      await refreshMedication(selectedMedication.id);
+    }, "Slika lijeka je uklonjena.");
   };
 
   if (!isAdmin) {
@@ -340,6 +348,7 @@ export default function AdminPanel() {
                   medication={selectedMedication}
                   isBusy={isBusy}
                   onUploadImage={handleUploadImage}
+                  onRemoveImage={handleRemoveImage}
                 />
                 <IngredientsManager
                   medication={selectedMedication}

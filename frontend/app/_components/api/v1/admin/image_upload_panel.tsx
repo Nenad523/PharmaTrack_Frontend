@@ -1,19 +1,21 @@
 "use client";
 
 import { ChangeEvent, FormEvent, useState } from "react";
-import { ImageUp } from "lucide-react";
+import { ImageUp, Trash2 } from "lucide-react";
 import type { MedicationDetails } from "./types";
 
 type ImageUploadPanelProps = {
   medication: MedicationDetails | null;
   isBusy: boolean;
   onUploadImage: (file: File) => Promise<void>;
+  onRemoveImage: () => Promise<void>;
 };
 
 export function ImageUploadPanel({
   medication,
   isBusy,
   onUploadImage,
+  onRemoveImage,
 }: ImageUploadPanelProps) {
   const [file, setFile] = useState<File | null>(null);
 
@@ -61,6 +63,17 @@ export function ImageUploadPanel({
           </div>
 
           <form onSubmit={submit} className="mt-4 space-y-3">
+            {medication.img_url && (
+              <button
+                type="button"
+                disabled={isBusy}
+                onClick={onRemoveImage}
+                className="inline-flex h-9 items-center gap-2 rounded-lg border border-red-200 px-3 text-sm font-bold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                <Trash2 className="h-4 w-4" />
+                Ukloni sliku
+              </button>
+            )}
             <input
               type="file"
               accept="image/png,image/jpeg,image/jpg,image/webp"
