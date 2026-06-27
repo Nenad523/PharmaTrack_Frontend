@@ -183,16 +183,29 @@ function DetailsBody({
             {pharmacy.city}
           </p>
 
-          {onShowOnMap && (
-            <button
-              type="button"
-              onClick={() => onShowOnMap(pharmacy)}
-              className="mt-4 inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
-            >
-              <Route className="h-4 w-4" />
-              Prikaži na mapi
-            </button>
-          )}
+          <div className="mt-4 flex flex-wrap gap-2">
+            {onShowOnMap && (
+              <button
+                type="button"
+                onClick={() => onShowOnMap(pharmacy)}
+                className="inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
+              >
+                <Route className="h-4 w-4" />
+                Prikaži na mapi
+              </button>
+            )}
+            {pharmacy.latitude != null && pharmacy.longitude != null && (
+              <a
+                href={`https://www.google.com/maps/dir/?api=1&destination=${pharmacy.latitude},${pharmacy.longitude}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
+              >
+                <Navigation className="h-4 w-4" />
+                Navigiraj
+              </a>
+            )}
+          </div>
         </div>
 
         <button
