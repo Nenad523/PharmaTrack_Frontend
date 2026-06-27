@@ -276,6 +276,12 @@ export function PharmacyPanel() {
             onUpdatePharmacy={handleUpdatePharmacy}
             onDeletePharmacy={handleDeletePharmacy}
           />
+          <PharmacyImageUploadPanel
+            pharmacy={selectedPharmacy}
+            isBusy={isBusy || isSelecting}
+            onUploadImage={handleUploadImage}
+            onRemoveImage={handleRemoveImage}
+          />
           <WorkingHoursManager
             pharmacy={selectedPharmacy}
             workingHours={workingHours}
@@ -298,12 +304,6 @@ export function PharmacyPanel() {
             onAdd={handleAddException}
             onUpdate={handleUpdateException}
             onDelete={handleDeleteException}
-          />
-          <PharmacyImageUploadPanel
-            pharmacy={selectedPharmacy}
-            isBusy={isBusy || isSelecting}
-            onUploadImage={handleUploadImage}
-            onRemoveImage={handleRemoveImage}
           />
         </div>
       </div>
