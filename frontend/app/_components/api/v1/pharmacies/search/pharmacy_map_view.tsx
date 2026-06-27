@@ -267,9 +267,10 @@ function PharmacyPopup({
               href={buildGoogleMapsUrl({ ...pharmacy, latitude: lat, longitude: lng }, userLocation)}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-1 inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-blue-600 px-3 py-2 text-[10px] font-bold leading-none text-white transition hover:bg-blue-700 md:text-xs"
+              style={{ color: "#ffffff" }}
+              className="mt-1 inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-blue-600 px-3 py-2 text-[10px] font-bold leading-none transition hover:bg-blue-700 md:text-xs"
             >
-              <Navigation className="h-3 w-3 md:h-3.5 md:w-3.5" />
+              <Navigation className="h-3 w-3 md:h-3.5 md:w-3.5" style={{ color: "#ffffff" }} />
               Navigiraj
             </a>
           );
