@@ -10,6 +10,7 @@ type DosesManagerProps = {
   isBusy: boolean;
   onCreateDoses: (strengths: string[]) => Promise<void>;
   onDeleteDose: (doseId: number) => Promise<void>;
+  onUpdateDose: (doseId: number, is_refundable: boolean) => Promise<void>;
 };
 
 export function DosesManager({
@@ -18,6 +19,7 @@ export function DosesManager({
   isBusy,
   onCreateDoses,
   onDeleteDose,
+  onUpdateDose,
 }: DosesManagerProps) {
   const [strengths, setStrengths] = useState("");
 
@@ -60,6 +62,19 @@ export function DosesManager({
                 className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 text-sm font-semibold text-slate-700"
               >
                 {dose.strength}
+                <button
+                  type="button"
+                  onClick={() => onUpdateDose(dose.id, !dose.is_refundable)}
+                  disabled={isBusy}
+                  title={dose.is_refundable ? "RFZO: refundabilno" : "RFZO: nije refundabilno"}
+                  className={`rounded px-1.5 py-0.5 text-[11px] font-bold transition disabled:cursor-not-allowed disabled:opacity-50 ${
+                    dose.is_refundable
+                      ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                      : "bg-slate-100 text-slate-400 hover:bg-slate-200"
+                  }`}
+                >
+                  RFZO
+                </button>
                 <button
                   type="button"
                   onClick={() => onDeleteDose(dose.id)}

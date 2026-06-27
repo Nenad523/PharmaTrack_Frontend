@@ -13,7 +13,7 @@ type Props = {
   onDeletePharmacy: () => void;
 };
 
-const empty = { name: "", address: "", latitude: "", longitude: "", city_id: "" };
+const empty = { name: "", address: "", latitude: "", longitude: "", city_id: "", is_state: false };
 
 const mapPharmacyToForm = (pharmacy: PharmacyDetails) => ({
   name: pharmacy.name,
@@ -21,6 +21,7 @@ const mapPharmacyToForm = (pharmacy: PharmacyDetails) => ({
   latitude: String(pharmacy.latitude),
   longitude: String(pharmacy.longitude),
   city_id: String(pharmacy.city_id),
+  is_state: pharmacy.is_state,
 });
 
 export function PharmacyEditor({
@@ -35,8 +36,11 @@ export function PharmacyEditor({
     selectedPharmacy ? mapPharmacyToForm(selectedPharmacy) : empty
   );
 
-  const set = (field: keyof typeof empty, value: string) =>
+  const set = (field: keyof Omit<typeof empty, "is_state">, value: string) =>
     setForm((prev) => ({ ...prev, [field]: value }));
+
+  const toggleIsState = () =>
+    setForm((prev) => ({ ...prev, is_state: !prev.is_state }));
 
   const buildPayload = (): PharmacyPayload | null => {
     const lat = parseFloat(form.latitude);
@@ -52,6 +56,7 @@ export function PharmacyEditor({
       latitude: lat,
       longitude: lng,
       city_id: cityId,
+      is_state: form.is_state,
     };
   };
 
@@ -148,6 +153,27 @@ export function PharmacyEditor({
               </option>
             ))}
           </select>
+        </div>
+
+        <div>
+          <label className={labelClass}>Tip apoteke</label>
+          <button
+            type="button"
+            onClick={toggleIsState}
+            disabled={isBusy}
+            className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-semibold transition disabled:opacity-50 ${
+              form.is_state
+                ? "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                : "border-slate-200 bg-slate-50 text-slate-500 hover:bg-slate-100"
+            }`}
+          >
+            <span
+              className={`h-3.5 w-3.5 rounded-full border-2 ${
+                form.is_state ? "border-emerald-500 bg-emerald-500" : "border-slate-300 bg-white"
+              }`}
+            />
+            {form.is_state ? "Državna apoteka" : "Privatna apoteka"}
+          </button>
         </div>
 
         <div className="flex gap-2 pt-1">

@@ -11,6 +11,7 @@ export type PharmacyDetails = {
   latitude: number;
   longitude: number;
   city_id: number;
+  is_state: boolean;
 };
 
 export type PharmacyPayload = {
@@ -19,6 +20,7 @@ export type PharmacyPayload = {
   latitude: number;
   longitude: number;
   city_id: number;
+  is_state?: boolean;
 };
 
 export type WorkingHoursEntry = {

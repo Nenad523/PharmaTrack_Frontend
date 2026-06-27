@@ -89,19 +89,31 @@ export default function PharmacySearchCard({
               </div>
 
               <div className="mt-3 flex flex-wrap gap-2 sm:mt-4">
-                {pharmacy.doses.map((dose) => (
-                  <span
-                    key={`${pharmacy.id}-${dose.doseId}`}
-                    className="inline-flex min-h-10 flex-col justify-center rounded-xl border border-emerald-100 bg-emerald-50 px-2.5 py-1.5 sm:min-h-12 sm:px-3 sm:py-2"
-                  >
-                    <span className="text-[11px] font-bold text-emerald-700 sm:text-xs">
-                      {dose.strength}
+                {pharmacy.doses.map((dose) => {
+                  const refundable = pharmacy.is_state && dose.is_refundable;
+                  return (
+                    <span
+                      key={`${pharmacy.id}-${dose.doseId}`}
+                      className={`inline-flex min-h-10 flex-col justify-center rounded-xl border px-2.5 py-1.5 sm:min-h-12 sm:px-3 sm:py-2 ${
+                        refundable
+                          ? "border-emerald-100 bg-emerald-50"
+                          : "border-slate-200 bg-slate-50"
+                      }`}
+                    >
+                      <span className={`flex items-center gap-1 text-[11px] font-bold sm:text-xs ${refundable ? "text-emerald-700" : "text-slate-700"}`}>
+                        {dose.strength}
+                        {refundable && (
+                          <span className="rounded bg-emerald-600 px-1 text-[9px] font-black text-white">
+                            RFZO
+                          </span>
+                        )}
+                      </span>
+                      <span className={`mt-0.5 text-[11px] font-semibold ${refundable ? "text-emerald-700/75" : "text-slate-500"}`}>
+                        {formatDoseUpdate(dose.lastUpdated)}
+                      </span>
                     </span>
-                    <span className="mt-0.5 text-[11px] font-semibold text-emerald-700/75">
-                      {formatDoseUpdate(dose.lastUpdated)}
-                    </span>
-                  </span>
-                ))}
+                  );
+                })}
 
                 {pharmacy.isOnDuty && (
                   <span className="inline-flex min-h-10 items-center justify-center rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-center text-xs font-bold text-blue-700 sm:min-h-12">

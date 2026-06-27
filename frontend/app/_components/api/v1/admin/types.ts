@@ -11,6 +11,7 @@ export type ActiveIngredient = {
 export type MedicationDose = {
   id: number;
   strength: string;
+  is_refundable: boolean;
 };
 
 export type MedicationSearchResult = {

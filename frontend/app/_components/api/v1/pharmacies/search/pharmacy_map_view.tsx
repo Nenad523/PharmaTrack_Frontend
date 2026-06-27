@@ -248,15 +248,38 @@ function PharmacyPopup({
           <span className="font-bold uppercase tracking-wide text-slate-500">
             Dostupne doze
           </span>
-          {pharmacy.doses.map((dose) => (
-            <span
-              key={`${pharmacy.id}-${dose.doseId}`}
-              className="inline-flex rounded-md border border-emerald-100 bg-emerald-50 px-1 py-0.5 font-bold leading-none text-emerald-800"
-            >
-              {dose.strength}
-            </span>
-          ))}
+          {pharmacy.doses.map((dose) => {
+            const refundable = pharmacy.is_state && dose.is_refundable;
+            return (
+              <span
+                key={`${pharmacy.id}-${dose.doseId}`}
+                className={`inline-flex items-center gap-0.5 rounded-md border px-1 py-0.5 font-bold leading-none ${
+                  refundable
+                    ? "border-emerald-100 bg-emerald-50 text-emerald-800"
+                    : "border-slate-200 bg-slate-50 text-slate-700"
+                }`}
+              >
+                {dose.strength}
+                {refundable && (
+                  <span className="rounded bg-emerald-600 px-0.5 text-[6px] font-black text-white md:text-[8px]">
+                    RFZO
+                  </span>
+                )}
+              </span>
+            );
+          })}
         </div>
+        {pharmacy.is_state !== undefined && (
+          <div className="text-[7px] leading-none">
+            <span className={`inline-flex items-center gap-0.5 rounded-full px-1 py-0.5 font-bold ${
+              pharmacy.is_state
+                ? "border border-emerald-100 bg-emerald-50 text-emerald-700"
+                : "border border-slate-200 bg-slate-50 text-slate-500"
+            }`}>
+              {pharmacy.is_state ? "Državna apoteka" : "Privatna apoteka"}
+            </span>
+          </div>
+        )}
 
         {(() => {
           const lat = normalizeNumber(pharmacy.latitude);

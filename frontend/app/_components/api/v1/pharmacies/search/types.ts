@@ -9,6 +9,7 @@ export type PharmacySearchDose = {
   doseId: number;
   strength: string;
   lastUpdated?: string | null;
+  is_refundable: boolean;
 };
 
 export type PharmacySearchResult = {
@@ -24,6 +25,7 @@ export type PharmacySearchResult = {
   openUntil: string | null;
   availabilitySource: "exception" | "duty" | "working_hours" | null;
   doses: PharmacySearchDose[];
+  is_state: boolean;
 };
 
 export type PharmacySearchApiResponse = {

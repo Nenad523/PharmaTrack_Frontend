@@ -17,6 +17,7 @@ import {
   normalizeMedicationResult,
   searchMedications,
   unlinkIngredient,
+  updateDose,
   updateMedication,
   uploadMedicationImage,
 } from "./admin_api";
@@ -220,6 +221,14 @@ export default function AdminPanel() {
     }, "Doze su dodate.");
   };
 
+  const handleUpdateDose = async (doseId: number, is_refundable: boolean) => {
+    if (!selectedMedication) return;
+    await runAction(async () => {
+      await updateDose(selectedMedication.id, doseId, is_refundable);
+      await refreshMedication(selectedMedication.id);
+    }, is_refundable ? "Doza označena kao refundabilna." : "Doza označena kao nerefundabilna.");
+  };
+
   const handleDeleteDose = async (doseId: number) => {
     if (!selectedMedication) return;
 
@@ -346,6 +355,7 @@ export default function AdminPanel() {
                   isBusy={isBusy}
                   onCreateDoses={handleCreateDoses}
                   onDeleteDose={handleDeleteDose}
+                  onUpdateDose={handleUpdateDose}
                 />
               </div>
             </div>
