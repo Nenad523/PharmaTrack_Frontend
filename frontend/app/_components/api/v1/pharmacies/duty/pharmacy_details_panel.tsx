@@ -19,7 +19,8 @@ import { PharmacyDetails } from "./types";
 type PharmacyMedicineContext = {
   medicineName: string;
   selectedDoseStrengths: string[];
-  availableDoseStrengths: string[];
+  availableDoses: { strength: string; is_refundable: boolean }[];
+  is_state: boolean;
   distanceLabel?: string | null;
   latestUpdateLabel?: string | null;
 };
@@ -233,21 +234,27 @@ function DetailsBody({
         {medicineContext && (
           <div className="overflow-hidden rounded-3xl border border-emerald-200/80 bg-[linear-gradient(135deg,rgba(236,253,245,0.95)_0%,rgba(255,255,255,1)_52%,rgba(239,246,255,0.95)_100%)] shadow-sm">
             <div className="border-b border-emerald-100/80 px-5 py-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
-                Trazeni lijek
-              </p>
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
+                  Traženi lijek
+                </p>
+                <span className={`rounded-full border px-2.5 py-0.5 text-[11px] font-bold ${
+                  medicineContext.is_state
+                    ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                    : "border-slate-200 bg-slate-50 text-slate-500"
+                }`}>
+                  {medicineContext.is_state ? "Državna apoteka" : "Privatna apoteka"}
+                </span>
+              </div>
               <h3 className="mt-1 text-lg font-bold text-slate-900">
                 {medicineContext.medicineName}
               </h3>
-              <p className="mt-1 text-sm text-slate-600">
-                Apoteka ima izdvojene doze koje odgovaraju trenutnoj pretrazi.
-              </p>
             </div>
 
             <div className="grid gap-3 px-5 py-4 sm:grid-cols-2">
               <div className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-sm">
                 <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  Trazene doze
+                  Tražene doze
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {medicineContext.selectedDoseStrengths.length > 0 ? (
@@ -272,15 +279,27 @@ function DetailsBody({
                   Dostupno u apoteci
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {medicineContext.availableDoseStrengths.length > 0 ? (
-                    medicineContext.availableDoseStrengths.map((dose) => (
-                      <span
-                        key={`available-${dose}`}
-                        className="rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700"
-                      >
-                        {dose}
-                      </span>
-                    ))
+                  {medicineContext.availableDoses.length > 0 ? (
+                    medicineContext.availableDoses.map((dose) => {
+                      const refundable = medicineContext.is_state && dose.is_refundable;
+                      return (
+                        <span
+                          key={`available-${dose.strength}`}
+                          className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold ${
+                            refundable
+                              ? "border-emerald-300 bg-emerald-50 text-emerald-700"
+                              : "border-slate-200 bg-white text-slate-600"
+                          }`}
+                        >
+                          {dose.strength}
+                          {refundable && (
+                            <span className="rounded bg-emerald-600 px-1 py-px text-[9px] font-black text-white">
+                              RFZO
+                            </span>
+                          )}
+                        </span>
+                      );
+                    })
                   ) : (
                     <span className="text-sm text-slate-500">
                       Stanje doza nije dostupno.
@@ -308,7 +327,7 @@ function DetailsBody({
                   <Clock3 className="mt-0.5 h-5 w-5 text-emerald-600" />
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                      Zadnje azuriranje
+                      Zadnje ažuriranje
                     </p>
                     <p className="mt-1 text-sm font-semibold text-slate-900">
                       {medicineContext.latestUpdateLabel || "Nije dostupno"}

@@ -748,7 +748,11 @@ export default function PharmacySearchPage() {
     return {
       medicineName,
       selectedDoseStrengths: doseStrengths,
-      availableDoseStrengths: activeSearchPharmacy.doses.map((dose) => dose.strength),
+      availableDoses: activeSearchPharmacy.doses.map((dose) => ({
+        strength: dose.strength,
+        is_refundable: dose.is_refundable,
+      })),
+      is_state: activeSearchPharmacy.is_state,
       distanceLabel: formatDistance(activeSearchPharmacy.distance),
       latestUpdateLabel: latestInventoryUpdate
         ? formatRelativeUpdate(latestInventoryUpdate)
