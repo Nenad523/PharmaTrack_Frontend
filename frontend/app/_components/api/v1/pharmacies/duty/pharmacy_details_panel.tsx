@@ -206,6 +206,16 @@ function DetailsBody({
       </div>
 
       <div className="space-y-5 px-6 py-6">
+        {pharmacy.img_url && (
+          <div className="overflow-hidden rounded-2xl border border-slate-200">
+            <img
+              src={pharmacy.img_url}
+              alt={`Fotografija apoteke ${pharmacy.name}`}
+              className="h-48 w-full object-cover"
+            />
+          </div>
+        )}
+
         {medicineContext && (
           <div className="overflow-hidden rounded-3xl border border-emerald-200/80 bg-[linear-gradient(135deg,rgba(236,253,245,0.95)_0%,rgba(255,255,255,1)_52%,rgba(239,246,255,0.95)_100%)] shadow-sm">
             <div className="border-b border-emerald-100/80 px-5 py-4">

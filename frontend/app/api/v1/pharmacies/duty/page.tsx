@@ -127,6 +127,7 @@ const normalizePharmacyDetails = (
   longitude: normalizeNumber(response.data.longitude),
   isActive: response.data.isActive === true || response.data.isActive === 1,
   isOnDuty: response.data.isOnDuty,
+  img_url: response.data.img_url ?? null,
   phones: Array.isArray(response.data.phones) ? response.data.phones : [],
   workingHours: normalizeWorkingHours(response.data.workingHours),
   dutySchedule: response.data.dutySchedule ?? null,

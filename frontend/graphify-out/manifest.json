@@ -1,0 +1,407 @@
+{
+  "app/.vscode/sidebar-notes.json": {
+    "mtime": 1777883857.5743022,
+    "ast_hash": "7b75351fbb69acd68f52944ef12461ca",
+    "semantic_hash": "7b75351fbb69acd68f52944ef12461ca"
+  },
+  "app/ThemeRegistry.tsx": {
+    "mtime": 1777883857.5743022,
+    "ast_hash": "cb984d93b5684feda1d682094365c2fe",
+    "semantic_hash": "cb984d93b5684feda1d682094365c2fe"
+  },
+  "app/_components/Footer/footer.tsx": {
+    "mtime": 1778486357.1571817,
+    "ast_hash": "5f7e459b69c586a8f90f53ce33871c29",
+    "semantic_hash": "5f7e459b69c586a8f90f53ce33871c29"
+  },
+  "app/_components/Header/header.tsx": {
+    "mtime": 1780311785.908973,
+    "ast_hash": "95c6023ad870aa6284c1bc76d4a416cd",
+    "semantic_hash": "95c6023ad870aa6284c1bc76d4a416cd"
+  },
+  "app/_components/Header/mobile_header.tsx": {
+    "mtime": 1780311785.908973,
+    "ast_hash": "9e737477537ac849e612d4ee1779fb06",
+    "semantic_hash": "9e737477537ac849e612d4ee1779fb06"
+  },
+  "app/_components/Home/data.ts": {
+    "mtime": 1778422901.2432876,
+    "ast_hash": "62434d4ee67d1192ffb32e1cf77d91d9",
+    "semantic_hash": "62434d4ee67d1192ffb32e1cf77d91d9"
+  },
+  "app/_components/Home/features.tsx": {
+    "mtime": 1778486357.1571817,
+    "ast_hash": "8eb7a74ad49ef3661461d5640622e61a",
+    "semantic_hash": "8eb7a74ad49ef3661461d5640622e61a"
+  },
+  "app/_components/Home/hero.tsx": {
+    "mtime": 1778486357.1571817,
+    "ast_hash": "c533c39fd0457dda10076610b261495e",
+    "semantic_hash": "c533c39fd0457dda10076610b261495e"
+  },
+  "app/_components/Home/news.tsx": {
+    "mtime": 1779716459.7658348,
+    "ast_hash": "bdd8f4fabfbdcf46ec56c68703c548fe",
+    "semantic_hash": "bdd8f4fabfbdcf46ec56c68703c548fe"
+  },
+  "app/_components/Home/promo_video.tsx": {
+    "mtime": 1779716459.7660527,
+    "ast_hash": "bd12e241db6a3bff3d05334d393ef2b5",
+    "semantic_hash": "bd12e241db6a3bff3d05334d393ef2b5"
+  },
+  "app/_components/Home/quick_actions.tsx": {
+    "mtime": 1778486357.1571817,
+    "ast_hash": "17356bce5a028898fd20c90186b2c847",
+    "semantic_hash": "17356bce5a028898fd20c90186b2c847"
+  },
+  "app/_components/api/v1/admin/admin_api.ts": {
+    "mtime": 1779716459.7662404,
+    "ast_hash": "6d964dd3de67d29a65e1cfe230a28078",
+    "semantic_hash": "6d964dd3de67d29a65e1cfe230a28078"
+  },
+  "app/_components/api/v1/admin/admin_notice.tsx": {
+    "mtime": 1779716459.766525,
+    "ast_hash": "ee088df0ba59cb57c40ba8cfabcbaf05",
+    "semantic_hash": "ee088df0ba59cb57c40ba8cfabcbaf05"
+  },
+  "app/_components/api/v1/admin/admin_panel.tsx": {
+    "mtime": 1780308554.8403473,
+    "ast_hash": "96f6a21b040c4aede583c43378c3db91",
+    "semantic_hash": "96f6a21b040c4aede583c43378c3db91"
+  },
+  "app/_components/api/v1/admin/doses_manager.tsx": {
+    "mtime": 1779716459.7671516,
+    "ast_hash": "0a2342ae49ffec260103db375b6f9dcc",
+    "semantic_hash": "0a2342ae49ffec260103db375b6f9dcc"
+  },
+  "app/_components/api/v1/admin/duty_manager.tsx": {
+    "mtime": 1780308554.8403473,
+    "ast_hash": "f23abce3970b63f57ccbefd07462b6f6",
+    "semantic_hash": "f23abce3970b63f57ccbefd07462b6f6"
+  },
+  "app/_components/api/v1/admin/image_upload_panel.tsx": {
+    "mtime": 1779716459.7673078,
+    "ast_hash": "7d52fdd1fd8ec64a6329900f0261fdd5",
+    "semantic_hash": "7d52fdd1fd8ec64a6329900f0261fdd5"
+  },
+  "app/_components/api/v1/admin/ingredients_manager.tsx": {
+    "mtime": 1779716459.7673078,
+    "ast_hash": "845ff48c7b6fb3cdc637ba206ad00435",
+    "semantic_hash": "845ff48c7b6fb3cdc637ba206ad00435"
+  },
+  "app/_components/api/v1/admin/medication_editor.tsx": {
+    "mtime": 1779716459.7676275,
+    "ast_hash": "04e7be0328af1a419e5172a8369364da",
+    "semantic_hash": "04e7be0328af1a419e5172a8369364da"
+  },
+  "app/_components/api/v1/admin/medication_search_panel.tsx": {
+    "mtime": 1779716459.7678185,
+    "ast_hash": "604df57bba74c11ec2fe0e6c30b568cc",
+    "semantic_hash": "604df57bba74c11ec2fe0e6c30b568cc"
+  },
+  "app/_components/api/v1/admin/pharmacy_api.ts": {
+    "mtime": 1780308554.8403473,
+    "ast_hash": "f6b2380b74cd8e3b5c01e97af9a5d285",
+    "semantic_hash": "f6b2380b74cd8e3b5c01e97af9a5d285"
+  },
+  "app/_components/api/v1/admin/pharmacy_editor.tsx": {
+    "mtime": 1780308554.8413472,
+    "ast_hash": "750486f8c6626cdad67a6e31e59978eb",
+    "semantic_hash": "750486f8c6626cdad67a6e31e59978eb"
+  },
+  "app/_components/api/v1/admin/pharmacy_panel.tsx": {
+    "mtime": 1780308554.8413472,
+    "ast_hash": "ab0d359bcc88439ef50e98aec883f07b",
+    "semantic_hash": "ab0d359bcc88439ef50e98aec883f07b"
+  },
+  "app/_components/api/v1/admin/pharmacy_search_panel.tsx": {
+    "mtime": 1780308554.8413472,
+    "ast_hash": "c046bf833075a1134c98db902a9dac4c",
+    "semantic_hash": "c046bf833075a1134c98db902a9dac4c"
+  },
+  "app/_components/api/v1/admin/pharmacy_types.ts": {
+    "mtime": 1780308554.8413472,
+    "ast_hash": "604d4e06602a361db295948d1b4e3fbe",
+    "semantic_hash": "604d4e06602a361db295948d1b4e3fbe"
+  },
+  "app/_components/api/v1/admin/schedule_exceptions_manager.tsx": {
+    "mtime": 1780308554.8423474,
+    "ast_hash": "19e042b012b0219ceb71a09495fabb0c",
+    "semantic_hash": "19e042b012b0219ceb71a09495fabb0c"
+  },
+  "app/_components/api/v1/admin/types.ts": {
+    "mtime": 1779716459.7679698,
+    "ast_hash": "4ad847696451ab69d94132558a071710",
+    "semantic_hash": "4ad847696451ab69d94132558a071710"
+  },
+  "app/_components/api/v1/admin/working_hours_manager.tsx": {
+    "mtime": 1780308554.8423474,
+    "ast_hash": "89e4e7938346b2b3d6a3861f3908c05c",
+    "semantic_hash": "89e4e7938346b2b3d6a3861f3908c05c"
+  },
+  "app/_components/api/v1/medications/MedicineDetailsPanel/medicine_details_panel.tsx": {
+    "mtime": 1778419209.3520412,
+    "ast_hash": "ff783538cc9f077ac7114698551f83d0",
+    "semantic_hash": "ff783538cc9f077ac7114698551f83d0"
+  },
+  "app/_components/api/v1/medications/data.ts": {
+    "mtime": 1777883857.5758584,
+    "ast_hash": "42bb1d2f4028cd86c452f070626a2e2f",
+    "semantic_hash": "42bb1d2f4028cd86c452f070626a2e2f"
+  },
+  "app/_components/api/v1/medications/medications_content.tsx": {
+    "mtime": 1780311785.908973,
+    "ast_hash": "5e4721a36ecc066411c66272388c7e33",
+    "semantic_hash": "5e4721a36ecc066411c66272388c7e33"
+  },
+  "app/_components/api/v1/medications/popular_medicine.tsx": {
+    "mtime": 1778486357.158182,
+    "ast_hash": "40d06399ca9020ebde00c1ca1eb33d7a",
+    "semantic_hash": "40d06399ca9020ebde00c1ca1eb33d7a"
+  },
+  "app/_components/api/v1/medications/search_bar.tsx": {
+    "mtime": 1778422901.2436843,
+    "ast_hash": "b7755adb7180c8922176f61a8a158119",
+    "semantic_hash": "b7755adb7180c8922176f61a8a158119"
+  },
+  "app/_components/api/v1/medications/search_bar_title.tsx": {
+    "mtime": 1778422901.2436843,
+    "ast_hash": "fbebc1e40cfeb68f2f8ac4c2168ea10c",
+    "semantic_hash": "fbebc1e40cfeb68f2f8ac4c2168ea10c"
+  },
+  "app/_components/api/v1/medications/search_button.tsx": {
+    "mtime": 1778486357.158182,
+    "ast_hash": "9a254ed8564401dc6714ec9328f14248",
+    "semantic_hash": "9a254ed8564401dc6714ec9328f14248"
+  },
+  "app/_components/api/v1/medications/search_results.tsx": {
+    "mtime": 1780311785.9099731,
+    "ast_hash": "fd86bf31847ed646815f1c43b9e54f03",
+    "semantic_hash": "fd86bf31847ed646815f1c43b9e54f03"
+  },
+  "app/_components/api/v1/medications/selected_medication.tsx": {
+    "mtime": 1778486357.158182,
+    "ast_hash": "aa3657ad625b4633ea3e7c8d7fd04bb7",
+    "semantic_hash": "aa3657ad625b4633ea3e7c8d7fd04bb7"
+  },
+  "app/_components/api/v1/medications/types.ts": {
+    "mtime": 1778404087.5318787,
+    "ast_hash": "a3d02f2a007a51d0dc6384f125fc4a89",
+    "semantic_hash": "a3d02f2a007a51d0dc6384f125fc4a89"
+  },
+  "app/_components/api/v1/pharmacies/duty/city_filter.tsx": {
+    "mtime": 1777883857.5773966,
+    "ast_hash": "8b867ade05f18055c1596ad89c37d52a",
+    "semantic_hash": "8b867ade05f18055c1596ad89c37d52a"
+  },
+  "app/_components/api/v1/pharmacies/duty/date_utils.ts": {
+    "mtime": 1780308554.8423474,
+    "ast_hash": "fe51e264f458e5141f4bb45fe049a9da",
+    "semantic_hash": "fe51e264f458e5141f4bb45fe049a9da"
+  },
+  "app/_components/api/v1/pharmacies/duty/duty_calendar.tsx": {
+    "mtime": 1777883857.5775425,
+    "ast_hash": "08eb5871c430b1cfce4914b02ab9a56e",
+    "semantic_hash": "08eb5871c430b1cfce4914b02ab9a56e"
+  },
+  "app/_components/api/v1/pharmacies/duty/duty_pharmacy_card.tsx": {
+    "mtime": 1778486357.158182,
+    "ast_hash": "ffe9e530969b986ac8ff65b42f982ed7",
+    "semantic_hash": "ffe9e530969b986ac8ff65b42f982ed7"
+  },
+  "app/_components/api/v1/pharmacies/duty/duty_pharmacy_list.tsx": {
+    "mtime": 1778486357.158182,
+    "ast_hash": "55d10feb225028c588bc55cfd6443998",
+    "semantic_hash": "55d10feb225028c588bc55cfd6443998"
+  },
+  "app/_components/api/v1/pharmacies/duty/mobile_duty_controls.tsx": {
+    "mtime": 1778486357.158182,
+    "ast_hash": "7b973fb0a997f95a276b26fbd9437eda",
+    "semantic_hash": "7b973fb0a997f95a276b26fbd9437eda"
+  },
+  "app/_components/api/v1/pharmacies/duty/pharmacy_details_panel.tsx": {
+    "mtime": 1780308554.8433473,
+    "ast_hash": "ade67775d40438171685ed43f6002f3c",
+    "semantic_hash": "ade67775d40438171685ed43f6002f3c"
+  },
+  "app/_components/api/v1/pharmacies/duty/types.ts": {
+    "mtime": 1777883857.5775425,
+    "ast_hash": "a603243e541f94e1b832b70b9ec6cd00",
+    "semantic_hash": "a603243e541f94e1b832b70b9ec6cd00"
+  },
+  "app/_components/api/v1/pharmacies/search/map_placeholder.tsx": {
+    "mtime": 1779716459.7686253,
+    "ast_hash": "bcafa0898e1ed903b78eb4805bcb45b4",
+    "semantic_hash": "bcafa0898e1ed903b78eb4805bcb45b4"
+  },
+  "app/_components/api/v1/pharmacies/search/mobile_search_controls.tsx": {
+    "mtime": 1778486357.1591818,
+    "ast_hash": "4d3ffa319ba0cee433e6eb703e5acb14",
+    "semantic_hash": "4d3ffa319ba0cee433e6eb703e5acb14"
+  },
+  "app/_components/api/v1/pharmacies/search/pharmacy_map_view.tsx": {
+    "mtime": 1779716459.7691557,
+    "ast_hash": "177b5687c5d8199768ea9e262b2e615a",
+    "semantic_hash": "177b5687c5d8199768ea9e262b2e615a"
+  },
+  "app/_components/api/v1/pharmacies/search/pharmacy_search_card.tsx": {
+    "mtime": 1780308554.8433473,
+    "ast_hash": "efa62280142b2d8f1d65f659c941eeea",
+    "semantic_hash": "efa62280142b2d8f1d65f659c941eeea"
+  },
+  "app/_components/api/v1/pharmacies/search/pharmacy_search_empty_state.tsx": {
+    "mtime": 1780311785.9099731,
+    "ast_hash": "a06026cdde9ab0d1bf9335d039f4a078",
+    "semantic_hash": "a06026cdde9ab0d1bf9335d039f4a078"
+  },
+  "app/_components/api/v1/pharmacies/search/pharmacy_search_page.tsx": {
+    "mtime": 1780311785.910973,
+    "ast_hash": "6688fd76529b1485ea8465af318d7ac5",
+    "semantic_hash": "6688fd76529b1485ea8465af318d7ac5"
+  },
+  "app/_components/api/v1/pharmacies/search/search_filter_panel.tsx": {
+    "mtime": 1780308554.8433473,
+    "ast_hash": "3473f013359c8e47a41dd4db1f19e477",
+    "semantic_hash": "3473f013359c8e47a41dd4db1f19e477"
+  },
+  "app/_components/api/v1/pharmacies/search/search_utils.ts": {
+    "mtime": 1779716459.7707336,
+    "ast_hash": "6920b642d14c03272324999e757f9ce1",
+    "semantic_hash": "6920b642d14c03272324999e757f9ce1"
+  },
+  "app/_components/api/v1/pharmacies/search/types.ts": {
+    "mtime": 1779716459.7709627,
+    "ast_hash": "84e1da0bed70b3cf61c0d627f811a5c1",
+    "semantic_hash": "84e1da0bed70b3cf61c0d627f811a5c1"
+  },
+  "app/_components/api/v1/pharmacies/search/view_toggle.tsx": {
+    "mtime": 1777883857.5786164,
+    "ast_hash": "037ec35001c00bc195933de479df6ec3",
+    "semantic_hash": "037ec35001c00bc195933de479df6ec3"
+  },
+  "app/_components/auth/AuthContext.tsx": {
+    "mtime": 1777883857.5786164,
+    "ast_hash": "f17418e2f0b9dae4dc92c7160fcf3d03",
+    "semantic_hash": "f17418e2f0b9dae4dc92c7160fcf3d03"
+  },
+  "app/_components/auth/api.ts": {
+    "mtime": 1780308554.8433473,
+    "ast_hash": "267cae889aaab026e447246532c167fd",
+    "semantic_hash": "267cae889aaab026e447246532c167fd"
+  },
+  "app/_components/auth/types.ts": {
+    "mtime": 1777883857.579156,
+    "ast_hash": "335cf3446beb36a36fb69fb1300633a0",
+    "semantic_hash": "335cf3446beb36a36fb69fb1300633a0"
+  },
+  "app/_components/layout/AppShell.tsx": {
+    "mtime": 1779716459.771735,
+    "ast_hash": "1e6ad1c9e4e67c7e5038a96604efe014",
+    "semantic_hash": "1e6ad1c9e4e67c7e5038a96604efe014"
+  },
+  "app/_components/modals/LoginModal.tsx": {
+    "mtime": 1780308554.8443472,
+    "ast_hash": "5094ee5771b60620375532a76a9482a3",
+    "semantic_hash": "5094ee5771b60620375532a76a9482a3"
+  },
+  "app/_components/modals/RegisterModal.tsx": {
+    "mtime": 1780308554.8443472,
+    "ast_hash": "9b1e48b87fb253675c3eba3bfd47e36f",
+    "semantic_hash": "9b1e48b87fb253675c3eba3bfd47e36f"
+  },
+  "app/_components/ui/InputField.tsx": {
+    "mtime": 1777883857.5798657,
+    "ast_hash": "96082453a1f26f3a31d41f3d16a28123",
+    "semantic_hash": "96082453a1f26f3a31d41f3d16a28123"
+  },
+  "app/api/backend/[...path]/route.ts": {
+    "mtime": 1780308554.845617,
+    "ast_hash": "c04950d1e02bce3208ef58957db9063e",
+    "semantic_hash": "c04950d1e02bce3208ef58957db9063e"
+  },
+  "app/api/v1/admin/page.tsx": {
+    "mtime": 1779716459.7719197,
+    "ast_hash": "cbec30ddba2e3e574faeb75bd640c18c",
+    "semantic_hash": "cbec30ddba2e3e574faeb75bd640c18c"
+  },
+  "app/api/v1/home/page.tsx": {
+    "mtime": 1779716459.772391,
+    "ast_hash": "c42ce778cfbc0aa7fccc8e5f635ca0e9",
+    "semantic_hash": "c42ce778cfbc0aa7fccc8e5f635ca0e9"
+  },
+  "app/api/v1/medications/page.tsx": {
+    "mtime": 1780311785.911973,
+    "ast_hash": "48d50c80f5bc8d4d3c61cf7a2744b0c4",
+    "semantic_hash": "48d50c80f5bc8d4d3c61cf7a2744b0c4"
+  },
+  "app/api/v1/pharmacies/duty/page.tsx": {
+    "mtime": 1777883857.5806596,
+    "ast_hash": "0ccb0d7c4990c1e70be0b1e255cb16cb",
+    "semantic_hash": "0ccb0d7c4990c1e70be0b1e255cb16cb"
+  },
+  "app/api/v1/pharmacies/map/page.tsx": {
+    "mtime": 1777883857.5806596,
+    "ast_hash": "e4fb00e646cececb519a2c6fcd229783",
+    "semantic_hash": "e4fb00e646cececb519a2c6fcd229783"
+  },
+  "app/api/v1/pharmacies/search/page.tsx": {
+    "mtime": 1777883857.5806596,
+    "ast_hash": "547f08363026b500ed237ffa2eefc847",
+    "semantic_hash": "547f08363026b500ed237ffa2eefc847"
+  },
+  "app/error.tsx": {
+    "mtime": 1777883857.5806596,
+    "ast_hash": "4ceb25af983564e86ac55a7347bd4283",
+    "semantic_hash": "4ceb25af983564e86ac55a7347bd4283"
+  },
+  "app/layout.tsx": {
+    "mtime": 1778404092.8039362,
+    "ast_hash": "f142f66f36a75e45f3f036e946b3b4c0",
+    "semantic_hash": "f142f66f36a75e45f3f036e946b3b4c0"
+  },
+  "app/loading.tsx": {
+    "mtime": 1777883857.5806596,
+    "ast_hash": "8325389d2c1ff72eb7809387788576a1",
+    "semantic_hash": "8325389d2c1ff72eb7809387788576a1"
+  },
+  "app/page.tsx": {
+    "mtime": 1777883857.5806596,
+    "ast_hash": "801db3c9543f27a481c39ae5903c703e",
+    "semantic_hash": "801db3c9543f27a481c39ae5903c703e"
+  },
+  "app/verify-email/page.tsx": {
+    "mtime": 1780308554.845617,
+    "ast_hash": "1e64436f98d37d47c6f2793509330a35",
+    "semantic_hash": "1e64436f98d37d47c6f2793509330a35"
+  },
+  "eslint.config.mjs": {
+    "mtime": 1777883857.5806596,
+    "ast_hash": "dfa1f5f6a7037bf39dc510f30b180002",
+    "semantic_hash": "dfa1f5f6a7037bf39dc510f30b180002"
+  },
+  "lib/api.ts": {
+    "mtime": 1780308554.845617,
+    "ast_hash": "cd0508139b498408062595039ce4b6af",
+    "semantic_hash": "cd0508139b498408062595039ce4b6af"
+  },
+  "next.config.ts": {
+    "mtime": 1777883857.5806596,
+    "ast_hash": "9b77af189a21a7a64e4bd7a426f64176",
+    "semantic_hash": "9b77af189a21a7a64e4bd7a426f64176"
+  },
+  "package.json": {
+    "mtime": 1778404092.8050733,
+    "ast_hash": "68249fa76c729d412aace197b4804389",
+    "semantic_hash": "68249fa76c729d412aace197b4804389"
+  },
+  "postcss.config.mjs": {
+    "mtime": 1777883857.5826163,
+    "ast_hash": "239f3ebf717465dc636818a1a619398d",
+    "semantic_hash": "239f3ebf717465dc636818a1a619398d"
+  },
+  "tsconfig.json": {
+    "mtime": 1777883857.5866163,
+    "ast_hash": "02fc19ad21338c2ab820a70136310db4",
+    "semantic_hash": "02fc19ad21338c2ab820a70136310db4"
+  }
+}

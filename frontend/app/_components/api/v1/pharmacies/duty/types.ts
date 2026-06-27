@@ -30,6 +30,7 @@ export type PharmacyDetails = {
   longitude: number | null;
   isActive: boolean;
   isOnDuty: boolean;
+  img_url: string | null;
   phones: string[];
   workingHours: WorkingHours[];
   dutySchedule: {
@@ -63,6 +64,7 @@ export type PharmacyDetailsApiResponse = {
     longitude: number | string | null;
     isActive: boolean | number;
     isOnDuty: boolean;
+    img_url?: string | null;
     phones?: string[];
     workingHours?: WorkingHours[];
     dutySchedule?: {
