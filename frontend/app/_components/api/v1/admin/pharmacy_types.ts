@@ -12,6 +12,7 @@ export type PharmacyDetails = {
   longitude: number;
   city_id: number;
   is_state: boolean;
+  img_url: string | null;
 };
 
 export type PharmacyPayload = {

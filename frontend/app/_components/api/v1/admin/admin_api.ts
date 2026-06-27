@@ -201,6 +201,24 @@ export async function updateDose(medicationId: number, doseId: number, is_refund
   );
 }
 
+export async function uploadPharmacyImage(pharmacyId: number, file: File) {
+  const formData = new FormData();
+  formData.append("pharmacyId", String(pharmacyId));
+  formData.append("file", file);
+
+  const response = await fetch(apiUrl("/api/v1/upload/pharmacy-image"), {
+    method: "POST",
+    credentials: "include",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error(await responseMessage(response));
+  }
+
+  return response.json() as Promise<{ pharmacyId: number; imageUrl: string }>;
+}
+
 export async function uploadMedicationImage(
   medicationName: string,
   file: File
