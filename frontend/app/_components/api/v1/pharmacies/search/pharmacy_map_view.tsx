@@ -73,12 +73,12 @@ function createUserMarkerIcon() {
     className: "",
     html: `
       <div class="pharmacy-map-marker pharmacy-map-marker--user">
-        <span style="position: relative; z-index: 1; font-size: 12px; font-weight: 900; line-height: 1;">Ja</span>
+        <span style="position: relative; z-index: 1; font-size: 13px; font-weight: 900; line-height: 1; color: #ffffff;">Ja</span>
       </div>
     `,
-    iconSize: [40, 46],
-    iconAnchor: [20, 42],
-    popupAnchor: [0, -38],
+    iconSize: [46, 54],
+    iconAnchor: [23, 52],
+    popupAnchor: [0, -48],
   });
 }
 
@@ -443,18 +443,7 @@ export default function PharmacyMapView({
         />
 
         {userPoint && (
-          <Marker position={userPoint} icon={createUserMarkerIcon()} title="Ja">
-            <Tooltip
-              direction="top"
-              offset={[0, -14]}
-              opacity={1}
-              permanent
-              interactive={false}
-              className="pharmacy-map-tooltip pharmacy-map-tooltip--user"
-            >
-              Ja
-            </Tooltip>
-          </Marker>
+          <Marker position={userPoint} icon={createUserMarkerIcon()} title="Ja" />
         )}
 
         {pharmaciesWithCoordinates.map((pharmacy) => (
