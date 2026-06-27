@@ -199,9 +199,10 @@ function DetailsBody({
                 href={`https://www.google.com/maps/dir/?api=1&destination=${pharmacy.latitude},${pharmacy.longitude}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
+                style={{ color: "#ffffff" }}
+                className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold transition hover:bg-blue-700"
               >
-                <Navigation className="h-4 w-4" />
+                <Navigation className="h-4 w-4" style={{ color: "#ffffff" }} />
                 Navigiraj
               </a>
             )}

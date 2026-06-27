@@ -4,7 +4,6 @@ import { divIcon, type LatLngBoundsExpression } from "leaflet";
 import {
   MapContainer,
   Marker,
-  Polyline,
   Popup,
   TileLayer,
   Tooltip,
@@ -18,7 +17,6 @@ import {
   Navigation,
   Power,
   Sparkles,
-  X,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { formatTime } from "../duty/date_utils";
@@ -30,35 +28,16 @@ import {
 } from "./search_utils";
 import { PharmacySearchResult, UserLocation } from "./types";
 
-// ─── OSRM routing ─────────────────────────────────────────────────────────────
-
-type RoutePolyline = {
-  coords: [number, number][];
-  primary: boolean;
-  distanceKm: number;
-  durationMin: number;
-};
-
-async function fetchOSRMRoutes(
-  origin: [number, number],
-  destination: [number, number]
-): Promise<RoutePolyline[]> {
-  const url = `https://router.project-osrm.org/route/v1/driving/${origin[1]},${origin[0]};${destination[1]},${destination[0]}?overview=full&geometries=geojson&alternatives=true`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error("OSRM request failed");
-  const data = (await res.json()) as {
-    routes: {
-      geometry: { coordinates: [number, number][] };
-      distance: number;
-      duration: number;
-    }[];
-  };
-  return data.routes.map((route, i) => ({
-    coords: route.geometry.coordinates.map(([lng, lat]) => [lat, lng] as [number, number]),
-    primary: i === 0,
-    distanceKm: route.distance / 1000,
-    durationMin: Math.round(route.duration / 60),
-  }));
+function buildGoogleMapsUrl(
+  pharmacy: PharmacySearchResult & { latitude: number; longitude: number },
+  userLocation: UserLocation | null
+) {
+  const dest = `${pharmacy.latitude},${pharmacy.longitude}`;
+  const origin =
+    userLocation
+      ? `&origin=${normalizeNumber(userLocation.latitude)},${normalizeNumber(userLocation.longitude)}`
+      : "";
+  return `https://www.google.com/maps/dir/?api=1&destination=${dest}${origin}`;
 }
 
 type PharmacyMapViewProps = {
@@ -138,14 +117,12 @@ function PharmacyPopup({
   pharmacy,
   medicineName,
   doseStrengths,
-  onNavigate,
-  isRouting,
+  userLocation,
 }: {
   pharmacy: PharmacySearchResult;
   medicineName: string;
   doseStrengths: string[];
-  onNavigate: (() => void) | null;
-  isRouting: boolean;
+  userLocation: UserLocation | null;
 }) {
   const openLabel = pharmacy.isOnDuty
     ? pharmacy.openUntil
@@ -281,27 +258,22 @@ function PharmacyPopup({
           ))}
         </div>
 
-        {onNavigate ? (
-          <button
-            type="button"
-            onClick={onNavigate}
-            disabled={isRouting}
-            className="mt-1 inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-blue-600 px-3 py-2 text-[10px] font-bold text-white transition hover:bg-blue-700 disabled:opacity-60 md:text-xs"
-          >
-            <Navigation className="h-3 w-3 md:h-3.5 md:w-3.5" />
-            {isRouting ? "Učitavam rutu..." : "Navigiraj"}
-          </button>
-        ) : (
-          <a
-            href={`https://www.google.com/maps/dir/?api=1&destination=${normalizeNumber(pharmacy.latitude)},${normalizeNumber(pharmacy.longitude)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-1 inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-blue-600 px-3 py-2 text-[10px] font-bold text-white transition hover:bg-blue-700 md:text-xs"
-          >
-            <Navigation className="h-3 w-3 md:h-3.5 md:w-3.5" />
-            Navigiraj
-          </a>
-        )}
+        {(() => {
+          const lat = normalizeNumber(pharmacy.latitude);
+          const lng = normalizeNumber(pharmacy.longitude);
+          if (lat === null || lng === null) return null;
+          return (
+            <a
+              href={buildGoogleMapsUrl({ ...pharmacy, latitude: lat, longitude: lng }, userLocation)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-1 inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-blue-600 px-3 py-2 text-[10px] font-bold leading-none text-white transition hover:bg-blue-700 md:text-xs"
+            >
+              <Navigation className="h-3 w-3 md:h-3.5 md:w-3.5" />
+              Navigiraj
+            </a>
+          );
+        })()}
       </div>
     </div>
   );
@@ -329,21 +301,6 @@ export default function PharmacyMapView({
   doseStrengths,
 }: PharmacyMapViewProps) {
   const [activePharmacyId, setActivePharmacyId] = useState<number | null>(null);
-  const [routes, setRoutes] = useState<RoutePolyline[]>([]);
-  const [routingForId, setRoutingForId] = useState<number | null>(null);
-
-  const handleNavigate = async (pharmacy: PharmacySearchResult & { latitude: number; longitude: number }) => {
-    if (!userPoint) return;
-    setRoutingForId(pharmacy.id);
-    try {
-      const result = await fetchOSRMRoutes(userPoint, [pharmacy.latitude, pharmacy.longitude]);
-      setRoutes(result);
-    } catch {
-      setRoutes([]);
-    } finally {
-      setRoutingForId(null);
-    }
-  };
   const pharmaciesWithCoordinates = useMemo(
     () =>
       pharmacies
@@ -449,7 +406,7 @@ export default function PharmacyMapView({
         </button>
       </div>
 
-      {routes.length === 0 && activePharmacyId === null && (
+      {activePharmacyId === null && (
         <div className="pointer-events-none absolute bottom-4 left-4 z-[500] rounded-2xl border border-slate-200/90 bg-white/95 px-2.5 py-2 shadow-lg backdrop-blur">
           <p className="mb-1 text-[9px] font-bold uppercase tracking-wide text-slate-500">
             Status
@@ -468,38 +425,6 @@ export default function PharmacyMapView({
         </div>
       )}
 
-      {routes.length > 0 && (
-        <div className="absolute bottom-4 left-4 z-[500] flex flex-col gap-2 rounded-2xl border border-slate-200/90 bg-white/95 px-3 py-2.5 shadow-lg backdrop-blur">
-          <div className="flex items-center justify-between gap-4">
-            <p className="text-[9px] font-bold uppercase tracking-wide text-slate-500">Ruta</p>
-            <button
-              type="button"
-              onClick={() => setRoutes([])}
-              className="text-slate-400 hover:text-slate-600"
-              aria-label="Ukloni rutu"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
-          </div>
-          {routes.map((r, i) => (
-            <div key={i} className="flex items-center gap-2 text-xs">
-              <span
-                className="inline-block h-1.5 w-4 rounded-full"
-                style={{ backgroundColor: r.primary ? "#2563eb" : "#94a3b8" }}
-              />
-              <span className="font-semibold text-slate-700">
-                {r.distanceKm.toFixed(1)} km
-              </span>
-              <span className="text-slate-500">{r.durationMin} min</span>
-              {r.primary && (
-                <span className="rounded-full border border-blue-100 bg-blue-50 px-1.5 py-0.5 text-[9px] font-bold text-blue-700">
-                  Najbrža
-                </span>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
 
       <MapContainer
         center={DEFAULT_CENTER}
@@ -531,19 +456,6 @@ export default function PharmacyMapView({
             </Tooltip>
           </Marker>
         )}
-
-        {routes.map((route, i) => (
-          <Polyline
-            key={i}
-            positions={route.coords}
-            pathOptions={{
-              color: route.primary ? "#2563eb" : "#94a3b8",
-              weight: route.primary ? 5 : 3,
-              opacity: route.primary ? 0.85 : 0.5,
-              dashArray: route.primary ? undefined : "8 6",
-            }}
-          />
-        ))}
 
         {pharmaciesWithCoordinates.map((pharmacy) => (
           <Marker
@@ -590,8 +502,7 @@ export default function PharmacyMapView({
                 pharmacy={pharmacy}
                 medicineName={medicineName}
                 doseStrengths={doseStrengths}
-                onNavigate={userPoint ? () => handleNavigate(pharmacy) : null}
-                isRouting={routingForId === pharmacy.id}
+                userLocation={userLocation}
               />
             </Popup>
           </Marker>
