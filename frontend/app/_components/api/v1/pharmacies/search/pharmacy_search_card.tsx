@@ -94,13 +94,9 @@ export default function PharmacySearchCard({
                   return (
                     <span
                       key={`${pharmacy.id}-${dose.doseId}`}
-                      className={`inline-flex min-h-10 flex-col justify-center rounded-xl border px-2.5 py-1.5 sm:min-h-12 sm:px-3 sm:py-2 ${
-                        refundable
-                          ? "border-emerald-100 bg-emerald-50"
-                          : "border-slate-200 bg-slate-50"
-                      }`}
+                      className="inline-flex min-h-10 flex-col justify-center rounded-xl border border-emerald-100 bg-emerald-50 px-2.5 py-1.5 sm:min-h-12 sm:px-3 sm:py-2"
                     >
-                      <span className={`flex items-center gap-1 text-[11px] font-bold sm:text-xs ${refundable ? "text-emerald-700" : "text-slate-700"}`}>
+                      <span className="flex items-center gap-1 text-[11px] font-bold text-emerald-700 sm:text-xs">
                         {dose.strength}
                         {refundable && (
                           <span className="rounded bg-emerald-600 px-1 text-[9px] font-black text-white">
@@ -108,7 +104,7 @@ export default function PharmacySearchCard({
                           </span>
                         )}
                       </span>
-                      <span className={`mt-0.5 text-[11px] font-semibold ${refundable ? "text-emerald-700/75" : "text-slate-500"}`}>
+                      <span className="mt-0.5 text-[11px] font-semibold text-emerald-700/75">
                         {formatDoseUpdate(dose.lastUpdated)}
                       </span>
                     </span>
